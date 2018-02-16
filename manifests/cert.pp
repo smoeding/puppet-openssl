@@ -58,7 +58,7 @@ define openssl::cert (
     #
 
     $cert_chain.each |$index, $entry| {
-      $order = sprintf("%02d", 20 + $index)
+      $order = sprintf('%02d', 20 + $index)
 
       concat::fragment { "${_cert_file}-${order}":
         target  => $_cert_file,
