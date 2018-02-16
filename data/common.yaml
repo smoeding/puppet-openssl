@@ -1,0 +1,7 @@
+# common.yaml --- Common defaults
+---
+
+openssl::package_name: 'openssl'
+openssl::package_ensure: 'installed'
+
+openssl::ca_certs: []

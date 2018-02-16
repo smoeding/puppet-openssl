@@ -1,0 +1,7 @@
+# FreeBSD.yaml --- Defaults for FreeBSD
+---
+
+openssl::root_group: 'wheel'
+
+openssl::default_cert_dir: '/usr/local/etc/ssl'
+openssl::default_key_dir: '/usr/local/etc/ssl'

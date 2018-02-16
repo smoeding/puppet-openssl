@@ -1,0 +1,49 @@
+{
+  "name": "stm-openssl",
+  "version": "1.0.0",
+  "author": "stm",
+  "summary": "Deploy X.509 certificates, keys and Diffie-Hellman parameter files",
+  "license": "BSD-2-Clause",
+  "source": "https://github.com/smoeding/puppet-openssl",
+  "project_page": "https://github.com/smoeding/puppet-openssl",
+  "issues_url": "https://github.com/smoeding/puppet-openssl/issues",
+  "tags": [ "openssl", "x509", "certificate" ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [ "7", "8", "9" ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [ "14.04", "16.04", "17.10" ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [ "6", "7" ]
+    },
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [ "6", "7" ]
+    },
+    {
+      "operatingsystem": "FreeBSD",
+      "operatingsystemrelease": [ "10", "11" ]
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 4.2.0 < 5.0.0"
+    },
+    {
+      "name": "puppetlabs/concat",
+      "version_requirement": ">= 1.2.0 < 3.0.0"
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 4.0.0 < 6.0.0"
+    }
+  ]
+}
