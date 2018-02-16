@@ -9,12 +9,8 @@ fixture_path = File.expand_path(File.join(__FILE__, '..', 'fixtures'))
 RSpec.configure do |c|
   c.module_path = File.join(fixture_path, 'modules')
   c.manifest_dir = File.join(fixture_path, 'manifests')
-  c.after(:suite) do
-    RSpec::Puppet::Coverage.report!
-  end
-
-  # Hiera
-  # c.hiera_config = File.join('spec', 'fixtures', 'hiera', 'hiera.yaml')
+  c.manifest = File.join(fixture_path, '../../manifests/site.pp')
+  c.hiera_config = File.join(fixture_path, '../../hiera.yaml')
 
   # :id and :osfamily facts are needed for concat module
   c.default_facts = {
@@ -26,4 +22,8 @@ RSpec.configure do |c|
     :operatingsystem => 'Debian',
     :concat_basedir  => '/var/tmp',
   }
+
+  c.after(:suite) do
+    RSpec::Puppet::Coverage.report!
+  end
 end
