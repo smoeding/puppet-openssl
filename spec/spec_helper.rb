@@ -10,7 +10,7 @@ RSpec.configure do |c|
   c.module_path = File.join(fixture_path, 'modules')
   c.manifest_dir = File.join(fixture_path, 'manifests')
   c.manifest = File.join(fixture_path, '../../manifests/site.pp')
-  c.hiera_config = File.join(fixture_path, '../../hiera.yaml')
+  c.hiera_config = File.join(fixture_path, '../fixtures/hiera.yaml')
 
   # :id and :osfamily facts are needed for concat module
   c.default_facts = {
