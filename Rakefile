@@ -6,13 +6,19 @@ require 'metadata-json-lint/rake_task'
 PuppetLint.configuration.fail_on_warnings = true
 PuppetLint.configuration.send('relative')
 PuppetLint.configuration.send('disable_80chars')
-PuppetLint.configuration.send('disable_class_inherits_from_params_class')
-PuppetLint.configuration.ignore_paths = [ 'spec/**/*', 'pkg/**/*', 'vendor/**/*', '.vendor/**/*' ]
 
-RSpec.configure do |c|
-  c.module_path = File.join(fixture_path, 'modules')
-  c.manifest_dir = File.join(fixture_path, 'manifests')
-  c.after(:suite) do
-    RSpec::Puppet::Coverage.report!
-  end
-end
+exclude_paths = [
+  "pkg/**/*",
+  "vendor/**/*",
+  "spec/**/*",
+]
+PuppetLint.configuration.ignore_paths = exclude_paths
+PuppetSyntax.exclude_paths = exclude_paths
+
+desc "Run syntax, lint, and spec tests."
+task :test => [
+  :metadata_lint,
+  :syntax,
+  :lint,
+  :spec,
+]
