@@ -4,11 +4,12 @@ describe 'openssl' do
 
   on_supported_os.each do |os, facts|
     let(:facts) { facts }
-    let(:hiera_config) { 'hiera.yaml' }
-
-    #hiera = Hiera.new(:config => 'hiera.yaml')
 
     context "on #{os} with default parameters" do
+      let(:params) do
+        { :cert_source_directory => '/foo/bar' }
+      end
+
       it {
         is_expected.to contain_class('openssl')
       }
