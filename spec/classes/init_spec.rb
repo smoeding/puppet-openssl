@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe 'openssl' do
+  let(:hiera_config) { 'hiera.yaml' }
+  hiera = Hiera.new(:config => 'hiera.yaml')
 
   on_supported_os.each do |os, facts|
     let(:facts) { facts }
