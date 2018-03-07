@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'openssl' do
-  let(:params) do
+  let :default_params do
     {
       default_key_dir:       '/key',
       default_cert_dir:      '/crt',
@@ -12,6 +12,7 @@ describe 'openssl' do
 
   on_supported_os.each do |os, facts|
     let(:facts) { facts }
+    let(:params) { default_params }
 
     context "on #{os} with default parameters" do
       it {
@@ -23,7 +24,7 @@ describe 'openssl' do
     end
 
     context "on #{os} with one element for ca_cert" do
-      let(:facts) { facts.merge({ :ca_certs => ['ca-1'] }) }
+      let(:params) { default_params.merge({ :ca_certs => ['ca-1'] }) }
 
       it {
         is_expected.to contain_openssl__cert('ca-1').
@@ -32,7 +33,7 @@ describe 'openssl' do
     end
 
     context "on #{os} with two elements for ca_cert" do
-      let(:facts) { facts.merge({ :ca_certs => [ 'ca-1', 'ca-2' ] }) }
+      let(:params) { default_params.merge({ :ca_certs => [ 'ca-1', 'ca-2' ] }) }
 
       it {
         is_expected.to contain_openssl__cert('ca-1').with_makehash('true')
