@@ -26,7 +26,8 @@ describe 'openssl' do
       let(:facts) { facts.merge({ :ca_certs => [ 'ca-1' ] }) }
 
       it {
-        is_expected.to contain_openssl__cert('ca-1').with_makehash(true)
+        is_expected.to contain_openssl__cert(['ca-1']).
+          with_makehash(true)
       }
     end
 
