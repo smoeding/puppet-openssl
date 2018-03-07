@@ -11,10 +11,10 @@ describe 'openssl' do
   end
 
   before do
-    MockFunction.new('file') { |f|
+    MockFunction.new('file') do |f|
       f.stubbed.with('/foo/bar/ca-1.crt').returns("#\n")
       f.stubbed.with('/foo/bar/ca-2.crt').returns("#\n")
-    }
+    end
   end
 
   on_supported_os.each do |os, facts|
@@ -31,7 +31,7 @@ describe 'openssl' do
     end
 
     context "on #{os} with one element for ca_cert" do
-      let(:params) { default_params.merge( ca_certs: ['ca-1'] ) }
+      let(:params) { default_params.merge(ca_certs: ['ca-1']) }
 
       it {
         is_expected.to contain_openssl__cert('ca-1').with_makehash('true')
@@ -39,7 +39,7 @@ describe 'openssl' do
     end
 
     context "on #{os} with two elements for ca_cert" do
-      let(:params) { default_params.merge( ca_certs: ['ca-1', 'ca-2'] ) }
+      let(:params) { default_params.merge(ca_certs: ['ca-1', 'ca-2']) }
 
       it {
         is_expected.to contain_openssl__cert('ca-1').with_makehash('true')
