@@ -20,7 +20,7 @@ describe 'openssl::dhparam' do
         is_expected.to contain_class('openssl')
 
         is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 2048').
-          with_creates('/foodh.pem').
+          with_creates('/foo/dh.pem').
           with_timeout('1800').
           that_requires('Package[openssl]').
           that_comes_before('File[/foo/dh.pem]')
@@ -30,6 +30,17 @@ describe 'openssl::dhparam' do
           with_owner('root').
           with_group('wheel').
           with_mode('0644')
+      }
+    end
+
+    context "on #{os} with ensure => absent" do
+      let(:params) do
+        { ensure: 'absent' }
+      end
+
+      it {
+        is_expected.to contain_class('openssl')
+        is_expected.to contain_file('/foo/dh.pem').with_ensure('absent')
       }
     end
   end
