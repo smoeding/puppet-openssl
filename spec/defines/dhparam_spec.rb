@@ -77,9 +77,9 @@ describe 'openssl::dhparam' do
       }
     end
 
-    context "on #{os} with mode => 642" do
+    context "on #{os} with mode => 0642" do
       let(:params) do
-        { mode: '642' }
+        { mode: '0642' }
       end
 
       it {
