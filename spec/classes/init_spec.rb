@@ -16,6 +16,9 @@ describe 'openssl' do
     context "on #{os} with default parameters" do
       it {
         is_expected.to contain_class('openssl')
+        is_expected.to contain_package('openssl').
+          with_ensure('installed').
+          with_name('openssl')
       }
     end
   end
