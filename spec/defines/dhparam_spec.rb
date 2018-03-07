@@ -107,7 +107,7 @@ describe 'openssl::dhparam' do
       it {
         is_expected.to contain_class('openssl')
 
-        is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -s 2048').
+        is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -5 2048').
           with_creates('/foo/dh.pem').
           with_timeout('1800').
           that_requires('Package[openssl]').
