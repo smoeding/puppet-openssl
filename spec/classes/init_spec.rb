@@ -3,10 +3,10 @@ require 'spec_helper'
 describe 'openssl' do
   let(:params) do
     {
-      :default_key_dir       => '/key',
-      :default_cert_dir      => '/crt',
-      :cert_source_directory => '/foo/bar',
-      :root_group            => 'wheel'
+      default_key_dir:       '/key',
+      default_cert_dir:      '/crt',
+      cert_source_directory: '/foo/bar',
+      root_group:            'wheel'
     }
   end
 
