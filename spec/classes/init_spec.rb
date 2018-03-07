@@ -12,6 +12,7 @@ describe 'openssl' do
 
   let!(:file) { MockFunction.new('file') { |f|
       f.stubbed.with('/foo/bar/ca-1.crt').returns("#\n")
+      f.stubbed.with('/foo/bar/ca-2.crt').returns("#\n")
     }
   }
 
