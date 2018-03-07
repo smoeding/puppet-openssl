@@ -23,11 +23,11 @@ describe 'openssl' do
     end
 
     context "on #{os} with one element for ca_cert" do
-      let(:facts) { facts.merge({ :ca_certs => [ 'ca-1' ] }) }
+      let(:facts) { facts.merge({ :ca_certs => ['ca-1'] }) }
 
       it {
         is_expected.to contain_openssl__cert(['ca-1']).
-          with_makehash(true)
+          with_makehash('true')
       }
     end
 
@@ -35,8 +35,8 @@ describe 'openssl' do
       let(:facts) { facts.merge({ :ca_certs => [ 'ca-1', 'ca-2' ] }) }
 
       it {
-        is_expected.to contain_openssl__cert('ca-1').with_makehash(true)
-        is_expected.to contain_openssl__cert('ca-2').with_makehash(true)
+        is_expected.to contain_openssl__cert('ca-1').with_makehash('true')
+        is_expected.to contain_openssl__cert('ca-2').with_makehash('true')
       }
     end
   end
