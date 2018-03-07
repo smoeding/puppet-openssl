@@ -10,8 +10,15 @@ describe 'openssl::dhparam' do
      }'
   end
 
+  let(:title) { '/foo/bar/dhparam.pem' }
+
   on_supported_os.each do |os, facts|
     let(:facts) { facts }
-  end
 
+    context "on #{os} with default parameters" do
+      it {
+        is_expected.to contain_class('openssl')
+      }
+    end
+  end
 end
