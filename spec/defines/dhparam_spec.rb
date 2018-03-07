@@ -18,6 +18,12 @@ describe 'openssl::dhparam' do
     context "on #{os} with default parameters" do
       it {
         is_expected.to contain_class('openssl')
+        is_expected.
+          to contain_exec('openssl dhparam -out /foo/bar/dhparam.pem -2 2048').
+            with_creates('/foo/bar/dhparam.pem').
+            with_timeout('1800').
+            that_requires('Package[openssl]').
+            that_comes_before('File[/foo/bar/dhparam.pem]')
       }
     end
   end
