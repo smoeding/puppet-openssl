@@ -5,10 +5,15 @@ describe 'openssl' do
     {
       default_key_dir:       '/key',
       default_cert_dir:      '/crt',
-      cert_source_directory: '/foo/bar',
+      cert_source_directory: 'src',
       root_group:            'wheel'
     }
   end
+
+  let!(:file) { MockFunction.new('file') { |f|
+      f.stubbed.with('/foo/bar/ca-1.crt').returns("#\n")
+    }
+  }
 
   on_supported_os.each do |os, facts|
     let(:facts) { facts }
@@ -27,8 +32,7 @@ describe 'openssl' do
       let(:params) { default_params.merge({ :ca_certs => ['ca-1'] }) }
 
       it {
-        is_expected.to contain_openssl__cert('ca-1').
-          with_makehash('true')
+        is_expected.to contain_openssl__cert('ca-1').with_makehash('true')
       }
     end
 
