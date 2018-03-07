@@ -8,7 +8,10 @@ describe 'openssl' do
 
     context "on #{os} with default parameters" do
       let(:params) do
-        { :cert_source_directory => '/foo/bar' }
+        { :default_key_dir       => '/key',
+          :default_cert_dir      => '/crt',
+          :cert_source_directory => '/foo/bar'
+        }
       end
 
       it {
