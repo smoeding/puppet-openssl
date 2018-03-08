@@ -158,6 +158,46 @@ describe 'openssl::key' do
       }
     end
 
+    context "on #{os} with key_dir => /baz" do
+      let(:params) do
+        { key_dir: '/baz' }
+      end
+
+      it {
+        is_expected.to contain_class('openssl')
+
+        is_expected.to contain_file('/baz/key.key').
+          with_ensure('file').
+          with_owner('root').
+          with_group('wheel').
+          with_mode('0400').
+          with_content("# /foo/key.key\n").
+          with_backup('false').
+          with_show_diff('false').
+          that_requires('Package[openssl]')
+      }
+    end
+
+    context "on #{os} with key_file => /baz/key.pem" do
+      let(:params) do
+        { key_file: '/baz/key.pem' }
+      end
+
+      it {
+        is_expected.to contain_class('openssl')
+
+        is_expected.to contain_file('/baz/key.pem').
+          with_ensure('file').
+          with_owner('root').
+          with_group('wheel').
+          with_mode('0400').
+          with_content("# /foo/key.key\n").
+          with_backup('false').
+          with_show_diff('false').
+          that_requires('Package[openssl]')
+      }
+    end
+
     context "on #{os} with ensure => absent" do
       let(:params) do
         { ensure: 'absent' }
