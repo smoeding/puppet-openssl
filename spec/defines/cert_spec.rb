@@ -182,7 +182,7 @@ describe 'openssl::cert' do
 
       it {
         # Special test to satisfy resource coverage
-        is_expected.to contain_exec('openssl rehash /crt/cert.crt')
+        is_expected.to contain_exec('openssl rehash /crt/ca.crt')
       }
     end
 
