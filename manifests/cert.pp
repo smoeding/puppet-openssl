@@ -34,8 +34,6 @@ define openssl::cert (
   $_cert_dir  = pick($cert_dir, $::openssl::default_cert_dir)
   $_cert_file = pick($cert_file, "${_cert_dir}/${cert}.${extension}")
 
-  $_inst_dir  = dirname($_cert_file)
-
   if ($ensure == 'present') {
     concat { $_cert_file:
       owner          => $cert_owner,
