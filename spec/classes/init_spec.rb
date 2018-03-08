@@ -5,15 +5,15 @@ describe 'openssl' do
     {
       default_key_dir:       '/key',
       default_cert_dir:      '/crt',
-      cert_source_directory: '/foo/bar',
+      cert_source_directory: '/foo',
       root_group:            'wheel'
     }
   end
 
   before do
     MockFunction.new('file') do |f|
-      f.stubbed.with('/foo/bar/ca-1.crt').returns("#\n")
-      f.stubbed.with('/foo/bar/ca-2.crt').returns("#\n")
+      f.stubbed.with('/foo/cert.crt').returns("# /foo/cert.crt\n")
+      f.stubbed.with('/foo/ca.crt').returns("# /foo/ca.crt\n")
     end
   end
 
@@ -31,19 +31,19 @@ describe 'openssl' do
     end
 
     context "on #{os} with one element for ca_cert" do
-      let(:params) { default_params.merge(ca_certs: ['ca-1']) }
+      let(:params) { default_params.merge(ca_certs: ['cert']) }
 
       it {
-        is_expected.to contain_openssl__cert('ca-1').with_makehash('true')
+        is_expected.to contain_openssl__cert('cert').with_makehash('true')
       }
     end
 
     context "on #{os} with two elements for ca_cert" do
-      let(:params) { default_params.merge(ca_certs: ['ca-1', 'ca-2']) }
+      let(:params) { default_params.merge(ca_certs: ['cert', 'ca']) }
 
       it {
-        is_expected.to contain_openssl__cert('ca-1').with_makehash('true')
-        is_expected.to contain_openssl__cert('ca-2').with_makehash('true')
+        is_expected.to contain_openssl__cert('cert').with_makehash('true')
+        is_expected.to contain_openssl__cert('ca').with_makehash('true')
       }
     end
   end

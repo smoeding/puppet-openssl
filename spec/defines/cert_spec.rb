@@ -10,13 +10,13 @@ describe 'openssl::cert' do
      }'
   end
 
+  let(:title) { 'cert' }
+
   before do
     MockFunction.new('file') do |f|
       f.stubbed.with('/foo/cert.crt').returns("# /foo/cert.crt\n")
     end
   end
-
-  let(:title) { 'cert' }
 
   on_supported_os.each do |os, facts|
     let(:facts) { facts }
