@@ -175,6 +175,17 @@ describe 'openssl::cert' do
       }
     end
 
+    context "on #{os} with makehash => true, cert_file => /crt/ca.crt" do
+      let(:params) do
+        { makehash: true, cert_file: '/crt/ca.crt' }
+      end
+
+      it {
+        # Special test to satisfy resource coverage
+        is_expected.to contain_exec('openssl rehash /crt/cert.crt')
+      }
+    end
+
     context "on #{os} with cert_mode => 0642" do
       let(:params) do
         { cert_mode: '0642' }
