@@ -41,7 +41,7 @@ describe 'openssl::cert' do
 
     context "on #{os} with default parameters" do
       let(:params) do
-        { makehash: 'true' }
+        { makehash: true }
       end
 
       it {
