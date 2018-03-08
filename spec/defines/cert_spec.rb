@@ -39,7 +39,29 @@ describe 'openssl::cert' do
       }
     end
 
-    context "on #{os} with default parameters" do
+    context "on #{os} with cert => ca" do
+      let(:params) do
+        { cert: 'ca' }
+      end
+
+      it {
+        is_expected.to contain_class('openssl')
+
+        is_expected.to contain_concat('/crt/ca.crt').
+          with_owner('root').
+          with_group('wheel').
+          with_mode('0444').
+          with_backup('false').
+          that_requires('Package[openssl]')
+
+        is_expected.to contain_concat__fragment('/crt/ca.crt-cert').
+          with_target('/crt/ca.crt').
+          with_content("# /foo/cert.crt\n").
+          with_order('10')
+      }
+    end
+
+    context "on #{os} with makehash => true" do
       let(:params) do
         { makehash: true }
       end
