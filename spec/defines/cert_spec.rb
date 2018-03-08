@@ -31,6 +31,8 @@ describe 'openssl::cert' do
           with_group('wheel').
           with_mode('0444').
           with_backup('false').
+          with_show_diff('false').
+          with_ensure_newline('true').
           that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
@@ -53,6 +55,8 @@ describe 'openssl::cert' do
           with_group('wheel').
           with_mode('0444').
           with_backup('false').
+          with_show_diff('false').
+          with_ensure_newline('true').
           that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/ca.crt-cert').
@@ -75,6 +79,8 @@ describe 'openssl::cert' do
           with_group('wheel').
           with_mode('0444').
           with_backup('false').
+          with_show_diff('false').
+          with_ensure_newline('true').
           that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
@@ -97,6 +103,8 @@ describe 'openssl::cert' do
           with_group('wheel').
           with_mode('0444').
           with_backup('false').
+          with_show_diff('false').
+          with_ensure_newline('true').
           that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
@@ -124,6 +132,8 @@ describe 'openssl::cert' do
           with_group('wheel').
           with_mode('0444').
           with_backup('false').
+          with_show_diff('false').
+          with_ensure_newline('true').
           that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.pem-cert').
@@ -146,6 +156,8 @@ describe 'openssl::cert' do
           with_group('wheel').
           with_mode('0444').
           with_backup('false').
+          with_show_diff('false').
+          with_ensure_newline('true').
           that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
@@ -176,6 +188,8 @@ describe 'openssl::cert' do
           with_group('wheel').
           with_mode('0642').
           with_backup('false').
+          with_show_diff('false').
+          with_ensure_newline('true').
           that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
@@ -198,6 +212,8 @@ describe 'openssl::cert' do
           with_group('wheel').
           with_mode('0444').
           with_backup('false').
+          with_show_diff('false').
+          with_ensure_newline('true').
           that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
@@ -220,6 +236,8 @@ describe 'openssl::cert' do
           with_group('mysql').
           with_mode('0444').
           with_backup('false').
+          with_show_diff('false').
+          with_ensure_newline('true').
           that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
@@ -242,6 +260,8 @@ describe 'openssl::cert' do
           with_group('wheel').
           with_mode('0444').
           with_backup('false').
+          with_show_diff('false').
+          with_ensure_newline('true').
           that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/baz/cert.crt-cert').
@@ -264,6 +284,8 @@ describe 'openssl::cert' do
           with_group('wheel').
           with_mode('0444').
           with_backup('false').
+          with_show_diff('false').
+          with_ensure_newline('true').
           that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/baz/ca.pem-cert').
