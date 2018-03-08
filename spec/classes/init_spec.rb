@@ -39,7 +39,7 @@ describe 'openssl' do
     end
 
     context "on #{os} with two elements for ca_cert" do
-      let(:params) { default_params.merge(ca_certs: ['cert', 'ca']) }
+      let(:params) { default_params.merge(ca_certs: %w[cert ca]) }
 
       it {
         is_expected.to contain_openssl__cert('cert').with_makehash('true')
