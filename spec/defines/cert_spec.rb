@@ -111,6 +111,28 @@ describe 'openssl::cert' do
       }
     end
 
+    context "on #{os} with extension => pem" do
+      let(:params) do
+        { extension: 'pem' }
+      end
+
+      it {
+        is_expected.to contain_class('openssl')
+
+        is_expected.to contain_concat('/crt/cert.pem').
+          with_owner('root').
+          with_group('wheel').
+          with_mode('0444').
+          with_backup('false').
+          that_requires('Package[openssl]')
+
+        is_expected.to contain_concat__fragment('/crt/cert.pem-cert').
+          with_target('/crt/cert.pem').
+          with_content("# /foo/cert.crt\n").
+          with_order('10')
+      }
+    end
+
     context "on #{os} with makehash => true" do
       let(:params) do
         { makehash: true }
@@ -138,6 +160,72 @@ describe 'openssl::cert' do
           with_logoutput('false').
           with_refreshonly('true').
           that_subscribes_to('Concat[/crt/cert.crt]')
+      }
+    end
+
+    context "on #{os} with cert_mode => 0642" do
+      let(:params) do
+        { cert_mode: '0642' }
+      end
+
+      it {
+        is_expected.to contain_class('openssl')
+
+        is_expected.to contain_concat('/crt/cert.crt').
+          with_owner('root').
+          with_group('wheel').
+          with_mode('0642').
+          with_backup('false').
+          that_requires('Package[openssl]')
+
+        is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
+          with_target('/crt/cert.crt').
+          with_content("# /foo/cert.crt\n").
+          with_order('10')
+      }
+    end
+
+    context "on #{os} with cert_owner => mysql" do
+      let(:params) do
+        { cert_owner: 'mysql' }
+      end
+
+      it {
+        is_expected.to contain_class('openssl')
+
+        is_expected.to contain_concat('/crt/cert.crt').
+          with_owner('mysql').
+          with_group('wheel').
+          with_mode('0444').
+          with_backup('false').
+          that_requires('Package[openssl]')
+
+        is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
+          with_target('/crt/cert.crt').
+          with_content("# /foo/cert.crt\n").
+          with_order('10')
+      }
+    end
+
+    context "on #{os} with cert_group => mysql" do
+      let(:params) do
+        { cert_group: 'mysql' }
+      end
+
+      it {
+        is_expected.to contain_class('openssl')
+
+        is_expected.to contain_concat('/crt/cert.crt').
+          with_owner('root').
+          with_group('mysql').
+          with_mode('0444').
+          with_backup('false').
+          that_requires('Package[openssl]')
+
+        is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
+          with_target('/crt/cert.crt').
+          with_content("# /foo/cert.crt\n").
+          with_order('10')
       }
     end
 
