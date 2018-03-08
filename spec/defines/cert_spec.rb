@@ -15,6 +15,7 @@ describe 'openssl::cert' do
   before do
     MockFunction.new('file') do |f|
       f.stubbed.with('/foo/cert.crt').returns("# /foo/cert.crt\n")
+      f.stubbed.with('/foo/ca.crt').returns("# /foo/ca.crt\n")
     end
   end
 
@@ -57,6 +58,28 @@ describe 'openssl::cert' do
         is_expected.to contain_concat__fragment('/crt/ca.crt-cert').
           with_target('/crt/ca.crt').
           with_content("# /foo/cert.crt\n").
+          with_order('10')
+      }
+    end
+
+    context "on #{os} with source => ca" do
+      let(:params) do
+        { source: 'ca' }
+      end
+
+      it {
+        is_expected.to contain_class('openssl')
+
+        is_expected.to contain_concat('/crt/cert.crt').
+          with_owner('root').
+          with_group('wheel').
+          with_mode('0444').
+          with_backup('false').
+          that_requires('Package[openssl]')
+
+        is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
+          with_target('/crt/cert.crt').
+          with_content("# /foo/ca.crt\n").
           with_order('10')
       }
     end
