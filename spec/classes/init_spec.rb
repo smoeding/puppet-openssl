@@ -6,11 +6,11 @@ describe 'openssl' do
       default_key_dir:       '/key',
       default_cert_dir:      '/crt',
       cert_source_directory: '/foo',
-      root_group:            'wheel'
+      root_group:            'wheel',
     }
   end
 
-  before do
+  before(:each) do
     MockFunction.new('file') do |f|
       f.stubbed.with('/foo/cert.crt').returns("# /foo/cert.crt\n")
       f.stubbed.with('/foo/ca.crt').returns("# /foo/ca.crt\n")
@@ -24,9 +24,9 @@ describe 'openssl' do
     context "on #{os} with default parameters" do
       it {
         is_expected.to contain_class('openssl')
-        is_expected.to contain_package('openssl').
-          with_ensure('installed').
-          with_name('openssl')
+        is_expected.to contain_package('openssl')
+          .with_ensure('installed')
+          .with_name('openssl')
       }
     end
 
@@ -39,7 +39,7 @@ describe 'openssl' do
     end
 
     context "on #{os} with two elements for ca_cert" do
-      let(:params) { default_params.merge(ca_certs: %w[cert ca]) }
+      let(:params) { default_params.merge(ca_certs: ['cert', 'ca']) }
 
       it {
         is_expected.to contain_openssl__cert('cert').with_makehash('true')

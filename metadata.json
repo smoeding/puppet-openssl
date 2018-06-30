@@ -7,29 +7,6 @@
   "source": "https://github.com/smoeding/puppet-openssl",
   "project_page": "https://github.com/smoeding/puppet-openssl",
   "issues_url": "https://github.com/smoeding/puppet-openssl/issues",
-  "tags": [ "openssl", "x509", "certificate" ],
-  "operatingsystem_support": [
-    {
-      "operatingsystem": "Debian",
-      "operatingsystemrelease": [ "7", "8", "9" ]
-    },
-    {
-      "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": [ "14.04", "16.04", "17.10" ]
-    },
-    {
-      "operatingsystem": "RedHat",
-      "operatingsystemrelease": [ "6", "7" ]
-    },
-    {
-      "operatingsystem": "CentOS",
-      "operatingsystemrelease": [ "6", "7" ]
-    },
-    {
-      "operatingsystem": "FreeBSD",
-      "operatingsystemrelease": [ "10", "11" ]
-    }
-  ],
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
@@ -40,10 +17,57 @@
       "version_requirement": ">= 1.2.0 < 5.0.0"
     }
   ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "7",
+        "8",
+        "9"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "14.04",
+        "16.04",
+        "17.10"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "FreeBSD",
+      "operatingsystemrelease": [
+        "10",
+        "11"
+      ]
+    }
+  ],
   "requirements": [
     {
       "name": "puppet",
       "version_requirement": ">= 4.0.0 < 6.0.0"
     }
-  ]
+  ],
+  "tags": [
+    "openssl",
+    "x509",
+    "certificate"
+  ],
+  "pdk-version": "1.6.0",
+  "template-url": "https://github.com/puppetlabs/pdk-templates",
+  "template-ref": "heads/master-0-gc87eee3"
 }

@@ -12,7 +12,7 @@ describe 'openssl::cert' do
 
   let(:title) { 'cert' }
 
-  before do
+  before(:each) do
     MockFunction.new('file') do |f|
       f.stubbed.with('/foo/cert.crt').returns("# /foo/cert.crt\n")
       f.stubbed.with('/foo/ca.crt').returns("# /foo/ca.crt\n")
@@ -26,19 +26,19 @@ describe 'openssl::cert' do
       it {
         is_expected.to contain_class('openssl')
 
-        is_expected.to contain_concat('/crt/cert.crt').
-          with_owner('root').
-          with_group('wheel').
-          with_mode('0444').
-          with_backup('false').
-          with_show_diff('false').
-          with_ensure_newline('true').
-          that_requires('Package[openssl]')
+        is_expected.to contain_concat('/crt/cert.crt')
+          .with_owner('root')
+          .with_group('wheel')
+          .with_mode('0444')
+          .with_backup('false')
+          .with_show_diff('false')
+          .with_ensure_newline('true')
+          .that_requires('Package[openssl]')
 
-        is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
-          with_target('/crt/cert.crt').
-          with_content("# /foo/cert.crt\n").
-          with_order('10')
+        is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
+          .with_target('/crt/cert.crt')
+          .with_content("# /foo/cert.crt\n")
+          .with_order('10')
       }
     end
 
@@ -50,19 +50,19 @@ describe 'openssl::cert' do
       it {
         is_expected.to contain_class('openssl')
 
-        is_expected.to contain_concat('/crt/ca.crt').
-          with_owner('root').
-          with_group('wheel').
-          with_mode('0444').
-          with_backup('false').
-          with_show_diff('false').
-          with_ensure_newline('true').
-          that_requires('Package[openssl]')
+        is_expected.to contain_concat('/crt/ca.crt')
+          .with_owner('root')
+          .with_group('wheel')
+          .with_mode('0444')
+          .with_backup('false')
+          .with_show_diff('false')
+          .with_ensure_newline('true')
+          .that_requires('Package[openssl]')
 
-        is_expected.to contain_concat__fragment('/crt/ca.crt-cert').
-          with_target('/crt/ca.crt').
-          with_content("# /foo/cert.crt\n").
-          with_order('10')
+        is_expected.to contain_concat__fragment('/crt/ca.crt-cert')
+          .with_target('/crt/ca.crt')
+          .with_content("# /foo/cert.crt\n")
+          .with_order('10')
       }
     end
 
@@ -74,19 +74,19 @@ describe 'openssl::cert' do
       it {
         is_expected.to contain_class('openssl')
 
-        is_expected.to contain_concat('/crt/cert.crt').
-          with_owner('root').
-          with_group('wheel').
-          with_mode('0444').
-          with_backup('false').
-          with_show_diff('false').
-          with_ensure_newline('true').
-          that_requires('Package[openssl]')
+        is_expected.to contain_concat('/crt/cert.crt')
+          .with_owner('root')
+          .with_group('wheel')
+          .with_mode('0444')
+          .with_backup('false')
+          .with_show_diff('false')
+          .with_ensure_newline('true')
+          .that_requires('Package[openssl]')
 
-        is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
-          with_target('/crt/cert.crt').
-          with_content("# /foo/ca.crt\n").
-          with_order('10')
+        is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
+          .with_target('/crt/cert.crt')
+          .with_content("# /foo/ca.crt\n")
+          .with_order('10')
       }
     end
 
@@ -98,24 +98,24 @@ describe 'openssl::cert' do
       it {
         is_expected.to contain_class('openssl')
 
-        is_expected.to contain_concat('/crt/cert.crt').
-          with_owner('root').
-          with_group('wheel').
-          with_mode('0444').
-          with_backup('false').
-          with_show_diff('false').
-          with_ensure_newline('true').
-          that_requires('Package[openssl]')
+        is_expected.to contain_concat('/crt/cert.crt')
+          .with_owner('root')
+          .with_group('wheel')
+          .with_mode('0444')
+          .with_backup('false')
+          .with_show_diff('false')
+          .with_ensure_newline('true')
+          .that_requires('Package[openssl]')
 
-        is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
-          with_target('/crt/cert.crt').
-          with_content("# /foo/cert.crt\n").
-          with_order('10')
+        is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
+          .with_target('/crt/cert.crt')
+          .with_content("# /foo/cert.crt\n")
+          .with_order('10')
 
-        is_expected.to contain_concat__fragment('/crt/cert.crt-20').
-          with_target('/crt/cert.crt').
-          with_content("# /foo/ca.crt\n").
-          with_order('20')
+        is_expected.to contain_concat__fragment('/crt/cert.crt-20')
+          .with_target('/crt/cert.crt')
+          .with_content("# /foo/ca.crt\n")
+          .with_order('20')
       }
     end
 
@@ -127,19 +127,19 @@ describe 'openssl::cert' do
       it {
         is_expected.to contain_class('openssl')
 
-        is_expected.to contain_concat('/crt/cert.pem').
-          with_owner('root').
-          with_group('wheel').
-          with_mode('0444').
-          with_backup('false').
-          with_show_diff('false').
-          with_ensure_newline('true').
-          that_requires('Package[openssl]')
+        is_expected.to contain_concat('/crt/cert.pem')
+          .with_owner('root')
+          .with_group('wheel')
+          .with_mode('0444')
+          .with_backup('false')
+          .with_show_diff('false')
+          .with_ensure_newline('true')
+          .that_requires('Package[openssl]')
 
-        is_expected.to contain_concat__fragment('/crt/cert.pem-cert').
-          with_target('/crt/cert.pem').
-          with_content("# /foo/cert.crt\n").
-          with_order('10')
+        is_expected.to contain_concat__fragment('/crt/cert.pem-cert')
+          .with_target('/crt/cert.pem')
+          .with_content("# /foo/cert.crt\n")
+          .with_order('10')
       }
     end
 
@@ -151,27 +151,27 @@ describe 'openssl::cert' do
       it {
         is_expected.to contain_class('openssl')
 
-        is_expected.to contain_concat('/crt/cert.crt').
-          with_owner('root').
-          with_group('wheel').
-          with_mode('0444').
-          with_backup('false').
-          with_show_diff('false').
-          with_ensure_newline('true').
-          that_requires('Package[openssl]')
+        is_expected.to contain_concat('/crt/cert.crt')
+          .with_owner('root')
+          .with_group('wheel')
+          .with_mode('0444')
+          .with_backup('false')
+          .with_show_diff('false')
+          .with_ensure_newline('true')
+          .that_requires('Package[openssl]')
 
-        is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
-          with_target('/crt/cert.crt').
-          with_content("# /foo/cert.crt\n").
-          with_order('10')
+        is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
+          .with_target('/crt/cert.crt')
+          .with_content("# /foo/cert.crt\n")
+          .with_order('10')
 
-        is_expected.to contain_exec('openssl rehash /crt/cert.crt').
-          with_command('ln -s -f /crt/cert.crt `openssl x509 -hash -noout -in /crt/cert.crt`.0').
-          with_provider('shell').
-          with_cwd('/').
-          with_logoutput('false').
-          with_refreshonly('true').
-          that_subscribes_to('Concat[/crt/cert.crt]')
+        is_expected.to contain_exec('openssl rehash /crt/cert.crt')
+          .with_command('ln -s -f /crt/cert.crt `openssl x509 -hash -noout -in /crt/cert.crt`.0')
+          .with_provider('shell')
+          .with_cwd('/')
+          .with_logoutput('false')
+          .with_refreshonly('true')
+          .that_subscribes_to('Concat[/crt/cert.crt]')
       }
     end
 
@@ -194,19 +194,19 @@ describe 'openssl::cert' do
       it {
         is_expected.to contain_class('openssl')
 
-        is_expected.to contain_concat('/crt/cert.crt').
-          with_owner('root').
-          with_group('wheel').
-          with_mode('0642').
-          with_backup('false').
-          with_show_diff('false').
-          with_ensure_newline('true').
-          that_requires('Package[openssl]')
+        is_expected.to contain_concat('/crt/cert.crt')
+          .with_owner('root')
+          .with_group('wheel')
+          .with_mode('0642')
+          .with_backup('false')
+          .with_show_diff('false')
+          .with_ensure_newline('true')
+          .that_requires('Package[openssl]')
 
-        is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
-          with_target('/crt/cert.crt').
-          with_content("# /foo/cert.crt\n").
-          with_order('10')
+        is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
+          .with_target('/crt/cert.crt')
+          .with_content("# /foo/cert.crt\n")
+          .with_order('10')
       }
     end
 
@@ -218,19 +218,19 @@ describe 'openssl::cert' do
       it {
         is_expected.to contain_class('openssl')
 
-        is_expected.to contain_concat('/crt/cert.crt').
-          with_owner('mysql').
-          with_group('wheel').
-          with_mode('0444').
-          with_backup('false').
-          with_show_diff('false').
-          with_ensure_newline('true').
-          that_requires('Package[openssl]')
+        is_expected.to contain_concat('/crt/cert.crt')
+          .with_owner('mysql')
+          .with_group('wheel')
+          .with_mode('0444')
+          .with_backup('false')
+          .with_show_diff('false')
+          .with_ensure_newline('true')
+          .that_requires('Package[openssl]')
 
-        is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
-          with_target('/crt/cert.crt').
-          with_content("# /foo/cert.crt\n").
-          with_order('10')
+        is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
+          .with_target('/crt/cert.crt')
+          .with_content("# /foo/cert.crt\n")
+          .with_order('10')
       }
     end
 
@@ -242,19 +242,19 @@ describe 'openssl::cert' do
       it {
         is_expected.to contain_class('openssl')
 
-        is_expected.to contain_concat('/crt/cert.crt').
-          with_owner('root').
-          with_group('mysql').
-          with_mode('0444').
-          with_backup('false').
-          with_show_diff('false').
-          with_ensure_newline('true').
-          that_requires('Package[openssl]')
+        is_expected.to contain_concat('/crt/cert.crt')
+          .with_owner('root')
+          .with_group('mysql')
+          .with_mode('0444')
+          .with_backup('false')
+          .with_show_diff('false')
+          .with_ensure_newline('true')
+          .that_requires('Package[openssl]')
 
-        is_expected.to contain_concat__fragment('/crt/cert.crt-cert').
-          with_target('/crt/cert.crt').
-          with_content("# /foo/cert.crt\n").
-          with_order('10')
+        is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
+          .with_target('/crt/cert.crt')
+          .with_content("# /foo/cert.crt\n")
+          .with_order('10')
       }
     end
 
@@ -266,19 +266,19 @@ describe 'openssl::cert' do
       it {
         is_expected.to contain_class('openssl')
 
-        is_expected.to contain_concat('/baz/cert.crt').
-          with_owner('root').
-          with_group('wheel').
-          with_mode('0444').
-          with_backup('false').
-          with_show_diff('false').
-          with_ensure_newline('true').
-          that_requires('Package[openssl]')
+        is_expected.to contain_concat('/baz/cert.crt')
+          .with_owner('root')
+          .with_group('wheel')
+          .with_mode('0444')
+          .with_backup('false')
+          .with_show_diff('false')
+          .with_ensure_newline('true')
+          .that_requires('Package[openssl]')
 
-        is_expected.to contain_concat__fragment('/baz/cert.crt-cert').
-          with_target('/baz/cert.crt').
-          with_content("# /foo/cert.crt\n").
-          with_order('10')
+        is_expected.to contain_concat__fragment('/baz/cert.crt-cert')
+          .with_target('/baz/cert.crt')
+          .with_content("# /foo/cert.crt\n")
+          .with_order('10')
       }
     end
 
@@ -290,19 +290,19 @@ describe 'openssl::cert' do
       it {
         is_expected.to contain_class('openssl')
 
-        is_expected.to contain_concat('/baz/ca.pem').
-          with_owner('root').
-          with_group('wheel').
-          with_mode('0444').
-          with_backup('false').
-          with_show_diff('false').
-          with_ensure_newline('true').
-          that_requires('Package[openssl]')
+        is_expected.to contain_concat('/baz/ca.pem')
+          .with_owner('root')
+          .with_group('wheel')
+          .with_mode('0444')
+          .with_backup('false')
+          .with_show_diff('false')
+          .with_ensure_newline('true')
+          .that_requires('Package[openssl]')
 
-        is_expected.to contain_concat__fragment('/baz/ca.pem-cert').
-          with_target('/baz/ca.pem').
-          with_content("# /foo/cert.crt\n").
-          with_order('10')
+        is_expected.to contain_concat__fragment('/baz/ca.pem-cert')
+          .with_target('/baz/ca.pem')
+          .with_content("# /foo/cert.crt\n")
+          .with_order('10')
       }
     end
 
