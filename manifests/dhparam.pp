@@ -37,7 +37,6 @@ define openssl::dhparam (
   if ($ensure == 'present') {
 
     # Create parameter file unless it already exists
-
     exec { "openssl dhparam -out ${file} -${generator} ${bits}":
       creates => $file,
       timeout => '1800',        # really slow machines
@@ -45,17 +44,18 @@ define openssl::dhparam (
       require => Package['openssl'],
       before  => File[$file],
     }
-  }
 
-  $_ensure = $ensure ? {
-    'present' => 'file',
-    default   => 'absent',
+    # Manage file owner/group/mode
+    file { $file:
+      ensure => file,
+      owner  => $owner,
+      group  => pick($group, $::openssl::root_group),
+      mode   => $mode,
+    }
   }
-
-  file { $file:
-    ensure => $_ensure,
-    owner  => $owner,
-    group  => pick($group, $::openssl::root_group),
-    mode   => $mode,
+  else {
+    file { $file:
+      ensure => absent,
+    }
   }
 }
