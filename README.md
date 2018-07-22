@@ -44,7 +44,7 @@ class { 'openssl':
 }
 ```
 
-The parameter `cert_source_directory` is mandatory and has no default value. This is the directory on the Puppet server where you keep your certificates and keys. This directory does not need to be inside a Puppet environment directory (e.g. below `/etc/puppetlabs/code/environments/production`). It can be located anywhere on the Puppet server. But the content must by readable by the user running the Puppetserver application (normally `puppet`). So make sure the filesystem permissions are set correctly.
+The parameter `cert_source_directory` is mandatory and has no default value. This is the directory on the Puppet server where you keep your certificates and keys. This directory does not need to be inside a Puppet environment directory. It can be located anywhere on the Puppet server. But the content must by readable by the user running the Puppetserver application (normally `puppet`). So make sure the filesystem permissions are set correctly.
 
 The module expects to find certificate and key files in this directory. Example:
 
@@ -53,15 +53,11 @@ The module expects to find certificate and key files in this directory. Example:
 total 236
 -r-------- 1 puppet root 1509 May 25  2017 cloud.crt
 -r-------- 1 puppet root 1675 May 25  2017 cloud.key
--r-------- 1 puppet root 1472 Mar 18  2016 columbia.crt
--r-------- 1 puppet root 1671 Mar 18  2016 columbia.key
--r-------- 1 puppet root 1484 Oct  9  2015 evora.crt
--r-------- 1 puppet root 1679 Oct  9  2015 evora.key
 -r-------- 1 puppet root 1570 Mar  1 20:06 imap.crt
 -r-------- 1 puppet root 1679 Mar  1 20:06 imap.key
 -r-------- 1 puppet root 1647 May 27 05:17 letsencrypt-ca.crt
--r-------- 1 puppet root 1464 Sep 25  2015 xmpp.crt
--r-------- 1 puppet root 1675 Sep 25  2015 xmpp.key
+-r-------- 1 puppet root 1472 Mar 18  2016 vortex.crt
+-r-------- 1 puppet root 1671 Mar 18  2016 vortex.key
 ```
 
 ## Usage
@@ -84,16 +80,51 @@ lrwxrwxrwx 1 root root   18 Jul 14 13:27 /etc/ssl/certs/4f06f81d.0 -> letsencryp
 -r--r--r-- 1 root root 1647 May 17 09:09 /etc/ssl/certs/letsencrypt-ca.crt
 ```
 
-### Install a certificate and key
+### Install a certificate and key using defaults
+
+The two defined types `openssl::cert` and `openssl::key` can be used to install a certificate and key using all defaults:
 
 ``` puppet
 openssl::cert { 'imap': }
 openssl::key { 'imap': }
 ```
 
+This would take the files from the directory on the Puppet server (e.g. `/etc/puppetlabs/code/private/certs` if you set that using the `cert_source_directory` parameter). On the client the two files are created with restrictive permissions and ownership:
+
 ``` text
 r-------- 1 root root 1679 Jan  3  2017 /etc/ssl/private/imap.key
 r--r--r-- 1 root root 1570 Mar  1 20:07 /etc/ssl/certs/imap.crt
+```
+
+### Install a certificate and key for a specific application
+
+The following code shows how to install a certificate and key in an application specific directory using application specific owner/group/mode details:
+
+``` text
+openssl::cert { 'postgresql':
+  cert       => $::hostname,
+  cert_owner => 'root',
+  cert_group => 'postgres',
+  cert_mode  => '0444',
+  cert_dir   => '/etc/postgresql',
+  source     => $::hostname,
+}
+
+openssl::key { 'postgresql':
+  key       => $::hostname,
+  key_owner => 'root',
+  key_group => 'postgres',
+  key_mode  => '0440',
+  key_dir   => '/etc/postgresql',
+  source    => $::hostname,
+}
+```
+
+This example assumes that node `vortex` is your PostgreSQL server running Debian. Then the following two files would be created by the manifest:
+
+``` text
+r--r----- 1 root postgres 1704 Jan  3  2017 /etc/postgresql/vortex.key
+r--r--r-- 1 root postgres 1464 Jan  3  2017 /etc/postgresql/vortex.crt
 ```
 
 ## Reference
