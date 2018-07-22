@@ -127,63 +127,79 @@ r--r----- 1 root postgres 1704 Jan  3  2017 /etc/postgresql/vortex.key
 r--r--r-- 1 root postgres 1464 Jan  3  2017 /etc/postgresql/vortex.crt
 ```
 
+### Create a Diffie-Hellman parameter file
+
+To use perfect forward secrecy cipher suites, you must set up Diffie-Hellman parameters on the server. Most applications allow including these parameters using a generated file. You can generate that file using the `openssl::dhparam` defined type:
+
+``` text
+openssl::dhparam { '/etc/nginx/ssl/dh2048.pem': }
+```
+
 ## Reference
 
 ### Classes
 
 #### Class: `openssl`
 
-##### Parameters
+Performs the basic setup and installation of Openssl on the system.
 
-* `ensure`
-* `cert`
-* `source`
-* `cert_chain`
-* `extension`
-* `makehash`
-* `cert_mode`
-* `cert_owner`
-* `cert_group`
-* `cert_dir`
-* `cert_file`
+**Parameters for the `openssl` class:**
+
+##### `ensure`
+##### `cert`
+##### `source`
+##### `cert_chain`
+##### `extension`
+##### `makehash`
+##### `cert_mode`
+##### `cert_owner`
+##### `cert_group`
+##### `cert_dir`
+##### `cert_file`
 
 ### Defined Types
 
 #### `openssl::cert`
 
-* `ensure`
-* `cert`
-* `source`
-* `cert_chain`
-* `extension`
-* `makehash`
-* `cert_mode`
-* `cert_owner`
-* `cert_group`
-* `cert_dir`
-* `cert_file`
+**Parameters for the `openssl::cert` defined type:**
+
+##### `ensure`
+##### `cert`
+##### `source`
+##### `cert_chain`
+##### `extension`
+##### `makehash`
+##### `cert_mode`
+##### `cert_owner`
+##### `cert_group`
+##### `cert_dir`
+##### `cert_file`
 
 #### `openssl::key`
 
-* `ensure`
-* `key`
-* `source`
-* `extension`
-* `key_mode`
-* `key_owner`
-* `key_group`
-* `key_dir`
-* `key_file`
+**Parameters for the `openssl::key` defined type:**
+
+##### `ensure`
+##### `key`
+##### `source`
+##### `extension`
+##### `key_mode`
+##### `key_owner`
+##### `key_group`
+##### `key_dir`
+##### `key_file`
 
 #### `openssl::dhparam`
 
-* `ensure`
-* `file`
-* `bits`
-* `generator`
-* `mode`
-* `owner`
-* `group`
+**Parameters for the `openssl::dhparam` defined type:**
+
+##### `ensure`
+##### `file`
+##### `bits`
+##### `generator`
+##### `mode`
+##### `owner`
+##### `group`
 
 ## Limitations
 
