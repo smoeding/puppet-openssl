@@ -1,19 +1,33 @@
-# = Define: openssl::cert
+# cert.pp --- Define puppet-openssl::cert
 #
-# Install a certificate file in PEM format
+# @summary Manage an X.509 certificate file in PEM format
 #
-# == Parameters:
+# @example Install the 'imap' cert in the default location
 #
-# [*ensure*]
-#   Default: present
+#   openssl::cert { 'imap': }
 #
-# == Requires:
+# @example Install the 'postgresql' cert using application specific defaults
 #
-# Nothing.
+#   openssl::cert { 'postgresql':
+#     cert       => $::hostname,
+#     cert_owner => 'root',
+#     cert_group => 'postgres',
+#     cert_mode  => '0444',
+#     cert_dir   => '/etc/postgresql',
+#     source     => $::hostname,
+#   }
 #
-# == Sample Usage:
-#
-#   openssl::cert { 'my-root-ca': }
+# @param ensure
+# @param cert
+# @param source
+# @param cert_chain
+# @param extension
+# @param makehash
+# @param cert_mode
+# @param cert_owner
+# @param cert_group
+# @param cert_dir
+# @param cert_file
 #
 #
 define openssl::cert (

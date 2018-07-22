@@ -1,19 +1,31 @@
-# = Define: openssl::key
+# key.pp --- Define openssl::key
 #
-# Install a certificate key file in PEM format
+# @summary Manage an X.509 key file in PEM format
 #
-# == Parameters:
+# @example Install the 'imap' key in the default location
 #
-# [*ensure*]
-#   Default: present
+#   openssl::key { 'imap': }
 #
-# == Requires:
+# @example Install the 'postgresql' key using application specific defaults
 #
-# Nothing.
+#   openssl::key { 'postgresql':
+#     key       => $::hostname,
+#     key_owner => 'root',
+#     key_group => 'postgres',
+#     key_mode  => '0440',
+#     key_dir   => '/etc/postgresql',
+#     source    => $::hostname,
+#   }
 #
-# == Sample Usage:
-#
-#   openssl::key { 'my-root-ca': }
+# @param ensure
+# @param key
+# @param source
+# @param extension
+# @param key_mode
+# @param key_owner
+# @param key_group
+# @param key_dir
+# @param key_file
 #
 #
 define openssl::key (

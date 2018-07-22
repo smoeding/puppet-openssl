@@ -24,8 +24,6 @@ describe 'openssl::key' do
 
     context "on #{os} with default parameters" do
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_file('/key/key.key')
           .with_ensure('file')
           .with_owner('root')
@@ -44,8 +42,6 @@ describe 'openssl::key' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_file('/key/secret.key')
           .with_ensure('file')
           .with_owner('root')
@@ -64,8 +60,6 @@ describe 'openssl::key' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_file('/key/key.key')
           .with_ensure('file')
           .with_owner('root')
@@ -84,8 +78,6 @@ describe 'openssl::key' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_file('/key/key.pem')
           .with_ensure('file')
           .with_owner('root')
@@ -104,8 +96,6 @@ describe 'openssl::key' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_file('/key/key.key')
           .with_ensure('file')
           .with_owner('root')
@@ -124,8 +114,6 @@ describe 'openssl::key' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_file('/key/key.key')
           .with_ensure('file')
           .with_owner('mysql')
@@ -144,8 +132,6 @@ describe 'openssl::key' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_file('/key/key.key')
           .with_ensure('file')
           .with_owner('root')
@@ -164,8 +150,6 @@ describe 'openssl::key' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_file('/baz/key.key')
           .with_ensure('file')
           .with_owner('root')
@@ -184,8 +168,6 @@ describe 'openssl::key' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_file('/baz/key.pem')
           .with_ensure('file')
           .with_owner('root')
@@ -203,10 +185,7 @@ describe 'openssl::key' do
         { ensure: 'absent' }
       end
 
-      it {
-        is_expected.to contain_class('openssl')
-        is_expected.to contain_file('/key/key.key').with_ensure('absent')
-      }
+      it { is_expected.to contain_file('/key/key.key').with_ensure('absent') }
     end
   end
 end

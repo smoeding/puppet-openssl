@@ -17,8 +17,6 @@ describe 'openssl::dhparam' do
 
     context "on #{os} with default parameters" do
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 2048')
           .with_creates('/foo/dh.pem')
           .with_timeout('1800')
@@ -39,8 +37,6 @@ describe 'openssl::dhparam' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 4096')
           .with_creates('/foo/dh.pem')
           .with_timeout('1800')
@@ -61,8 +57,6 @@ describe 'openssl::dhparam' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -5 2048')
           .with_creates('/foo/dh.pem')
           .with_timeout('1800')
@@ -83,8 +77,6 @@ describe 'openssl::dhparam' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 2048')
           .with_creates('/foo/dh.pem')
           .with_timeout('1800')
@@ -105,8 +97,6 @@ describe 'openssl::dhparam' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 2048')
           .with_creates('/foo/dh.pem')
           .with_timeout('1800')
@@ -127,8 +117,6 @@ describe 'openssl::dhparam' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 2048')
           .with_creates('/foo/dh.pem')
           .with_timeout('1800')
@@ -148,10 +136,7 @@ describe 'openssl::dhparam' do
         { ensure: 'absent' }
       end
 
-      it {
-        is_expected.to contain_class('openssl')
-        is_expected.to contain_file('/foo/dh.pem').with_ensure('absent')
-      }
+      it { is_expected.to contain_file('/foo/dh.pem').with_ensure('absent') }
     end
   end
 end

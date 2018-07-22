@@ -6,7 +6,7 @@
 #
 #   openssl::dhparam { '/etc/ssl/dhparam.pem': }
 #
-# @example Create a parameter file using using 4096 bits
+# @example Create a parameter file using 4096 bits
 #
 #   openssl::dhparam { '/etc/ssl/dhparam.pem':
 #     bits => '4096',
@@ -20,7 +20,13 @@
 #     mode  => '0640',
 #   }
 #
-# @param
+# @param ensure
+# @param file
+# @param bits
+# @param generator
+# @param mode
+# @param owner
+# @param group
 #
 #
 define openssl::dhparam (

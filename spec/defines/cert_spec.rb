@@ -24,8 +24,6 @@ describe 'openssl::cert' do
 
     context "on #{os} with default parameters" do
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_concat('/crt/cert.crt')
           .with_owner('root')
           .with_group('wheel')
@@ -48,8 +46,6 @@ describe 'openssl::cert' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_concat('/crt/ca.crt')
           .with_owner('root')
           .with_group('wheel')
@@ -72,8 +68,6 @@ describe 'openssl::cert' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_concat('/crt/cert.crt')
           .with_owner('root')
           .with_group('wheel')
@@ -96,8 +90,6 @@ describe 'openssl::cert' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_concat('/crt/cert.crt')
           .with_owner('root')
           .with_group('wheel')
@@ -125,8 +117,6 @@ describe 'openssl::cert' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_concat('/crt/cert.pem')
           .with_owner('root')
           .with_group('wheel')
@@ -149,8 +139,6 @@ describe 'openssl::cert' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_concat('/crt/cert.crt')
           .with_owner('root')
           .with_group('wheel')
@@ -192,8 +180,6 @@ describe 'openssl::cert' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_concat('/crt/cert.crt')
           .with_owner('root')
           .with_group('wheel')
@@ -216,8 +202,6 @@ describe 'openssl::cert' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_concat('/crt/cert.crt')
           .with_owner('mysql')
           .with_group('wheel')
@@ -240,8 +224,6 @@ describe 'openssl::cert' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_concat('/crt/cert.crt')
           .with_owner('root')
           .with_group('mysql')
@@ -264,8 +246,6 @@ describe 'openssl::cert' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_concat('/baz/cert.crt')
           .with_owner('root')
           .with_group('wheel')
@@ -288,8 +268,6 @@ describe 'openssl::cert' do
       end
 
       it {
-        is_expected.to contain_class('openssl')
-
         is_expected.to contain_concat('/baz/ca.pem')
           .with_owner('root')
           .with_group('wheel')
@@ -311,10 +289,7 @@ describe 'openssl::cert' do
         { ensure: 'absent' }
       end
 
-      it {
-        is_expected.to contain_class('openssl')
-        is_expected.to contain_file('/crt/cert.crt').with_ensure('absent')
-      }
+      it { is_expected.to contain_file('/crt/cert.crt').with_ensure('absent') }
     end
   end
 end
