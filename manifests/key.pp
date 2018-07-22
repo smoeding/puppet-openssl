@@ -27,7 +27,11 @@ define openssl::key (
   Optional[Stdlib::Absolutepath] $key_dir   = undef,
   Optional[Stdlib::Absolutepath] $key_file  = undef,
 ) {
-  include ::openssl
+
+  # The base class must be included first
+  unless defined(Class['openssl']) {
+    fail('You must include the openssl base class before using any openssl defined resources')
+  }
 
   $_key_dir  = pick($key_dir, $::openssl::default_key_dir)
   $_key_file = pick($key_file, "${_key_dir}/${key}.${extension}")

@@ -29,7 +29,11 @@ define openssl::cert (
   Optional[Stdlib::Absolutepath] $cert_dir   = undef,
   Optional[Stdlib::Absolutepath] $cert_file  = undef,
 ) {
-  include ::openssl
+
+  # The base class must be included first
+  unless defined(Class['openssl']) {
+    fail('You must include the openssl base class before using any openssl defined resources')
+  }
 
   $_cert_dir  = pick($cert_dir, $::openssl::default_cert_dir)
   $_cert_file = pick($cert_file, "${_cert_dir}/${cert}.${extension}")

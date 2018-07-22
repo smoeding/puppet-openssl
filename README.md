@@ -38,7 +38,7 @@ The module requires the Puppetlabs modules `stdlib` and `concat`.
 
 ### Beginning with openssl
 
-The module needs to be initialized before you can manage certificates and keys.
+The module must be initialized before you can manage certificates and keys. So you have to make sure the base class is defined before any defined type is used:
 
 ``` puppet
 class { 'openssl':
