@@ -22,7 +22,9 @@ Manage X.509 certificates, keys and Diffie-Hellman parameter files.
 
 ## Module Description
 
-The `openssl` module manages files containing X.509 certificates and keys. In contrast to some other modules, this module does not generate the certificates and keys itself. Instead it requires a directory on the Puppet server where the certificates and keys can be fetched from.
+The `openssl` module manages files containing X.509 certificates and keys.
+
+In contrast to some other modules, this module does not generate the certificates and keys itself. Instead it requires a directory on the Puppet server where the certificates and keys can be fetched from. So you can run your own CA or take certificates received from a public CA and have them managed by Puppet.
 
 ## Setup
 
@@ -145,17 +147,40 @@ Performs the basic setup and installation of Openssl on the system.
 
 **Parameters for the `openssl` class:**
 
-##### `ensure`
-##### `cert`
-##### `source`
-##### `cert_chain`
-##### `extension`
-##### `makehash`
-##### `cert_mode`
-##### `cert_owner`
-##### `cert_group`
-##### `cert_dir`
-##### `cert_file`
+##### `cert_source_directory`
+
+The directory on the Puppetmaster where all certificate and key files are
+kept. Every certificate or key file will be read from this directory and then
+deployed on the client. This directory is accessed using the `file` function
+and therefore does not need to be part of the Puppet directory structure. But
+obviously the directory and the files must be readable by the Puppet user.
+This parameter is mandatory and has no default.
+
+##### `default_key_dir`
+
+The default directory where a key file is deployed. This is operating system
+specific. On Debian this is `/etc/ssl/private` and on RedHat this is
+`/etc/pki/tls/private`.
+
+##### `default_cert_dir`
+
+The default directory where a certificate file is deployed. This is operating system specific. On Debian this is `/etc/ssl/certs` and on RedHat this is `/etc/pki/tls/certs`.
+
+##### `package_name`
+
+The name of the openssl package to install. Default value: `openssl`.
+
+##### `package_ensure`
+
+The desired package state. Default value: `installed`.
+
+##### `root_group`
+
+The group used for deployed files. This is operating system specific. On Linux this is normally `root`. On FreeBSD this is `wheel`.
+
+##### `ca_certs`
+
+An array of CA certificates that are installed by default. Default: `[]`
 
 ### Defined Types
 
