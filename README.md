@@ -48,7 +48,7 @@ class { 'openssl':
 
 The parameter `cert_source_directory` is mandatory and has no default value. This is the directory on the Puppet server where you keep your certificates and keys. This directory does not need to be inside a Puppet environment directory. It can be located anywhere on the Puppet server. But the content must by readable by the user running the Puppetserver application (normally `puppet`). So make sure the filesystem permissions are set correctly.
 
-The module expects to find certificate and key files in this directory. Example:
+The module expects to find certificate and key files in this directory on the Puppet server. As an example the directory used above might look like this listing:
 
 ``` text
 # ls -l /etc/puppetlabs/code/private/certs/
@@ -61,6 +61,8 @@ total 236
 -r-------- 1 puppet root 1472 Mar 18  2016 vortex.crt
 -r-------- 1 puppet root 1671 Mar 18  2016 vortex.key
 ```
+
+Currently the module expects the keys to have the file extension `.key` and certificates to have the file extension `.crt`.
 
 ## Usage
 
@@ -149,18 +151,11 @@ Performs the basic setup and installation of Openssl on the system.
 
 ##### `cert_source_directory`
 
-The directory on the Puppetmaster where all certificate and key files are
-kept. Every certificate or key file will be read from this directory and then
-deployed on the client. This directory is accessed using the `file` function
-and therefore does not need to be part of the Puppet directory structure. But
-obviously the directory and the files must be readable by the Puppet user.
-This parameter is mandatory and has no default.
+The directory on the Puppetmaster where all certificate and key files are kept. Every certificate or key file will be read from this directory and then deployed on the client. This directory is accessed using the `file` function and therefore does not need to be part of the Puppet directory structure. But obviously the directory and the files must be readable by the Puppet user. This parameter is mandatory and has no default.
 
 ##### `default_key_dir`
 
-The default directory where a key file is deployed. This is operating system
-specific. On Debian this is `/etc/ssl/private` and on RedHat this is
-`/etc/pki/tls/private`.
+The default directory where a key file is deployed. This is operating system specific. On Debian this is `/etc/ssl/private` and on RedHat this is `/etc/pki/tls/private`.
 
 ##### `default_cert_dir`
 
@@ -189,42 +184,113 @@ An array of CA certificates that are installed by default. Default: `[]`
 **Parameters for the `openssl::cert` defined type:**
 
 ##### `ensure`
+
+The state of the resource. Can be `present` or `absent`. Default value: `present`.
+
 ##### `cert`
+
+The basename of the file where the certificate will be stored on the client. The full filename will be created using the three components `cert_dir`, `cert` and `extension`.
+
 ##### `source`
+
+The basename of the file where the certificate is stored on the server. The full filename will be created using the two parameters `cert_source_directory` (see the base class `openssl`) and `source`. The extension is currently hardcoded as `.crt`.
+
 ##### `cert_chain`
+
+An array of certificate names that are should be added to the certificate file. This allows the generation of certificate chains to provide a full verification path for the certificate if intermediate CAs are used. The chain is included in the generated certificate file. The certificates must be available in `cert_source_directory` on the server just like the ordinary certificate. Default value: `[]`.
+
 ##### `extension`
+
+The file extension used for files created on the client. Default: `crt`.
+
 ##### `makehash`
+
+A boolean value that determines if a symbolic link using the certificate hash value should be generated on the client. Default value: false.
+
 ##### `cert_mode`
+
+The file mode used for the resource. Default value: `0444`.
+
 ##### `cert_owner`
+
+The file owner used for the resource. Default value: `root`.
+
 ##### `cert_group`
+
+The file group used for the resource. The default value is operating system dependent.
+
 ##### `cert_dir`
-##### `cert_file`
+
+The destination directory on the client where the certificate will be stored. The default value is operating system specific.
+
 
 #### `openssl::key`
 
 **Parameters for the `openssl::key` defined type:**
 
 ##### `ensure`
+
+The state of the resource. Can be `present` or `absent`. Default value: `present`.
+
 ##### `key`
+
+The basename of the file where the key will be stored on the client. The full filename will be created using the three components `key_dir`, `key` and `extension`.
+
 ##### `source`
+
+The basename of the file where the key is stored on the server. The full filename will be created using the two parameters `cert_source_directory` (see the base class `openssl`) and `source`. The extension is currently hardcoded as `.key`.
+
 ##### `extension`
+
+The file extension used for files created on the client. Default: `key`.
+
 ##### `key_mode`
+
+The file mode used for the resource. Default value: `0400`.
+
 ##### `key_owner`
+
+The file owner used for the resource. Default value: `root`.
+
 ##### `key_group`
+
+The file group used for the resource. The default value is operating system dependent.
+
 ##### `key_dir`
-##### `key_file`
+
+The destination directory on the client where the key will be stored. The default value is operating system specific.
 
 #### `openssl::dhparam`
 
 **Parameters for the `openssl::dhparam` defined type:**
 
 ##### `ensure`
+
+The state of the resource. Can be `present` or `absent`. Default value: `present`.
+
 ##### `file`
+
+The file name where the DH parameters are stored on the node. Must be an absolute path. Default value: the resource title.
+
 ##### `bits`
+
+The number of bits to generate. Must be one of the strings `2048`, `4096` or `8192`. Defaults to `2048`.
+
 ##### `generator`
+
+The generator to use. Must be the string `2` or `5`. Check the openssl documentation for details about this parameter. Default value: `2`.
+
 ##### `mode`
+
+The file mode used for the resource. Default value: `0644`.
+
 ##### `owner`
+
+The file owner used for the resource. Default value: `root`.
+
 ##### `group`
+
+The file group used for the resource. The default value is operating system dependent.
 
 ## Limitations
 

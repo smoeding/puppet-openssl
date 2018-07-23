@@ -18,14 +18,36 @@
 #   }
 #
 # @param ensure
+#   The state of the resource. Can be 'present' or 'absent'. Default value:
+#   'present'.
+#
 # @param key
+#   The basename of the file where the key will be stored on the client. The
+#   full filename will be created using the three components 'key_dir', 'key'
+#   and 'extension'.
+#
 # @param source
+#   The basename of the file where the key is stored on the server. The full
+#   filename will be created using the two parameters 'cert_source_directory'
+#   (see the base class 'openssl') and 'source'. The extension is currently
+#   hardcoded as '.key'.
+#
 # @param extension
+#   The file extension used for files created on the client. Default: 'key'.
+#
 # @param key_mode
+#   The file mode used for the resource. Default value: '0400'.
+#
 # @param key_owner
+#   The file owner used for the resource. Default value: 'root'.
+#
 # @param key_group
+#   The file group used for the resource. The default value is operating
+#   system dependent.
+#
 # @param key_dir
-# @param key_file
+#   The destination directory on the client where the key will be stored. The
+#   default value is operating system specific.
 #
 #
 define openssl::key (
