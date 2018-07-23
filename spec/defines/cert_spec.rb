@@ -163,17 +163,6 @@ describe 'openssl::cert' do
       }
     end
 
-    context "on #{os} with makehash => true, cert_file => /crt/ca.crt" do
-      let(:params) do
-        { makehash: true, cert_file: '/crt/ca.crt' }
-      end
-
-      it {
-        # Special test to satisfy resource coverage
-        is_expected.to contain_exec('openssl rehash /crt/ca.crt')
-      }
-    end
-
     context "on #{os} with cert_mode => 0642" do
       let(:params) do
         { cert_mode: '0642' }
@@ -257,28 +246,6 @@ describe 'openssl::cert' do
 
         is_expected.to contain_concat__fragment('/baz/cert.crt-cert')
           .with_target('/baz/cert.crt')
-          .with_content("# /foo/cert.crt\n")
-          .with_order('10')
-      }
-    end
-
-    context "on #{os} with cert_file => /baz/ca.pem" do
-      let(:params) do
-        { cert_file: '/baz/ca.pem' }
-      end
-
-      it {
-        is_expected.to contain_concat('/baz/ca.pem')
-          .with_owner('root')
-          .with_group('wheel')
-          .with_mode('0444')
-          .with_backup('false')
-          .with_show_diff('false')
-          .with_ensure_newline('true')
-          .that_requires('Package[openssl]')
-
-        is_expected.to contain_concat__fragment('/baz/ca.pem-cert')
-          .with_target('/baz/ca.pem')
           .with_content("# /foo/cert.crt\n")
           .with_order('10')
       }

@@ -37,7 +37,6 @@ define openssl::key (
   String                         $key_owner = 'root',
   Optional[String]               $key_group = undef,
   Optional[Stdlib::Absolutepath] $key_dir   = undef,
-  Optional[Stdlib::Absolutepath] $key_file  = undef,
 ) {
 
   # The base class must be included first
@@ -46,7 +45,7 @@ define openssl::key (
   }
 
   $_key_dir  = pick($key_dir, $::openssl::default_key_dir)
-  $_key_file = pick($key_file, "${_key_dir}/${key}.${extension}")
+  $_key_file = "${_key_dir}/${key}.${extension}"
 
   $content = $ensure ? {
     'present' => file("${::openssl::cert_source_directory}/${source}.key"),

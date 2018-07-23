@@ -41,7 +41,6 @@ define openssl::cert (
   String                         $cert_owner = 'root',
   Optional[String]               $cert_group = undef,
   Optional[Stdlib::Absolutepath] $cert_dir   = undef,
-  Optional[Stdlib::Absolutepath] $cert_file  = undef,
 ) {
 
   # The base class must be included first
@@ -50,7 +49,7 @@ define openssl::cert (
   }
 
   $_cert_dir  = pick($cert_dir, $::openssl::default_cert_dir)
-  $_cert_file = pick($cert_file, "${_cert_dir}/${cert}.${extension}")
+  $_cert_file = "${_cert_dir}/${cert}.${extension}"
 
   if ($ensure == 'present') {
     concat { $_cert_file:
