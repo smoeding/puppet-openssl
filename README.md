@@ -24,7 +24,7 @@ Manage X.509 certificates, keys and Diffie-Hellman parameter files.
 
 The `openssl` module manages files containing X.509 certificates and keys.
 
-In contrast to some other modules, this module does not generate the certificates and keys itself. Instead it requires a directory on the Puppet server where the certificates and keys can be fetched from. So you can run your own CA or take certificates received from a public CA and have them managed by Puppet.
+In contrast to some other modules, this module does not generate the certificates and keys itself. Instead it uses a directory on the Puppet server where the certificates and keys can be fetched from. So you can run your own CA or take certificates received from a public CA and have them managed by Puppet.
 
 ## Setup
 
@@ -38,15 +38,15 @@ The module requires the Puppetlabs modules `stdlib` and `concat`.
 
 ### Beginning with openssl
 
-The module must be initialized before you can manage certificates and keys. So you have to make sure the base class is defined before any defined type is used:
+The module must be initialized before you can manage certificates and keys:
 
 ``` puppet
 class { 'openssl':
- cert_source_directory => '/etc/puppetlabs/code/private/certs',
+  cert_source_directory => '/etc/puppetlabs/code/private/certs',
 }
 ```
 
-The parameter `cert_source_directory` is mandatory and has no default value. This is the directory on the Puppet server where you keep your certificates and keys. This directory does not need to be inside a Puppet environment directory. It can be located anywhere on the Puppet server. But the content must by readable by the user running the Puppetserver application (normally `puppet`). So make sure the filesystem permissions are set correctly.
+The parameter `cert_source_directory` is mandatory and has no default value. This is a directory on the Puppet server where you keep your certificates and keys. This directory does not need to be inside a Puppet environment directory. It can be located anywhere on the Puppet server. But the content must by readable by the user running the Puppetserver application (normally `puppet`). So make sure the filesystem permissions are set correctly.
 
 The module expects to find certificate and key files in this directory on the Puppet server. As an example the directory used above might look like this listing:
 
@@ -68,7 +68,7 @@ Currently the module expects the keys to have the file extension `.key` and cert
 
 ### Install Root CA certificates by default
 
-If you want to provide certain Root CA certificates by default, you can add a class parameter containing the list of certificate names:
+If you want to provide certain Root or intermediate CA certificates by default, you can add a class parameter containing the list of certificate names:
 
 ``` puppet
 class { 'openssl':
@@ -102,29 +102,29 @@ r--r--r-- 1 root root 1570 Mar  1 20:07 /etc/ssl/certs/imap.crt
 
 ### Install a certificate and key for a specific application
 
-The following code shows how to install a certificate and key in an application specific directory using application specific owner/group/mode details:
+The following code shows how to install a certificate and key in an application specific directory using application specific owner, group and mode:
 
 ``` text
-openssl::cert { 'postgresql':
-  cert       => $::hostname,
-  cert_owner => 'root',
-  cert_group => 'postgres',
-  cert_mode  => '0444',
-  cert_dir   => '/etc/postgresql',
-  source     => $::hostname,
+openssl::key { 'postgresql':
+  key     => $::hostname,
+  owner   => 'root',
+  group   => 'postgres',
+  mode    => '0440',
+  key_dir => '/etc/postgresql',
+  source  => $::hostname,
 }
 
-openssl::key { 'postgresql':
-  key       => $::hostname,
-  key_owner => 'root',
-  key_group => 'postgres',
-  key_mode  => '0440',
-  key_dir   => '/etc/postgresql',
-  source    => $::hostname,
+openssl::cert { 'postgresql':
+  cert     => $::hostname,
+  owner    => 'root',
+  group    => 'postgres',
+  mode     => '0444',
+  cert_dir => '/etc/postgresql',
+  source   => $::hostname,
 }
 ```
 
-This example assumes that node `vortex` is your PostgreSQL server running Debian. Then the following two files would be created by the manifest:
+This example uses the hostname fact as the name of the key and therefore installs the cert and key on the host of the same name. If we assume that node `vortex` is your PostgreSQL server running Debian, then the following two files would be created by the manifest:
 
 ``` text
 r--r----- 1 root postgres 1704 Jan  3  2017 /etc/postgresql/vortex.key
@@ -133,7 +133,7 @@ r--r--r-- 1 root postgres 1464 Jan  3  2017 /etc/postgresql/vortex.crt
 
 ### Create a Diffie-Hellman parameter file
 
-To use perfect forward secrecy cipher suites, you must set up Diffie-Hellman parameters on the server. Most applications allow including these parameters using a generated file. You can generate that file using the `openssl::dhparam` defined type:
+To use perfect forward secrecy cipher suites, you must set up Diffie-Hellman parameters on the server. Most applications allow including these parameters using a file. You can generate such a file using the `openssl::dhparam` defined type:
 
 ``` text
 openssl::dhparam { '/etc/nginx/ssl/dh2048.pem': }
@@ -145,7 +145,7 @@ openssl::dhparam { '/etc/nginx/ssl/dh2048.pem': }
 
 #### Class: `openssl`
 
-Performs the basic setup and installation of Openssl on the system.
+Performs the basic setup and installation of the Openssl package on the system.
 
 **Parameters for the `openssl` class:**
 
@@ -171,7 +171,7 @@ The desired package state. Default value: `installed`.
 
 ##### `root_group`
 
-The group used for deployed files. This is operating system specific. On Linux this is normally `root`. On FreeBSD this is `wheel`.
+The group used for deployed files. This is operating system specific. It is `root` on Linux based operating systems and `wheel` on FreeBSD.
 
 ##### `ca_certs`
 
@@ -207,22 +207,21 @@ The file extension used for files created on the client. Default: `crt`.
 
 A boolean value that determines if a symbolic link using the certificate hash value should be generated on the client. Default value: false.
 
-##### `cert_mode`
+##### `mode`
 
 The file mode used for the resource. Default value: `0444`.
 
-##### `cert_owner`
+##### `owner`
 
 The file owner used for the resource. Default value: `root`.
 
-##### `cert_group`
+##### `group`
 
 The file group used for the resource. The default value is operating system dependent.
 
 ##### `cert_dir`
 
 The destination directory on the client where the certificate will be stored. The default value is operating system specific.
-
 
 #### `openssl::key`
 
@@ -244,15 +243,15 @@ The basename of the file where the key is stored on the server. The full filenam
 
 The file extension used for files created on the client. Default: `key`.
 
-##### `key_mode`
+##### `mode`
 
 The file mode used for the resource. Default value: `0400`.
 
-##### `key_owner`
+##### `owner`
 
 The file owner used for the resource. Default value: `root`.
 
-##### `key_group`
+##### `group`
 
 The file group used for the resource. The default value is operating system dependent.
 

@@ -9,12 +9,12 @@
 # @example Install the 'postgresql' key using application specific defaults
 #
 #   openssl::key { 'postgresql':
-#     key       => $::hostname,
-#     key_owner => 'root',
-#     key_group => 'postgres',
-#     key_mode  => '0440',
-#     key_dir   => '/etc/postgresql',
-#     source    => $::hostname,
+#     key     => $::hostname,
+#     owner   => 'root',
+#     group   => 'postgres',
+#     mode    => '0440',
+#     key_dir => '/etc/postgresql',
+#     source  => $::hostname,
 #   }
 #
 # @param ensure
@@ -35,13 +35,13 @@
 # @param extension
 #   The file extension used for files created on the client. Default: 'key'.
 #
-# @param key_mode
+# @param mode
 #   The file mode used for the resource. Default value: '0400'.
 #
-# @param key_owner
+# @param owner
 #   The file owner used for the resource. Default value: 'root'.
 #
-# @param key_group
+# @param group
 #   The file group used for the resource. The default value is operating
 #   system dependent.
 #
@@ -55,9 +55,9 @@ define openssl::key (
   String                         $key       = $name,
   String                         $source    = $name,
   String                         $extension = 'key',
-  Stdlib::Filemode               $key_mode  = '0400',
-  String                         $key_owner = 'root',
-  Optional[String]               $key_group = undef,
+  Stdlib::Filemode               $mode      = '0400',
+  String                         $owner     = 'root',
+  Optional[String]               $group     = undef,
   Optional[Stdlib::Absolutepath] $key_dir   = undef,
 ) {
 
@@ -81,9 +81,9 @@ define openssl::key (
 
   file { $_key_file:
     ensure    => $_ensure,
-    owner     => $key_owner,
-    group     => pick($key_group, $::openssl::root_group),
-    mode      => $key_mode,
+    owner     => $owner,
+    group     => pick($group, $::openssl::root_group),
+    mode      => $mode,
     content   => $content,
     backup    => false,
     show_diff => false,

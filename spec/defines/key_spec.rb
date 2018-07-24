@@ -90,9 +90,9 @@ describe 'openssl::key' do
       }
     end
 
-    context "on #{os} with key_mode => 0642" do
+    context "on #{os} with mode => 0642" do
       let(:params) do
-        { key_mode: '0642' }
+        { mode: '0642' }
       end
 
       it {
@@ -108,9 +108,9 @@ describe 'openssl::key' do
       }
     end
 
-    context "on #{os} with key_owner => mysql" do
+    context "on #{os} with owner => mysql" do
       let(:params) do
-        { key_owner: 'mysql' }
+        { owner: 'mysql' }
       end
 
       it {
@@ -126,9 +126,9 @@ describe 'openssl::key' do
       }
     end
 
-    context "on #{os} with key_group => mysql" do
+    context "on #{os} with group => mysql" do
       let(:params) do
-        { key_group: 'mysql' }
+        { group: 'mysql' }
       end
 
       it {

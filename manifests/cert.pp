@@ -9,12 +9,12 @@
 # @example Install the 'postgresql' cert using application specific defaults
 #
 #   openssl::cert { 'postgresql':
-#     cert       => $::hostname,
-#     cert_owner => 'root',
-#     cert_group => 'postgres',
-#     cert_mode  => '0444',
-#     cert_dir   => '/etc/postgresql',
-#     source     => $::hostname,
+#     cert     => $::hostname,
+#     owner    => 'root',
+#     group    => 'postgres',
+#     mode     => '0444',
+#     cert_dir => '/etc/postgresql',
+#     source   => $::hostname,
 #   }
 #
 # @param ensure
@@ -47,13 +47,13 @@
 #   A boolean value that determines if a symbolic link using the certificate
 #   hash value should be generated on the client. Default value: false.
 #
-# @param cert_mode
+# @param mode
 #   The file mode used for the resource. Default value: '0444'.
 #
-# @param cert_owner
+# @param owner
 #   The file owner used for the resource. Default value: 'root'.
 #
-# @param cert_group
+# @param group
 #   The file group used for the resource. The default value is operating
 #   system dependent.
 #
@@ -69,9 +69,9 @@ define openssl::cert (
   Array[String]                  $cert_chain = [],
   String                         $extension  = 'crt',
   Boolean                        $makehash   = false,
-  Stdlib::Filemode               $cert_mode  = '0444',
-  String                         $cert_owner = 'root',
-  Optional[String]               $cert_group = undef,
+  Stdlib::Filemode               $mode       = '0444',
+  String                         $owner      = 'root',
+  Optional[String]               $group      = undef,
   Optional[Stdlib::Absolutepath] $cert_dir   = undef,
 ) {
 
@@ -85,9 +85,9 @@ define openssl::cert (
 
   if ($ensure == 'present') {
     concat { $_cert_file:
-      owner          => $cert_owner,
-      group          => pick($cert_group, $::openssl::root_group),
-      mode           => $cert_mode,
+      owner          => $owner,
+      group          => pick($group, $::openssl::root_group),
+      mode           => $mode,
       backup         => false,
       show_diff      => false,
       ensure_newline => true,
