@@ -69,7 +69,6 @@ define openssl::dhparam (
       creates => $file,
       timeout => '1800',        # really slow machines
       path    => [ '/bin', '/usr/bin', '/usr/local/bin', ],
-      require => Package['openssl'],
       before  => File[$file],
     }
 

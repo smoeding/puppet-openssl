@@ -37,7 +37,6 @@ describe 'openssl::key' do
           .with_content("# /foo/key.key\n")
           .with_backup('false')
           .with_show_diff('false')
-          .that_requires('Package[openssl]')
       }
     end
 
@@ -55,7 +54,6 @@ describe 'openssl::key' do
           .with_content("# /foo/key.key\n")
           .with_backup('false')
           .with_show_diff('false')
-          .that_requires('Package[openssl]')
       }
     end
 
@@ -73,7 +71,6 @@ describe 'openssl::key' do
           .with_content("# /foo/secret.key\n")
           .with_backup('false')
           .with_show_diff('false')
-          .that_requires('Package[openssl]')
       }
     end
 
@@ -91,7 +88,6 @@ describe 'openssl::key' do
           .with_content("# /foo/key.key\n")
           .with_backup('false')
           .with_show_diff('false')
-          .that_requires('Package[openssl]')
       }
     end
 
@@ -109,7 +105,6 @@ describe 'openssl::key' do
           .with_content("# /foo/key.key\n")
           .with_backup('false')
           .with_show_diff('false')
-          .that_requires('Package[openssl]')
       }
     end
 
@@ -127,7 +122,6 @@ describe 'openssl::key' do
           .with_content("# /foo/key.key\n")
           .with_backup('false')
           .with_show_diff('false')
-          .that_requires('Package[openssl]')
       }
     end
 
@@ -145,7 +139,6 @@ describe 'openssl::key' do
           .with_content("# /foo/key.key\n")
           .with_backup('false')
           .with_show_diff('false')
-          .that_requires('Package[openssl]')
       }
     end
 
@@ -163,7 +156,6 @@ describe 'openssl::key' do
           .with_content("# /foo/key.key\n")
           .with_backup('false')
           .with_show_diff('false')
-          .that_requires('Package[openssl]')
       }
     end
 

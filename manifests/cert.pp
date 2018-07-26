@@ -91,7 +91,6 @@ define openssl::cert (
       backup         => false,
       show_diff      => false,
       ensure_newline => true,
-      require        => Package['openssl'],
     }
 
     concat::fragment { "${_cert_file}-cert":

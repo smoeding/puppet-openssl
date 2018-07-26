@@ -36,7 +36,6 @@ describe 'openssl::cert' do
           .with_backup('false')
           .with_show_diff('false')
           .with_ensure_newline('true')
-          .that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
           .with_target('/crt/cert.crt')
@@ -58,7 +57,6 @@ describe 'openssl::cert' do
           .with_backup('false')
           .with_show_diff('false')
           .with_ensure_newline('true')
-          .that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/ca.crt-cert')
           .with_target('/crt/ca.crt')
@@ -80,7 +78,6 @@ describe 'openssl::cert' do
           .with_backup('false')
           .with_show_diff('false')
           .with_ensure_newline('true')
-          .that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
           .with_target('/crt/cert.crt')
@@ -102,7 +99,6 @@ describe 'openssl::cert' do
           .with_backup('false')
           .with_show_diff('false')
           .with_ensure_newline('true')
-          .that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
           .with_target('/crt/cert.crt')
@@ -129,7 +125,6 @@ describe 'openssl::cert' do
           .with_backup('false')
           .with_show_diff('false')
           .with_ensure_newline('true')
-          .that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.pem-cert')
           .with_target('/crt/cert.pem')
@@ -151,7 +146,6 @@ describe 'openssl::cert' do
           .with_backup('false')
           .with_show_diff('false')
           .with_ensure_newline('true')
-          .that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
           .with_target('/crt/cert.crt')
@@ -181,7 +175,6 @@ describe 'openssl::cert' do
           .with_backup('false')
           .with_show_diff('false')
           .with_ensure_newline('true')
-          .that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
           .with_target('/crt/cert.crt')
@@ -203,7 +196,6 @@ describe 'openssl::cert' do
           .with_backup('false')
           .with_show_diff('false')
           .with_ensure_newline('true')
-          .that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
           .with_target('/crt/cert.crt')
@@ -225,7 +217,6 @@ describe 'openssl::cert' do
           .with_backup('false')
           .with_show_diff('false')
           .with_ensure_newline('true')
-          .that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
           .with_target('/crt/cert.crt')
@@ -247,7 +238,6 @@ describe 'openssl::cert' do
           .with_backup('false')
           .with_show_diff('false')
           .with_ensure_newline('true')
-          .that_requires('Package[openssl]')
 
         is_expected.to contain_concat__fragment('/baz/cert.crt-cert')
           .with_target('/baz/cert.crt')

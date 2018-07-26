@@ -20,7 +20,6 @@ describe 'openssl::dhparam' do
         is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 2048')
           .with_creates('/foo/dh.pem')
           .with_timeout('1800')
-          .that_requires('Package[openssl]')
           .that_comes_before('File[/foo/dh.pem]')
 
         is_expected.to contain_file('/foo/dh.pem')
@@ -40,7 +39,6 @@ describe 'openssl::dhparam' do
         is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 4096')
           .with_creates('/foo/dh.pem')
           .with_timeout('1800')
-          .that_requires('Package[openssl]')
           .that_comes_before('File[/foo/dh.pem]')
 
         is_expected.to contain_file('/foo/dh.pem')
@@ -60,7 +58,6 @@ describe 'openssl::dhparam' do
         is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -5 2048')
           .with_creates('/foo/dh.pem')
           .with_timeout('1800')
-          .that_requires('Package[openssl]')
           .that_comes_before('File[/foo/dh.pem]')
 
         is_expected.to contain_file('/foo/dh.pem')
@@ -80,7 +77,6 @@ describe 'openssl::dhparam' do
         is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 2048')
           .with_creates('/foo/dh.pem')
           .with_timeout('1800')
-          .that_requires('Package[openssl]')
           .that_comes_before('File[/foo/dh.pem]')
 
         is_expected.to contain_file('/foo/dh.pem')
@@ -100,7 +96,6 @@ describe 'openssl::dhparam' do
         is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 2048')
           .with_creates('/foo/dh.pem')
           .with_timeout('1800')
-          .that_requires('Package[openssl]')
           .that_comes_before('File[/foo/dh.pem]')
 
         is_expected.to contain_file('/foo/dh.pem')
@@ -120,7 +115,6 @@ describe 'openssl::dhparam' do
         is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 2048')
           .with_creates('/foo/dh.pem')
           .with_timeout('1800')
-          .that_requires('Package[openssl]')
           .that_comes_before('File[/foo/dh.pem]')
 
         is_expected.to contain_file('/foo/dh.pem')

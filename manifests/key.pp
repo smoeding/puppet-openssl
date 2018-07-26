@@ -87,6 +87,5 @@ define openssl::key (
     content   => $content,
     backup    => false,
     show_diff => false,
-    require   => Package['openssl'],
   }
 }
