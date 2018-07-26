@@ -13,9 +13,14 @@ describe 'openssl::key' do
   let(:title) { 'key' }
 
   before(:each) do
-    MockFunction.new('file') do |f|
-      f.stubbed.with('/foo/key.key').returns("# /foo/key.key\n")
-      f.stubbed.with('/foo/secret.key').returns("# /foo/secret.key\n")
+    # Mock the Puppet file() function
+    Puppet::Parser::Functions.newfunction(:file, type: :rvalue) do |args|
+      case args[0]
+      when '/foo/key.key'
+        "# /foo/key.key\n"
+      when '/foo/secret.key'
+        "# /foo/secret.key\n"
+      end
     end
   end
 

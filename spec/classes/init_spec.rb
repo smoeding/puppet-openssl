@@ -11,9 +11,14 @@ describe 'openssl' do
   end
 
   before(:each) do
-    MockFunction.new('file') do |f|
-      f.stubbed.with('/foo/cert.crt').returns("# /foo/cert.crt\n")
-      f.stubbed.with('/foo/ca.crt').returns("# /foo/ca.crt\n")
+    # Mock the Puppet file() function
+    Puppet::Parser::Functions.newfunction(:file, type: :rvalue) do |args|
+      case args[0]
+      when '/foo/cert.crt'
+        "# /foo/cert.crt\n"
+      when '/foo/ca.crt'
+        "# /foo/ca.crt\n"
+      end
     end
   end
 
