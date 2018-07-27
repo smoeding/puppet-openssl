@@ -151,7 +151,9 @@ Performs the basic setup and installation of the Openssl package on the system.
 
 ##### `cert_source_directory`
 
-The directory on the Puppetmaster where all certificate and key files are kept. Every certificate or key file will be read from this directory and then deployed on the client. This directory is accessed using the `file` function and therefore does not need to be part of the Puppet directory structure. But obviously the directory and the files must be readable by the Puppet user. This parameter is mandatory and has no default.
+*Required.*
+
+The directory on the Puppetmaster where all certificate and key files are kept. Every certificate or key file will be read from this directory and then deployed on the client. This directory is accessed using the `file` function and therefore does not need to be part of the Puppet directory structure. But obviously the directory and the files must be readable by the Puppet user.
 
 ##### `default_key_dir`
 
