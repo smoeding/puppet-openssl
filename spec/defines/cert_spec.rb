@@ -18,6 +18,8 @@ describe 'openssl::cert' do
       case args[0]
       when '/foo/cert.crt'
         "# /foo/cert.crt\n"
+      when '/foo/cert.baz'
+        "# /foo/cert.baz\n"
       when '/foo/ca.crt'
         "# /foo/ca.crt\n"
       end
@@ -129,6 +131,27 @@ describe 'openssl::cert' do
         is_expected.to contain_concat__fragment('/crt/cert.pem-cert')
           .with_target('/crt/cert.pem')
           .with_content("# /foo/cert.crt\n")
+          .with_order('10')
+      }
+    end
+
+    context "on #{os} with source_extension => baz" do
+      let(:params) do
+        { source_extension: 'baz' }
+      end
+
+      it {
+        is_expected.to contain_concat('/crt/cert.crt')
+          .with_owner('root')
+          .with_group('wheel')
+          .with_mode('0444')
+          .with_backup('false')
+          .with_show_diff('false')
+          .with_ensure_newline('true')
+
+        is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
+          .with_target('/crt/cert.crt')
+          .with_content("# /foo/cert.baz\n")
           .with_order('10')
       }
     end

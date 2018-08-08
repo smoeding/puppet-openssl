@@ -62,8 +62,6 @@ total 236
 -r-------- 1 puppet root 1671 Mar 18  2016 vortex.key
 ```
 
-Currently the module expects the keys to have the file extension `.key` and certificates to have the file extension `.crt`.
-
 ## Usage
 
 ### Install Root CA certificates by default
@@ -195,7 +193,7 @@ The basename of the file where the certificate will be stored on the client. The
 
 ##### `source`
 
-The basename of the file where the certificate is stored on the server. The full filename will be created using the two parameters `cert_source_directory` (see the base class `openssl`) and `source`. The extension is currently hardcoded as `.crt`.
+The basename of the file where the certificate is stored on the server. The full filename will be created using the three parameters `cert_source_directory` (see the base class `openssl`), `source` and `source_extension`.
 
 ##### `cert_chain`
 
@@ -204,6 +202,10 @@ An array of certificate names that are should be added to the certificate file. 
 ##### `extension`
 
 The file extension used for files created on the client. Default: `crt`.
+
+##### `source_extension`
+
+The file extension used for files read on the server. Default: `crt`.
 
 ##### `makehash`
 
@@ -239,11 +241,15 @@ The basename of the file where the key will be stored on the client. The full fi
 
 ##### `source`
 
-The basename of the file where the key is stored on the server. The full filename will be created using the two parameters `cert_source_directory` (see the base class `openssl`) and `source`. The extension is currently hardcoded as `.key`.
+The basename of the file where the key is stored on the server. The full filename will be created using the three parameters `cert_source_directory` (see the base class `openssl`), `source` and `source_extension`.
 
 ##### `extension`
 
 The file extension used for files created on the client. Default: `key`.
+
+##### `source_extension`
+
+The file extension used for files read on the server. Default: `key`.
 
 ##### `mode`
 

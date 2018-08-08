@@ -28,9 +28,9 @@
 #
 # @param source
 #   The basename of the file where the certificate is stored on the server.
-#   The full filename will be created using the two parameters
-#   'cert_source_directory' (see the base class 'openssl') and 'source'.
-#   The extension is currently hardcoded as '.crt'.
+#   The full filename will be created using the three parameters
+#   'cert_source_directory' (see the base class 'openssl'), 'source' and
+#   'source_extension'.
 #
 # @param cert_chain
 #   An array of certificate names that are should be added to the certificate
@@ -42,6 +42,9 @@
 #
 # @param extension
 #   The file extension used for files created on the client. Default: 'crt'.
+#
+# @param source_extension
+#   The file extension used for files read on the server. Default: 'crt'.
 #
 # @param makehash
 #   A boolean value that determines if a symbolic link using the certificate
@@ -63,16 +66,17 @@
 #
 #
 define openssl::cert (
-  Enum['present','absent']       $ensure     = 'present',
-  String                         $cert       = $name,
-  String                         $source     = $name,
-  Array[String]                  $cert_chain = [],
-  String                         $extension  = 'crt',
-  Boolean                        $makehash   = false,
-  Stdlib::Filemode               $mode       = '0444',
-  String                         $owner      = 'root',
-  Optional[String]               $group      = undef,
-  Optional[Stdlib::Absolutepath] $cert_dir   = undef,
+  Enum['present','absent']       $ensure           = 'present',
+  String                         $cert             = $name,
+  String                         $source           = $name,
+  Array[String]                  $cert_chain       = [],
+  String                         $extension        = 'crt',
+  String                         $source_extension = 'crt',
+  Boolean                        $makehash         = false,
+  Stdlib::Filemode               $mode             = '0444',
+  String                         $owner            = 'root',
+  Optional[String]               $group            = undef,
+  Optional[Stdlib::Absolutepath] $cert_dir         = undef,
 ) {
 
   # The base class must be included first
@@ -95,7 +99,7 @@ define openssl::cert (
 
     concat::fragment { "${_cert_file}-cert":
       target  => $_cert_file,
-      content => file("${::openssl::cert_source_directory}/${source}.crt"),
+      content => file("${::openssl::cert_source_directory}/${source}.${source_extension}"),
       order   => '10',
     }
 
@@ -108,7 +112,7 @@ define openssl::cert (
 
       concat::fragment { "${_cert_file}-${order}":
         target  => $_cert_file,
-        content => file("${::openssl::cert_source_directory}/${entry}.crt"),
+        content => file("${::openssl::cert_source_directory}/${entry}.${source_extension}"),
         order   => $order,
       }
     }

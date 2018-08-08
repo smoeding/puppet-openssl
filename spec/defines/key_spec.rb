@@ -18,6 +18,8 @@ describe 'openssl::key' do
       case args[0]
       when '/foo/key.key'
         "# /foo/key.key\n"
+      when '/foo/key.baz'
+        "# /foo/key.baz\n"
       when '/foo/secret.key'
         "# /foo/secret.key\n"
       end
@@ -86,6 +88,23 @@ describe 'openssl::key' do
           .with_group('wheel')
           .with_mode('0400')
           .with_content("# /foo/key.key\n")
+          .with_backup('false')
+          .with_show_diff('false')
+      }
+    end
+
+    context "on #{os} with source_extension => baz" do
+      let(:params) do
+        { source_extension: 'baz' }
+      end
+
+      it {
+        is_expected.to contain_file('/key/key.key')
+          .with_ensure('file')
+          .with_owner('root')
+          .with_group('wheel')
+          .with_mode('0400')
+          .with_content("# /foo/key.baz\n")
           .with_backup('false')
           .with_show_diff('false')
       }
