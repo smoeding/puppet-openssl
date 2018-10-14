@@ -1,4 +1,10 @@
-## 2018-08-05 - Release 1.2.0
+## 2018-10-14 - Release 1.3.0
+
+### Feature
+
+- Support Puppet 6
+
+## 2018-10-14 - Release 1.2.0
 
 ### Features
 
