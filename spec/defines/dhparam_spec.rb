@@ -130,7 +130,9 @@ describe 'openssl::dhparam' do
         { ensure: 'absent' }
       end
 
-      it { is_expected.to contain_file('/foo/dh.pem').with_ensure('absent') }
+      it {
+        is_expected.to contain_file('/foo/dh.pem').with_ensure('absent')
+      }
     end
   end
 end

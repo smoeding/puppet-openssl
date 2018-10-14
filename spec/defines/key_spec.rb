@@ -183,7 +183,9 @@ describe 'openssl::key' do
         { ensure: 'absent' }
       end
 
-      it { is_expected.to contain_file('/key/key.key').with_ensure('absent') }
+      it {
+        is_expected.to contain_file('/key/key.key').with_ensure('absent')
+      }
     end
   end
 end
