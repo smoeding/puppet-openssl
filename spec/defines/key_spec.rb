@@ -37,8 +37,8 @@ describe 'openssl::key' do
           .with_group('wheel')
           .with_mode('0400')
           .with_content("# /foo/key.key\n")
-          .with_backup('false')
-          .with_show_diff('false')
+          .with_backup(false)
+          .with_show_diff(false)
       }
     end
 
@@ -54,8 +54,8 @@ describe 'openssl::key' do
           .with_group('wheel')
           .with_mode('0400')
           .with_content("# /foo/key.key\n")
-          .with_backup('false')
-          .with_show_diff('false')
+          .with_backup(false)
+          .with_show_diff(false)
       }
     end
 
@@ -71,8 +71,8 @@ describe 'openssl::key' do
           .with_group('wheel')
           .with_mode('0400')
           .with_content("# /foo/secret.key\n")
-          .with_backup('false')
-          .with_show_diff('false')
+          .with_backup(false)
+          .with_show_diff(false)
       }
     end
 
@@ -88,8 +88,8 @@ describe 'openssl::key' do
           .with_group('wheel')
           .with_mode('0400')
           .with_content("# /foo/key.key\n")
-          .with_backup('false')
-          .with_show_diff('false')
+          .with_backup(false)
+          .with_show_diff(false)
       }
     end
 
@@ -105,8 +105,8 @@ describe 'openssl::key' do
           .with_group('wheel')
           .with_mode('0400')
           .with_content("# /foo/key.baz\n")
-          .with_backup('false')
-          .with_show_diff('false')
+          .with_backup(false)
+          .with_show_diff(false)
       }
     end
 
@@ -122,8 +122,8 @@ describe 'openssl::key' do
           .with_group('wheel')
           .with_mode('0642')
           .with_content("# /foo/key.key\n")
-          .with_backup('false')
-          .with_show_diff('false')
+          .with_backup(false)
+          .with_show_diff(false)
       }
     end
 
@@ -139,8 +139,8 @@ describe 'openssl::key' do
           .with_group('wheel')
           .with_mode('0400')
           .with_content("# /foo/key.key\n")
-          .with_backup('false')
-          .with_show_diff('false')
+          .with_backup(false)
+          .with_show_diff(false)
       }
     end
 
@@ -156,8 +156,8 @@ describe 'openssl::key' do
           .with_group('mysql')
           .with_mode('0400')
           .with_content("# /foo/key.key\n")
-          .with_backup('false')
-          .with_show_diff('false')
+          .with_backup(false)
+          .with_show_diff(false)
       }
     end
 
@@ -173,8 +173,8 @@ describe 'openssl::key' do
           .with_group('wheel')
           .with_mode('0400')
           .with_content("# /foo/key.key\n")
-          .with_backup('false')
-          .with_show_diff('false')
+          .with_backup(false)
+          .with_show_diff(false)
       }
     end
 
