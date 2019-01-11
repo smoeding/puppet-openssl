@@ -57,7 +57,7 @@ class openssl (
   }
 
   unless empty($ca_certs) {
-    ::openssl::cert { $ca_certs:
+    openssl::cert { $ca_certs:
       makehash => true,
     }
   }
