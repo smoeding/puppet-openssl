@@ -1,5 +1,3 @@
-# key.pp --- Define openssl::key
-#
 # @summary Manage an X.509 key file in PEM format
 #
 # @example Install the 'imap' key in the default location
@@ -18,31 +16,31 @@
 #   }
 #
 # @param ensure
-#   The state of the resource. Can be 'present' or 'absent'. Default value:
-#   'present'.
+#   The state of the resource. Can be `present` or `absent`. Default value:
+#   `present`.
 #
 # @param key
 #   The basename of the file where the key will be stored on the client. The
-#   full filename will be created using the three components 'key_dir', 'key'
-#   and 'extension'.
+#   full filename will be created using the three components `key_dir`, `key`
+#   and `extension`.
 #
 # @param source
 #   The basename of the file where the key is stored on the server. The full
 #   filename will be created using the three parameters
-#   'cert_source_directory' (see the base class 'openssl'), 'source' and
-#   'source_extension.
+#   `cert_source_directory` (see the base class `openssl`), `source` and
+#   `source_extension`.
 #
 # @param extension
-#   The file extension used for files created on the client. Default: 'key'.
+#   The file extension used for files created on the client. Default: `key`.
 #
 # @param source_extension
-#   The file extension used for files read on the server. Default: 'key'.
+#   The file extension used for files read on the server. Default: `key`.
 #
 # @param mode
-#   The file mode used for the resource. Default value: '0400'.
+#   The file mode used for the resource. Default value: `0400`.
 #
 # @param owner
-#   The file owner used for the resource. Default value: 'root'.
+#   The file owner used for the resource. Default value: `root`.
 #
 # @param group
 #   The file group used for the resource. The default value is operating

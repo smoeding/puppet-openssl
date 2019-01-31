@@ -17,11 +17,20 @@
 
 ### openssl
 
-init.pp --- Class openssl
+Manage X.509 certificates, keys and Diffie-Hellman parameter files
 
 #### Examples
 
 ##### Declaring the class
+
+```puppet
+
+class { 'openssl':
+  cert_source_directory => '/etc/puppetlabs/code/private/certs',
+}
+```
+
+##### Declaring the class and deploy a CA certificate
 
 ```puppet
 
@@ -41,7 +50,7 @@ Data type: `Stdlib::Absolutepath`
 
 The directory on the Puppetmaster where all certificate and key files are
 kept. Every certificate or key file will be read from this directory and
-then deployed on the client. This directory is accessed using the 'file'
+then deployed on the client. This directory is accessed using the `file`
 function and therefore does not need to be part of the Puppet directory
 structure. But obviously the directory and the files must be readable by
 the Puppet user. This parameter is mandatory and has no default.
@@ -51,47 +60,47 @@ the Puppet user. This parameter is mandatory and has no default.
 Data type: `Stdlib::Absolutepath`
 
 The default directory where a key file is deployed. This is operating
-system specific. On Debian this is '/etc/ssl/private' and on RedHat this
-is '/etc/pki/tls/private'.
+system specific. On Debian this is `/etc/ssl/private` and on RedHat this
+is `/etc/pki/tls/private`.
 
 ##### `default_cert_dir`
 
 Data type: `Stdlib::Absolutepath`
 
 The default directory where a certificate file is deployed. This is
-operating system specific. On Debian this is '/etc/ssl/certs' and on
-RedHat this is '/etc/pki/tls/certs'.
+operating system specific. On Debian this is `/etc/ssl/certs` and on
+RedHat this is `/etc/pki/tls/certs`.
 
 ##### `package_name`
 
 Data type: `String`
 
-The name of the openssl package to install. Default value: 'openssl'.
+The name of the openssl package to install. Default value: `openssl`.
 
 ##### `package_ensure`
 
 Data type: `String`
 
-The desired package state. Default value: 'installed'.
+The desired package state. Default value: `installed`.
 
 ##### `root_group`
 
 Data type: `String`
 
 The group used for deployed files. This is operating system specific. On
-Linux this is normally 'root'. On FreeBSD this is 'wheel'.
+Linux this is normally `root`. On FreeBSD this is `wheel`.
 
 ##### `ca_certs`
 
 Data type: `Array[String]`
 
-An array of CA certificates that are installed by default. Default: []
+An array of CA certificates that are installed by default. Default: `[]`
 
 ## Defined types
 
 ### openssl::cert
 
-cert.pp --- Define puppet-openssl::cert
+Manage an X.509 certificate file in PEM format
 
 #### Examples
 
@@ -124,8 +133,8 @@ The following parameters are available in the `openssl::cert` defined type.
 
 Data type: `Enum['present','absent']`
 
-The state of the resource. Can be 'present' or 'absent'. Default value:
-'present'.
+The state of the resource. Can be `present` or `absent`. Default value:
+`present`.
 
 Default value: 'present'
 
@@ -135,7 +144,7 @@ Data type: `String`
 
 The basename of the file where the certificate will be stored on the
 client. The full filename will be created using the three components
-'cert_dir', 'cert' and 'extension'.
+`cert_dir`, `cert` and `extension`.
 
 Default value: $name
 
@@ -145,8 +154,8 @@ Data type: `String`
 
 The basename of the file where the certificate is stored on the server.
 The full filename will be created using the three parameters
-'cert_source_directory' (see the base class 'openssl'), 'source' and
-'source_extension'.
+`cert_source_directory` (see the base class `openssl`), `source` and
+`source_extension`.
 
 Default value: $name
 
@@ -158,8 +167,8 @@ An array of certificate names that are should be added to the certificate
 file. This allows the generation of certificate chains to provide a full
 verification path for the certificate if intermediate CAs are used. The
 chain is included in the generated certificate file. The certificates
-must be available in 'cert_source_directory' on the server just like the
-ordinary certificate. Default value: '[]'.
+must be available in `cert_source_directory` on the server just like the
+ordinary certificate. Default value: `[]`.
 
 Default value: []
 
@@ -167,7 +176,7 @@ Default value: []
 
 Data type: `String`
 
-The file extension used for files created on the client. Default: 'crt'.
+The file extension used for files created on the client. Default: `crt`.
 
 Default value: 'crt'
 
@@ -175,7 +184,7 @@ Default value: 'crt'
 
 Data type: `String`
 
-The file extension used for files read on the server. Default: 'crt'.
+The file extension used for files read on the server. Default: `crt`.
 
 Default value: 'crt'
 
@@ -192,7 +201,7 @@ Default value: `false`
 
 Data type: `Stdlib::Filemode`
 
-The file mode used for the resource. Default value: '0444'.
+The file mode used for the resource. Default value: `0444`.
 
 Default value: '0444'
 
@@ -200,7 +209,7 @@ Default value: '0444'
 
 Data type: `String`
 
-The file owner used for the resource. Default value: 'root'.
+The file owner used for the resource. Default value: `root`.
 
 Default value: 'root'
 
@@ -224,7 +233,7 @@ Default value: `undef`
 
 ### openssl::dhparam
 
-dhparam.pp --- Define openssl::dhparam
+Manage Diffie-Hellman parameter files.
 
 #### Examples
 
@@ -263,8 +272,8 @@ The following parameters are available in the `openssl::dhparam` defined type.
 
 Data type: `Enum['present','absent']`
 
-The state of the resource. Can be 'present' or 'absent'. Default value:
-'present'.
+The state of the resource. Can be `present` or `absent`. Default value:
+`present`.
 
 Default value: 'present'
 
@@ -281,8 +290,8 @@ Default value: $name
 
 Data type: `Enum['2048','4096','8192']`
 
-The number of bits to generate. Must be one of the strings '2048', '4096'
-or '8192'. Defaults to '2048'.
+The number of bits to generate. Must be one of the strings `2048`, `4096`
+or `8192`. Defaults to `2048`.
 
 Default value: '2048'
 
@@ -290,8 +299,8 @@ Default value: '2048'
 
 Data type: `Enum['2','5']`
 
-The generator to use. Must be the string '2' or '5'. Check the openssl
-documentation for details about this parameter. Default value: '2'.
+The generator to use. Must be the string `2` or `5`. Check the openssl
+documentation for details about this parameter. Default value: `2`.
 
 Default value: '2'
 
@@ -299,7 +308,7 @@ Default value: '2'
 
 Data type: `Stdlib::Filemode`
 
-The file mode used for the resource. Default value: '0644'.
+The file mode used for the resource. Default value: `0644`.
 
 Default value: '0644'
 
@@ -307,7 +316,7 @@ Default value: '0644'
 
 Data type: `String`
 
-The file owner used for the resource. Default value: 'root'.
+The file owner used for the resource. Default value: `root`.
 
 Default value: 'root'
 
@@ -322,7 +331,7 @@ Default value: `undef`
 
 ### openssl::key
 
-key.pp --- Define openssl::key
+Manage an X.509 key file in PEM format
 
 #### Examples
 
@@ -355,8 +364,8 @@ The following parameters are available in the `openssl::key` defined type.
 
 Data type: `Enum['present','absent']`
 
-The state of the resource. Can be 'present' or 'absent'. Default value:
-'present'.
+The state of the resource. Can be `present` or `absent`. Default value:
+`present`.
 
 Default value: 'present'
 
@@ -365,8 +374,8 @@ Default value: 'present'
 Data type: `String`
 
 The basename of the file where the key will be stored on the client. The
-full filename will be created using the three components 'key_dir', 'key'
-and 'extension'.
+full filename will be created using the three components `key_dir`, `key`
+and `extension`.
 
 Default value: $name
 
@@ -376,8 +385,8 @@ Data type: `String`
 
 The basename of the file where the key is stored on the server. The full
 filename will be created using the three parameters
-'cert_source_directory' (see the base class 'openssl'), 'source' and
-'source_extension.
+`cert_source_directory` (see the base class `openssl`), `source` and
+`source_extension`.
 
 Default value: $name
 
@@ -385,7 +394,7 @@ Default value: $name
 
 Data type: `String`
 
-The file extension used for files created on the client. Default: 'key'.
+The file extension used for files created on the client. Default: `key`.
 
 Default value: 'key'
 
@@ -393,7 +402,7 @@ Default value: 'key'
 
 Data type: `String`
 
-The file extension used for files read on the server. Default: 'key'.
+The file extension used for files read on the server. Default: `key`.
 
 Default value: 'key'
 
@@ -401,7 +410,7 @@ Default value: 'key'
 
 Data type: `Stdlib::Filemode`
 
-The file mode used for the resource. Default value: '0400'.
+The file mode used for the resource. Default value: `0400`.
 
 Default value: '0400'
 
@@ -409,7 +418,7 @@ Default value: '0400'
 
 Data type: `String`
 
-The file owner used for the resource. Default value: 'root'.
+The file owner used for the resource. Default value: `root`.
 
 Default value: 'root'
 
