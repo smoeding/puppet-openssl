@@ -75,13 +75,13 @@ RedHat this is `/etc/pki/tls/certs`.
 
 Data type: `String`
 
-The name of the openssl package to install. Default value: `openssl`.
+The name of the openssl package to install.
 
 ##### `package_ensure`
 
 Data type: `String`
 
-The desired package state. Default value: `installed`.
+The desired package state.
 
 ##### `root_group`
 
@@ -94,7 +94,7 @@ Linux this is normally `root`. On FreeBSD this is `wheel`.
 
 Data type: `Array[String]`
 
-An array of CA certificates that are installed by default. Default: `[]`
+An array of CA certificates that are installed by default.
 
 ## Defined types
 
@@ -133,8 +133,7 @@ The following parameters are available in the `openssl::cert` defined type.
 
 Data type: `Enum['present','absent']`
 
-The state of the resource. Can be `present` or `absent`. Default value:
-`present`.
+The state of the resource. Can be `present` or `absent`.
 
 Default value: 'present'
 
@@ -168,7 +167,7 @@ file. This allows the generation of certificate chains to provide a full
 verification path for the certificate if intermediate CAs are used. The
 chain is included in the generated certificate file. The certificates
 must be available in `cert_source_directory` on the server just like the
-ordinary certificate. Default value: `[]`.
+ordinary certificate.
 
 Default value: []
 
@@ -176,7 +175,7 @@ Default value: []
 
 Data type: `String`
 
-The file extension used for files created on the client. Default: `crt`.
+The file extension used for files created on the client.
 
 Default value: 'crt'
 
@@ -184,7 +183,7 @@ Default value: 'crt'
 
 Data type: `String`
 
-The file extension used for files read on the server. Default: `crt`.
+The file extension used for files read on the server.
 
 Default value: 'crt'
 
@@ -193,7 +192,7 @@ Default value: 'crt'
 Data type: `Boolean`
 
 A boolean value that determines if a symbolic link using the certificate
-hash value should be generated on the client. Default value: false.
+hash value should be generated on the client.
 
 Default value: `false`
 
@@ -201,7 +200,7 @@ Default value: `false`
 
 Data type: `Stdlib::Filemode`
 
-The file mode used for the resource. Default value: `0444`.
+The file mode used for the resource.
 
 Default value: '0444'
 
@@ -209,7 +208,7 @@ Default value: '0444'
 
 Data type: `String`
 
-The file owner used for the resource. Default value: `root`.
+The file owner used for the resource.
 
 Default value: 'root'
 
@@ -217,8 +216,7 @@ Default value: 'root'
 
 Data type: `Optional[String]`
 
-The file group used for the resource. The default value is operating
-system dependent.
+The file group used for the resource.
 
 Default value: `undef`
 
@@ -227,7 +225,7 @@ Default value: `undef`
 Data type: `Optional[Stdlib::Absolutepath]`
 
 The destination directory on the client where the certificate will be
-stored. The default value is operating system specific.
+stored.
 
 Default value: `undef`
 
@@ -272,8 +270,7 @@ The following parameters are available in the `openssl::dhparam` defined type.
 
 Data type: `Enum['present','absent']`
 
-The state of the resource. Can be `present` or `absent`. Default value:
-`present`.
+The state of the resource. Can be `present` or `absent`.
 
 Default value: 'present'
 
@@ -282,7 +279,7 @@ Default value: 'present'
 Data type: `Stdlib::Absolutepath`
 
 The file name where the DH parameters are stored on the node. Must be an
-absolute path. Default value: the resource title.
+absolute path.
 
 Default value: $name
 
@@ -291,7 +288,7 @@ Default value: $name
 Data type: `Enum['2048','4096','8192']`
 
 The number of bits to generate. Must be one of the strings `2048`, `4096`
-or `8192`. Defaults to `2048`.
+or `8192`.
 
 Default value: '2048'
 
@@ -300,7 +297,7 @@ Default value: '2048'
 Data type: `Enum['2','5']`
 
 The generator to use. Must be the string `2` or `5`. Check the openssl
-documentation for details about this parameter. Default value: `2`.
+documentation for details about this parameter.
 
 Default value: '2'
 
@@ -308,7 +305,7 @@ Default value: '2'
 
 Data type: `Stdlib::Filemode`
 
-The file mode used for the resource. Default value: `0644`.
+The file mode used for the resource.
 
 Default value: '0644'
 
@@ -316,7 +313,7 @@ Default value: '0644'
 
 Data type: `String`
 
-The file owner used for the resource. Default value: `root`.
+The file owner used for the resource.
 
 Default value: 'root'
 
@@ -324,8 +321,7 @@ Default value: 'root'
 
 Data type: `Optional[String]`
 
-The file group used for the resource. The default value is operating
-system dependent.
+The file group used for the resource.
 
 Default value: `undef`
 
@@ -364,8 +360,7 @@ The following parameters are available in the `openssl::key` defined type.
 
 Data type: `Enum['present','absent']`
 
-The state of the resource. Can be `present` or `absent`. Default value:
-`present`.
+The state of the resource. Can be `present` or `absent`.
 
 Default value: 'present'
 
@@ -394,7 +389,7 @@ Default value: $name
 
 Data type: `String`
 
-The file extension used for files created on the client. Default: `key`.
+The file extension used for files created on the client.
 
 Default value: 'key'
 
@@ -402,7 +397,7 @@ Default value: 'key'
 
 Data type: `String`
 
-The file extension used for files read on the server. Default: `key`.
+The file extension used for files read on the server.
 
 Default value: 'key'
 
@@ -410,7 +405,7 @@ Default value: 'key'
 
 Data type: `Stdlib::Filemode`
 
-The file mode used for the resource. Default value: `0400`.
+The file mode used for the resource.
 
 Default value: '0400'
 
@@ -418,7 +413,7 @@ Default value: '0400'
 
 Data type: `String`
 
-The file owner used for the resource. Default value: `root`.
+The file owner used for the resource.
 
 Default value: 'root'
 
@@ -426,8 +421,7 @@ Default value: 'root'
 
 Data type: `Optional[String]`
 
-The file group used for the resource. The default value is operating
-system dependent.
+The file group used for the resource.
 
 Default value: `undef`
 
@@ -435,8 +429,7 @@ Default value: `undef`
 
 Data type: `Optional[Stdlib::Absolutepath]`
 
-The destination directory on the client where the key will be stored. The
-default value is operating system specific.
+The destination directory on the client where the key will be stored.
 
 Default value: `undef`
 

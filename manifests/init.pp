@@ -32,17 +32,17 @@
 #   RedHat this is `/etc/pki/tls/certs`.
 #
 # @param package_name
-#   The name of the openssl package to install. Default value: `openssl`.
+#   The name of the openssl package to install.
 #
 # @param package_ensure
-#   The desired package state. Default value: `installed`.
+#   The desired package state.
 #
 # @param root_group
 #   The group used for deployed files. This is operating system specific. On
 #   Linux this is normally `root`. On FreeBSD this is `wheel`.
 #
 # @param ca_certs
-#   An array of CA certificates that are installed by default. Default: `[]`
+#   An array of CA certificates that are installed by default.
 #
 #
 class openssl (

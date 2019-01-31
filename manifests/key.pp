@@ -16,8 +16,7 @@
 #   }
 #
 # @param ensure
-#   The state of the resource. Can be `present` or `absent`. Default value:
-#   `present`.
+#   The state of the resource. Can be `present` or `absent`.
 #
 # @param key
 #   The basename of the file where the key will be stored on the client. The
@@ -31,24 +30,22 @@
 #   `source_extension`.
 #
 # @param extension
-#   The file extension used for files created on the client. Default: `key`.
+#   The file extension used for files created on the client.
 #
 # @param source_extension
-#   The file extension used for files read on the server. Default: `key`.
+#   The file extension used for files read on the server.
 #
 # @param mode
-#   The file mode used for the resource. Default value: `0400`.
+#   The file mode used for the resource.
 #
 # @param owner
-#   The file owner used for the resource. Default value: `root`.
+#   The file owner used for the resource.
 #
 # @param group
-#   The file group used for the resource. The default value is operating
-#   system dependent.
+#   The file group used for the resource.
 #
 # @param key_dir
-#   The destination directory on the client where the key will be stored. The
-#   default value is operating system specific.
+#   The destination directory on the client where the key will be stored.
 #
 #
 define openssl::key (

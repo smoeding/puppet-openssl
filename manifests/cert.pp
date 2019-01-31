@@ -16,8 +16,7 @@
 #   }
 #
 # @param ensure
-#   The state of the resource. Can be `present` or `absent`. Default value:
-#   `present`.
+#   The state of the resource. Can be `present` or `absent`.
 #
 # @param cert
 #   The basename of the file where the certificate will be stored on the
@@ -36,31 +35,30 @@
 #   verification path for the certificate if intermediate CAs are used. The
 #   chain is included in the generated certificate file. The certificates
 #   must be available in `cert_source_directory` on the server just like the
-#   ordinary certificate. Default value: `[]`.
+#   ordinary certificate.
 #
 # @param extension
-#   The file extension used for files created on the client. Default: `crt`.
+#   The file extension used for files created on the client.
 #
 # @param source_extension
-#   The file extension used for files read on the server. Default: `crt`.
+#   The file extension used for files read on the server.
 #
 # @param makehash
 #   A boolean value that determines if a symbolic link using the certificate
-#   hash value should be generated on the client. Default value: false.
+#   hash value should be generated on the client.
 #
 # @param mode
-#   The file mode used for the resource. Default value: `0444`.
+#   The file mode used for the resource.
 #
 # @param owner
-#   The file owner used for the resource. Default value: `root`.
+#   The file owner used for the resource.
 #
 # @param group
-#   The file group used for the resource. The default value is operating
-#   system dependent.
+#   The file group used for the resource.
 #
 # @param cert_dir
 #   The destination directory on the client where the certificate will be
-#   stored. The default value is operating system specific.
+#   stored.
 #
 #
 define openssl::cert (
