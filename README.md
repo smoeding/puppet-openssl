@@ -131,10 +131,21 @@ r--r--r-- 1 root postgres 1464 Jan  3  2017 /etc/postgresql/vortex.crt
 
 ### Create a Diffie-Hellman parameter file
 
-To use perfect forward secrecy cipher suites, you must set up Diffie-Hellman parameters on the server. Most applications allow including these parameters using a file. You can generate such a file using the `openssl::dhparam` defined type:
+To use perfect forward secrecy cipher suites, you must set up Diffie-Hellman parameters on the server. Most applications allow including these parameters using a file. You can generate such a file using the `openssl::dhparam` defined type.
+
+Using all the defaults (2048 bits):
 
 ``` text
 openssl::dhparam { '/etc/nginx/ssl/dh2048.pem': }
+```
+
+Using 4096 bits and a different file group:
+
+``` text
+openssl::dhparam { '/etc/mail/tls/dh2048.pem':
+  bits  => '4096',
+  group => 'smmsp',
+}
 ```
 
 ## Reference
