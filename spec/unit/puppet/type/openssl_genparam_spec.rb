@@ -1,4 +1,3 @@
-# coding: utf-8
 require 'spec_helper'
 
 describe Puppet::Type.type(:openssl_genparam) do
@@ -69,10 +68,10 @@ describe Puppet::Type.type(:openssl_genparam) do
     expect(openssl_genparam[:curve]).to eq('secp521r1')
   end
 
-  it 'does not accept curve föö' do
+  it 'does not accept curve f%o' do
     expect {
-      openssl_genparam[:curve] = 'föö'
-    }.to raise_error(Puppet::Error, %r{Invalid value "föö"})
+      openssl_genparam[:curve] = 'f%o'
+    }.to raise_error(Puppet::Error, %r{Invalid value "f%o"})
   end
 
   it 'accepts refresh_interval 42' do
@@ -92,21 +91,21 @@ describe Puppet::Type.type(:openssl_genparam) do
 
   it 'accepts refresh_interval 42h' do
     openssl_genparam[:refresh_interval] = '42h'
-    expect(openssl_genparam[:refresh_interval]).to eq(151200)
+    expect(openssl_genparam[:refresh_interval]).to eq(151_200)
   end
 
   it 'accepts refresh_interval 42w' do
     openssl_genparam[:refresh_interval] = '42w'
-    expect(openssl_genparam[:refresh_interval]).to eq(25401600)
+    expect(openssl_genparam[:refresh_interval]).to eq(25_401_600)
   end
 
   it 'accepts refresh_interval 42mo' do
     openssl_genparam[:refresh_interval] = '42mo'
-    expect(openssl_genparam[:refresh_interval]).to eq(108864000)
+    expect(openssl_genparam[:refresh_interval]).to eq(108_864_000)
   end
 
   it 'accepts refresh_interval 42y' do
     openssl_genparam[:refresh_interval] = '42y'
-    expect(openssl_genparam[:refresh_interval]).to eq(1324512000)
+    expect(openssl_genparam[:refresh_interval]).to eq(1_324_512_000)
   end
 end
