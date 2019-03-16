@@ -58,27 +58,22 @@ define openssl::dhparam (
     fail('You must include the openssl base class before using any openssl defined resources')
   }
 
+  # Create DH parameter file
   if ($ensure == 'present') {
-
-    # Create parameter file unless it already exists
-    exec { "openssl dhparam -out ${file} -${generator} ${bits}":
-      creates => $file,
-      timeout => '1800',        # really slow machines
-      path    => [ '/bin', '/usr/bin', '/usr/local/bin', ],
-      before  => File[$file],
-    }
-
-    # Manage file owner/group/mode
-    file { $file:
-      ensure => file,
-      owner  => $owner,
-      group  => pick($group, $::openssl::root_group),
-      mode   => $mode,
+    openssl_genparam { $file:
+      ensure    => $ensure,
+      algorithm => 'DH',
+      bits      => $bits,
+      generator => $generator,
+      before    => File[$file],
     }
   }
-  else {
-    file { $file:
-      ensure => absent,
-    }
+
+  # Manage file owner/group/mode
+  file { $file:
+    ensure => $ensure,
+    owner  => $owner,
+    group  => pick($group, $::openssl::root_group),
+    mode   => $mode,
   }
 }

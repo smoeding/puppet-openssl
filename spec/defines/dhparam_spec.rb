@@ -17,13 +17,15 @@ describe 'openssl::dhparam' do
 
     context "on #{os} with default parameters" do
       it {
-        is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 2048')
-          .with_creates('/foo/dh.pem')
-          .with_timeout('1800')
+        is_expected.to contain_openssl_genparam('/foo/dh.pem')
+          .with_ensure('present')
+          .with_algorithm('DH')
+          .with_bits('2048')
+          .with_generator('2')
           .that_comes_before('File[/foo/dh.pem]')
 
         is_expected.to contain_file('/foo/dh.pem')
-          .with_ensure('file')
+          .with_ensure('present')
           .with_owner('root')
           .with_group('wheel')
           .with_mode('0644')
@@ -36,13 +38,15 @@ describe 'openssl::dhparam' do
       end
 
       it {
-        is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 4096')
-          .with_creates('/foo/dh.pem')
-          .with_timeout('1800')
+        is_expected.to contain_openssl_genparam('/foo/dh.pem')
+          .with_ensure('present')
+          .with_algorithm('DH')
+          .with_bits('4096')
+          .with_generator('2')
           .that_comes_before('File[/foo/dh.pem]')
 
         is_expected.to contain_file('/foo/dh.pem')
-          .with_ensure('file')
+          .with_ensure('present')
           .with_owner('root')
           .with_group('wheel')
           .with_mode('0644')
@@ -55,13 +59,15 @@ describe 'openssl::dhparam' do
       end
 
       it {
-        is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -5 2048')
-          .with_creates('/foo/dh.pem')
-          .with_timeout('1800')
+        is_expected.to contain_openssl_genparam('/foo/dh.pem')
+          .with_ensure('present')
+          .with_algorithm('DH')
+          .with_bits('2048')
+          .with_generator('5')
           .that_comes_before('File[/foo/dh.pem]')
 
         is_expected.to contain_file('/foo/dh.pem')
-          .with_ensure('file')
+          .with_ensure('present')
           .with_owner('root')
           .with_group('wheel')
           .with_mode('0644')
@@ -74,13 +80,15 @@ describe 'openssl::dhparam' do
       end
 
       it {
-        is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 2048')
-          .with_creates('/foo/dh.pem')
-          .with_timeout('1800')
+        is_expected.to contain_openssl_genparam('/foo/dh.pem')
+          .with_ensure('present')
+          .with_algorithm('DH')
+          .with_bits('2048')
+          .with_generator('2')
           .that_comes_before('File[/foo/dh.pem]')
 
         is_expected.to contain_file('/foo/dh.pem')
-          .with_ensure('file')
+          .with_ensure('present')
           .with_owner('root')
           .with_group('wheel')
           .with_mode('0642')
@@ -93,13 +101,15 @@ describe 'openssl::dhparam' do
       end
 
       it {
-        is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 2048')
-          .with_creates('/foo/dh.pem')
-          .with_timeout('1800')
+        is_expected.to contain_openssl_genparam('/foo/dh.pem')
+          .with_ensure('present')
+          .with_algorithm('DH')
+          .with_bits('2048')
+          .with_generator('2')
           .that_comes_before('File[/foo/dh.pem]')
 
         is_expected.to contain_file('/foo/dh.pem')
-          .with_ensure('file')
+          .with_ensure('present')
           .with_owner('mysql')
           .with_group('wheel')
           .with_mode('0644')
@@ -112,13 +122,15 @@ describe 'openssl::dhparam' do
       end
 
       it {
-        is_expected.to contain_exec('openssl dhparam -out /foo/dh.pem -2 2048')
-          .with_creates('/foo/dh.pem')
-          .with_timeout('1800')
+        is_expected.to contain_openssl_genparam('/foo/dh.pem')
+          .with_ensure('present')
+          .with_algorithm('DH')
+          .with_bits('2048')
+          .with_generator('2')
           .that_comes_before('File[/foo/dh.pem]')
 
         is_expected.to contain_file('/foo/dh.pem')
-          .with_ensure('file')
+          .with_ensure('present')
           .with_owner('root')
           .with_group('mysql')
           .with_mode('0644')
