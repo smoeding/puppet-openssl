@@ -6,13 +6,16 @@ Puppet::Type.type(:openssl_genparam).provide(:openssl_genparam) do
   commands openssl: 'openssl'
 
   def exists?
+    param = [ 'openssl', 'pkeyparam', '-noout', '-text' ]
     curve = generator = bits = 0
 
     # file does not exist
     return false unless File.exist?(resource[:file])
 
+    param << '-in' << resource[:file]
+
     # parse openssl output for properties
-    Open3.popen2('openssl', 'pkeyparam', '-noout', '-text', '-in', resource[:file]) do |_stdin, stdout, process_status|
+    Open3.popen2(*param) do |_stdin, stdout, process_status|
       Puppet.debug("openssl_genparam: #{resource[:file]} opened")
       stdout.each_line do |line|
         %r{^.*ECDSA-Parameters: \((\d+) bit\)}.match(line) { |m| curve = m[1] }
