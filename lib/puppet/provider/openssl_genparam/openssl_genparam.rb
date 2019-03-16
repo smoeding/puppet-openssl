@@ -6,22 +6,23 @@ Puppet::Type.type(:openssl_genparam).provide(:openssl_genparam) do
   commands openssl: 'openssl'
 
   def exists?
-    param = [ 'openssl', 'pkeyparam', '-noout', '-text' ]
+    param = ['openssl', 'pkeyparam', '-noout', '-text']
     curve = generator = bits = 0
 
     # file does not exist
     return false unless File.exist?(resource[:file])
-
     param << '-in' << resource[:file]
 
     # parse openssl output for properties
     Open3.popen2(*param) do |_stdin, stdout, process_status|
       Puppet.debug("openssl_genparam: #{resource[:file]} opened")
+
       stdout.each_line do |line|
         %r{^.*ECDSA-Parameters: \((\d+) bit\)}.match(line) { |m| curve = m[1] }
         %r{^.*DH Parameters: \((\d+) bit\)}.match(line) { |m| bits = m[1] }
         %r{^.*generator: (\d) }.match(line) { |m| generator = m[1] }
       end
+
       return false unless process_status.value.success?
     end
 
@@ -50,20 +51,25 @@ Puppet::Type.type(:openssl_genparam).provide(:openssl_genparam) do
   end
 
   def create
+    param = ['genpkey', '-genparam']
+
     # use a temporary file to generate the parameters and rename it when done
-    t = resource[:file] + '.' + SecureRandom.uuid
+    sfile = resource[:file] + '.' + SecureRandom.uuid
+    param << '-out' << sfile
+
+    param << '-algorithm' << resource[:algorithm]
 
     case resource[:algorithm]
     when 'DH'
-      openssl('genpkey', '-genparam', '-algorithm', 'DH', '-out', t,
-              '-pkeyopt', "dh_paramgen_prime_len:#{resource[:bits]}",
-              '-pkeyopt', "dh_paramgen_generator:#{resource[:generator]}")
+      param << '-pkeyopt' << "dh_paramgen_prime_len:#{resource[:bits]}"
+      param << '-pkeyopt' << "dh_paramgen_generator:#{resource[:generator]}"
     when 'EC'
-      openssl('genpkey', '-genparam', '-algorithm', 'EC', '-out', t,
-              '-pkeyopt', "ec_paramgen_curve:#{resource[:curve]}")
+      param << '-pkeyopt' << "ec_paramgen_curve:#{resource[:curve]}"
     end
 
-    File.rename(t, resource[:file])
+    openssl(*param)
+
+    File.rename(sfile, resource[:file])
   end
 
   def destroy
