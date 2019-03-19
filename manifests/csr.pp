@@ -130,8 +130,8 @@ define openssl::csr (
 
   file { $cnf_file:
     ensure  => file,
-    owner   => 'root',
-    group   => 'root',
+    owner   => $owner,
+    group   => pick($group, $::openssl::root_group),
     mode    => '0600',
     content => epp("${module_name}/csr.conf.epp", $params),
   }
