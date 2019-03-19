@@ -107,7 +107,7 @@ define openssl::csr (
   }
 
   $use_subject_alternate_names = !empty($subject_alternate_names_dns) or
-                                 !empty($subject_alternate_names_ip)
+    !empty($subject_alternate_names_ip)
 
   $basic_constraints = bool2str($basic_constraints_ca, 'CA:true', 'CA:false')
 
