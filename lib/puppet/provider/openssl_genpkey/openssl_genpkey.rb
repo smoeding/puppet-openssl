@@ -46,8 +46,7 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
 
     case resource[:algorithm]
     when 'RSA'
-      param << '-pkeyopt' << "dh_paramgen_prime_len:#{resource[:bits]}"
-      param << '-pkeyopt' << "dh_paramgen_generator:#{resource[:generator]}"
+      param << '-pkeyopt' << "rsa_keygen_bits:#{resource[:bits]}"
     when 'EC'
       param << '-pkeyopt' << "ec_paramgen_curve:#{resource[:curve]}"
     end
