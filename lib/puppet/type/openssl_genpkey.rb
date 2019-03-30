@@ -89,11 +89,12 @@ Puppet::Type.newtype(:openssl_genpkey) do
   end
 
   validate do
-    case self[:algorithm]
-    when 'RSA'
-      raise Puppet::Error, 'Parameter bits is mandatory for RSA keys' if self[:bits].nil?
-    when 'EC'
-      raise Puppet::Error, 'Parameter curve is mandatory for EC keys' if self[:curve].nil?
+    if (self[:algorithm] == 'RSA') && self[:bits].nil?
+      raise Puppet::Error, 'Parameter bits is mandatory for RSA keys'
+    end
+
+    if (self[:algorithm] == 'EC') && self[:curve].nil?
+      raise Puppet::Error, 'Parameter curve is mandatory for EC keys'
     end
 
     if !self[:cipher].nil? && self[:password].nil?
