@@ -10,8 +10,14 @@
 **Defined types**
 
 * [`openssl::cert`](#opensslcert): Manage an X.509 certificate file in PEM format
+* [`openssl::csr`](#opensslcsr): Manage OpenSSL certificate signing request (CSR)
 * [`openssl::dhparam`](#openssldhparam): Manage Diffie-Hellman parameter files.
 * [`openssl::key`](#opensslkey): Manage an X.509 key file in PEM format
+
+**Resource types**
+
+* [`openssl_genparam`](#openssl_genparam): Generate OpenSSL DH or EC parameter files.  Example for a Diffie-Hellman parameter file:    openssl_genparam { '/tmp/dhparam.pem':     algori
+* [`openssl_genpkey`](#openssl_genpkey): Generate OpenSSL private key files.
 
 ## Classes
 
@@ -229,6 +235,186 @@ stored.
 
 Default value: `undef`
 
+### openssl::csr
+
+Manage OpenSSL certificate signing request (CSR)
+
+#### Examples
+
+##### Creating a CSR with subject alternate names
+
+```puppet
+
+openssl::csr { 'www.example.com':
+  csr_file                    => '/etc/ssl/www.example.com.csr',
+  cnf_file                    => '/etc/ssl/www.example.com.cnf',
+  csr_file                    => '/etc/ssl/www.example.com.key',
+  subject_alternate_names_dns => [ 'www.example.com', 'example.com', ],
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `openssl::csr` defined type.
+
+##### `csr_file`
+
+Data type: `Stdlib::Absolutepath`
+
+The full path name of the signing request file that will be created. It
+contains the attributes that will be included in the certificate and also
+the public part of the key.
+
+##### `cnf_file`
+
+Data type: `Stdlib::Absolutepath`
+
+The full path name of the OpenSSL configuration file that will be
+created. It contains a minimal set of configuration options that are
+needed to process the CSR. It will also be used when the CSR is used to
+create a self-signed certificate. Updates to the config file will not
+trigger the generation of a new certificate.
+
+##### `key_file`
+
+Data type: `Stdlib::Absolutepath`
+
+The full path of the private key file. This file including the key must
+already be present to generate the CSR.
+
+##### `common_name`
+
+Data type: `String`
+
+The value of the X.509 CN attribute. This attribute is mandatory.
+
+Default value: $name
+
+##### `subject_alternate_names_dns`
+
+Data type: `Array[Stdlib::Fqdn]`
+
+An array of DNS names that will be added as subject alternate names using
+the 'DNS' prefix. The certificate can be used for all names given in this
+list. Normally the common name should be in this list or the certificate
+may be rejected by modern web browsers.
+
+Default value: []
+
+##### `subject_alternate_names_ip`
+
+Data type: `Array[Stdlib::IP::Address]`
+
+An array of IP addresses that wull be added as subject alternate names
+using the 'IP' prefix. The certificate can be used for all IP addresses
+given in this list.
+
+Default value: []
+
+##### `key_usage`
+
+Data type: `Array[Openssl::Keyusage]`
+
+The intended purposes of the certificate.
+
+Default value: [ 'keyEncipherment', 'dataEncipherment' ]
+
+##### `extended_key_usage`
+
+Data type: `Array[String]`
+
+The extended key usage of the certificate.
+
+Default value: [ 'serverAuth' ]
+
+##### `basic_constraints_ca`
+
+Data type: `Boolean`
+
+Whether the subject of the certificate is a CA.
+
+Default value: `false`
+
+##### `mode`
+
+Data type: `Stdlib::Filemode`
+
+The file mode used for the resource.
+
+Default value: '0444'
+
+##### `owner`
+
+Data type: `String`
+
+The file owner used for the resource.
+
+Default value: 'root'
+
+##### `group`
+
+Data type: `Optional[String]`
+
+The file group used for the resource.
+
+Default value: `undef`
+
+##### `country_name`
+
+Data type: `Optional[String]`
+
+The value of the X.509 `C` attribute.
+
+Default value: `undef`
+
+##### `state_or_province_name`
+
+Data type: `Optional[String]`
+
+The value of the X.509 `ST` attribute.
+
+Default value: `undef`
+
+##### `locality_name`
+
+Data type: `Optional[String]`
+
+The value of the X.509 `L` attribute.
+
+Default value: `undef`
+
+##### `postal_code`
+
+Data type: `Optional[String]`
+
+The value of the X.509 `PC` attribute.
+
+Default value: `undef`
+
+##### `street_address`
+
+Data type: `Optional[String]`
+
+The value of the X.509 `STREET` attribute.
+
+Default value: `undef`
+
+##### `organization_name`
+
+Data type: `Optional[String]`
+
+The value of the X.509 `O` attribute.
+
+Default value: `undef`
+
+##### `organization_unit_name`
+
+Data type: `Optional[String]`
+
+The value of the X.509 `OU` attribute.
+
+Default value: `undef`
+
 ### openssl::dhparam
 
 Manage Diffie-Hellman parameter files.
@@ -432,4 +618,173 @@ Data type: `Optional[Stdlib::Absolutepath]`
 The destination directory on the client where the key will be stored.
 
 Default value: `undef`
+
+## Resource types
+
+### openssl_genparam
+
+Generate OpenSSL DH or EC parameter files.
+
+Example for a Diffie-Hellman parameter file:
+
+  openssl_genparam { '/tmp/dhparam.pem':
+    algorithm => 'DH',
+    bits      => '2048,
+    generator => '2',
+  }
+
+Example for a Elliptic Curve parameter file:
+
+  openssl_genparam { '/tmp/ecparam.pem':
+    algorithm => 'EC',
+    curve     => 'secp521r1',
+  }
+
+#### Properties
+
+The following properties are available in the `openssl_genparam` type.
+
+##### `ensure`
+
+Valid values: present, absent
+
+Specifies whether the resource should exist.
+
+Default value: present
+
+#### Parameters
+
+The following parameters are available in the `openssl_genparam` type.
+
+##### `file`
+
+The name of the parameter file to manage.
+
+##### `algorithm`
+
+Valid values: DH, EC
+
+The algorithm to generate parameters for.
+
+##### `bits`
+
+Valid values: 2048, 4096, 8192
+
+The number of bits to generate for Diffie-Hellman parameters.
+
+##### `generator`
+
+Valid values: 2, 5
+
+The generator to use for Diffie-Hellman parameters.
+
+##### `curve`
+
+Valid values: %r{^[a-zA-Z][a-zA-Z0-9-]+[0-9]$}
+
+The EC curve to use for elliptic curve parameters.
+
+##### `refresh_interval`
+
+Valid values: %r{^[0-9]+(y|mo|w|d|h|mi|s)?$}
+
+The Refresh interval for the Diffie-Hellman parameter file. A new
+parameter file will be generated after this time.
+
+The value must be a number optionally followed by a time unit. The
+following units are understood: `y` for year (365 days), `mo` for
+months (30 days), `w` for week (7 days), `d` for days (24 hours), `h`
+for hours (60 minutes), `mi` for minute (60 seconds). When the unit `s`
+or no unit is used then the value is interpreted as the number of
+seconds.
+
+### openssl_genpkey
+
+The type generates OpenSSL private key file. The key can optionally be
+encrypted using a supplied password.
+
+#### Examples
+
+##### Generate RSA private key using 2048 bits
+
+```puppet
+
+openssl_genpkey { '/tmp/rsa-2048.key':
+  algorithm => 'RSA',
+  bits      => '2048',
+}
+```
+
+##### Generate EC private key using secp521r1 curve
+
+```puppet
+
+openssl_genpkey { '/tmp/ec-secp521r1.key':
+  algorithm => 'EC',
+  curve     => 'secp521r1',
+}
+```
+
+##### Generate AES encrypted EC private key using secp256k1 curve
+
+```puppet
+
+openssl_genpkey { '/tmp/ec-secp256k1.key':
+  algorithm => 'EC',
+  curve     => 'secp256k1',
+  cipher    => 'aes128',
+  password  => 'rosebud',
+}
+```
+
+#### Properties
+
+The following properties are available in the `openssl_genpkey` type.
+
+##### `ensure`
+
+Valid values: present, absent
+
+Specifies whether the resource should exist.
+
+Default value: present
+
+#### Parameters
+
+The following parameters are available in the `openssl_genpkey` type.
+
+##### `file`
+
+The name of the private key file to manage.
+
+##### `algorithm`
+
+Valid values: RSA, EC
+
+The algorithm to generate a private key for. The number of bits
+must be supplied if an RSA key is generated. For an EC key the curve
+name must be given
+
+##### `bits`
+
+Valid values: 2048, 4096, 8192
+
+The number of bits for the RSA key. Must be one of the strings
+`2048`, `4096` or `8192`. This parameter is mandatory for RSA keys.
+
+##### `curve`
+
+Valid values: %r{^[a-zA-Z][a-zA-Z0-9-]+[0-9]$}
+
+The curve to use for elliptic curve key. This parameter is
+mandatory for EC keys.
+
+##### `cipher`
+
+Encrypt the key with the supplied cipher. A password must be given
+in this case.
+
+##### `password`
+
+Use the supplied password when encrypting the key.
 

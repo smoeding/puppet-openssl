@@ -3,6 +3,10 @@
 require 'securerandom'
 
 Puppet::Type.type(:openssl_genparam).provide(:openssl_genparam) do
+  desc <<-EOT
+    This provider implements the openssl_genparam type.
+  EOT
+
   commands openssl: 'openssl'
 
   def exists?

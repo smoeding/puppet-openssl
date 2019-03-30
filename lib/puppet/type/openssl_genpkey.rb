@@ -32,6 +32,10 @@ Puppet::Type.newtype(:openssl_genpkey) do
   DOC
 
   ensurable do
+    desc <<-EOT
+      Specifies whether the resource should exist.
+    EOT
+
     defaultvalues
     defaultto :present
   end

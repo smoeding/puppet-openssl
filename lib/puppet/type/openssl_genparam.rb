@@ -46,6 +46,10 @@ Puppet::Type.newtype(:openssl_genparam) do
   end
 
   ensurable do
+    desc <<-EOT
+      Specifies whether the resource should exist.
+    EOT
+
     defaultvalues
     defaultto :present
   end
