@@ -2,3 +2,4 @@
 ---
 spec/spec_helper.rb:
   mock_with: ':rspec'
+  hiera_config: 'spec/fixtures/hiera.yaml'

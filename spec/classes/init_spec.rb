@@ -2,12 +2,7 @@ require 'spec_helper'
 
 describe 'openssl' do
   let :default_params do
-    {
-      default_key_dir:       '/key',
-      default_cert_dir:      '/crt',
-      cert_source_directory: '/foo',
-      root_group:            'wheel',
-    }
+    { cert_source_directory: '/foo' }
   end
 
   before(:each) do
@@ -22,8 +17,8 @@ describe 'openssl' do
     end
   end
 
-  on_supported_os.each do |os, facts|
-    let(:facts) { facts }
+  on_supported_os.each do |os, os_facts|
+    let(:facts) { os_facts }
     let(:params) { default_params }
 
     context "on #{os} with default parameters" do
