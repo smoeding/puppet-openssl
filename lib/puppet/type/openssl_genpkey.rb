@@ -2,13 +2,32 @@
 
 Puppet::Type.newtype(:openssl_genpkey) do
   desc <<-DOC
-    Generate OpenSSL private key files.
+    @summary Generate OpenSSL private key files.
 
-    Example for a RSA private key using 2048 bits:
+    The type generates OpenSSL private key file. The key can optionally be
+    encrypted using a supplied password.
 
-      openssl_genpkey { '/tmp/rsa248.key':
+    @example Generate RSA private key using 2048 bits
+
+      openssl_genpkey { '/tmp/rsa-2048.key':
         algorithm => 'RSA',
         bits      => '2048',
+      }
+
+    @example Generate EC private key using secp521r1 curve
+
+      openssl_genpkey { '/tmp/ec-secp521r1.key':
+        algorithm => 'EC',
+        curve     => 'secp521r1',
+      }
+
+    @example Generate AES encrypted EC private key using secp256k1 curve
+
+      openssl_genpkey { '/tmp/ec-secp256k1.key':
+        algorithm => 'EC',
+        curve     => 'secp256k1',
+        cipher    => 'aes128',
+        password  => 'rosebud',
       }
   DOC
 
@@ -28,7 +47,9 @@ Puppet::Type.newtype(:openssl_genpkey) do
   end
 
   newparam(:algorithm) do
-    desc 'The algorithm to generate a private key for.'
+    desc 'The algorithm to generate a private key for. The number of bits
+      must be supplied if an RSA key is generated. For an EC key the curve
+      name must be given'
 
     newvalues('RSA', 'EC')
     munge { |value| value.to_s }
@@ -40,14 +61,15 @@ Puppet::Type.newtype(:openssl_genpkey) do
 
   newparam(:bits) do
     desc 'The number of bits for the RSA key. Must be one of the strings
-      `2048`, `4096` or `8192`.'
+      `2048`, `4096` or `8192`. This parameter is mandatory for RSA keys.'
 
     newvalues('2048', '4096', '8192')
     munge { |value| value.to_s }
   end
 
   newparam(:curve) do
-    desc 'The curve to use for elliptic curve key.'
+    desc 'The curve to use for elliptic curve key. This parameter is
+      mandatory for EC keys.'
 
     newvalues(%r{^[a-zA-Z][a-zA-Z0-9-]+[0-9]$})
     munge { |value| value.to_s }
