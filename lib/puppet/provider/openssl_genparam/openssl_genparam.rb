@@ -11,7 +11,7 @@ Puppet::Type.type(:openssl_genparam).provide(:openssl_genparam) do
 
   def exists?
     param = ['openssl', 'pkeyparam', '-noout', '-text']
-    curve = generator = bits = 0
+    curve = generator = bits = '0'
 
     # file does not exist
     return false unless File.exist?(resource[:file])
@@ -40,7 +40,7 @@ Puppet::Type.type(:openssl_genparam).provide(:openssl_genparam) do
       return false unless resource[:bits].to_s == bits
       return false unless resource[:generator].to_s == generator
     when 'EC'
-      return false unless resource[:curve].to_s == '0'
+      return false if resource[:curve].to_s == '0'
     end
 
     # check get age of file if refresh_interval is set
@@ -57,11 +57,11 @@ Puppet::Type.type(:openssl_genparam).provide(:openssl_genparam) do
   def create
     param = ['genpkey', '-genparam']
 
+    param << '-algorithm' << resource[:algorithm]
+
     # use a temporary file to generate the parameters and rename it when done
     sfile = resource[:file] + '.' + SecureRandom.uuid
     param << '-out' << sfile
-
-    param << '-algorithm' << resource[:algorithm]
 
     case resource[:algorithm]
     when 'DH'
