@@ -4,28 +4,20 @@ Puppet::Type.newtype(:openssl_genpkey) do
   desc <<-DOC
     @summary Generate OpenSSL private key files.
 
-    The type generates OpenSSL private key file. The key can optionally be
-    encrypted using a supplied password.
+    The type generates an OpenSSL private key file from a parameter file. The
+    parameter file is created by using the `openssl_genparam` type. The key
+    can optionally be encrypted using a supplied password.
 
-    @example Generate RSA private key using 2048 bits
+    @example Generate a private key from Diffie-Hellman 2048 bits parameters
 
       openssl_genpkey { '/tmp/rsa-2048.key':
-        algorithm => 'RSA',
-        bits      => '2048',
+        paramfile => '/tmp/dh-2048.pem',
       }
 
-    @example Generate EC private key using secp521r1 curve
-
-      openssl_genpkey { '/tmp/ec-secp521r1.key':
-        algorithm => 'EC',
-        curve     => 'secp521r1',
-      }
-
-    @example Generate AES encrypted EC private key using secp256k1 curve
+    @example Generate AES encrypted Elliptic Curve private key
 
       openssl_genpkey { '/tmp/ec-secp256k1.key':
-        algorithm => 'EC',
-        curve     => 'secp256k1',
+        paramfile => '/tmp/ec-secp256k1.pem',
         cipher    => 'aes128',
         password  => 'rosebud',
       }
@@ -42,6 +34,16 @@ Puppet::Type.newtype(:openssl_genpkey) do
 
   newparam(:file, namevar: true) do
     desc 'The name of the private key file to manage.'
+
+    validate do |value|
+      unless Puppet::Util.absolute_path?(value)
+        raise Puppet::Error, "File paths must be fully qualified, not '#{value}'"
+      end
+    end
+  end
+
+  newparam(:paramfile) do
+    desc 'The name of the parameter file to use when the key is generated.'
 
     validate do |value|
       unless Puppet::Util.absolute_path?(value)
@@ -104,5 +106,9 @@ Puppet::Type.newtype(:openssl_genpkey) do
     if !self[:cipher].nil? && self[:password].nil?
       raise Puppet::Error, 'A password must be given when encryption is used.'
     end
+  end
+
+  autorequire(:openssl_genparam) do
+    [ self[:paramfile] ]
   end
 end

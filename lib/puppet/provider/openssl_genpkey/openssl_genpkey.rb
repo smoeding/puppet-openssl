@@ -11,32 +11,27 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
 
   def exists?
     param = ['openssl', 'pkey', '-noout', '-text']
-    valid = false
 
     # file does not exist
     return false unless File.exist?(resource[:file])
     param << '-in' << resource[:file]
 
-    param << "-#{resource[:cipher]}" unless resource[:cipher].nil?
+    # send cipher password on stdin for security reasons
+    unless resource[:cipher].nil? || resource[:password].nil?
+      param << "-#{resource[:cipher]}"
+      param << '-passin' << 'stdin'
+    end
 
-    # use stdin to send password for security reasons
-    param << '-passin' << 'stdin' unless resource[:password].nil?
-
-    # parse openssl output for properties
     Open3.popen2(*param) do |stdin, stdout, process_status|
       Puppet.debug("openssl_genpkey: exists? #{resource[:file]}")
 
       stdin.puts(resource[:password]) unless resource[:password].nil?
 
-      stdout.each_line do |line|
-        %r{^Private-Key: \((\d+) bit\)}.match(line) { |_| valid = true }
-      end
+      # Ignore output
+      stdout.each_line { |_| }
 
       return false unless process_status.value.success?
     end
-
-    # validate
-    return false unless valid
 
     true
   end
@@ -44,16 +39,17 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
   def create
     param = ['openssl', 'genpkey']
 
-    param << '-algorithm' << resource[:algorithm]
+    param << '-paramfile' << resource[:paramfile]
 
     # use a temporary file to generate the parameters and rename it when done
     sfile = resource[:file] + '.' + SecureRandom.uuid
     param << '-out' << sfile
 
-    param << "-#{resource[:cipher]}" unless resource[:cipher].nil?
-
-    # use stdin to send password for security reasons
-    param << '-pass' << 'stdin' unless resource[:password].nil?
+    # send cipher password on stdin for security reasons
+    unless resource[:cipher].nil? || resource[:password].nil?
+      param << "-#{resource[:cipher]}"
+      param << '-pass' << 'stdin'
+    end
 
     case resource[:algorithm]
     when 'RSA'
@@ -63,7 +59,6 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
       param << '-pkeyopt' << 'ec_param_enc:named_curve'
     end
 
-    # parse openssl output for properties
     Open3.popen2(*param) do |stdin, stdout, process_status|
       Puppet.debug("openssl_genpkey: create #{resource[:file]}")
 
