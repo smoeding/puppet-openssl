@@ -117,6 +117,8 @@ Puppet::Type.newtype(:openssl_genparam) do
       raise Puppet::Error, 'Parameter generator is mandatory for Diffie-Hellman parameters' if self[:generator].nil?
     when 'EC'
       raise Puppet::Error, 'Parameter curve is mandatory for Elliptic Curve parameters' if self[:curve].nil?
+    else
+      raise Puppet::Error, "Unsupported algorithm #{self[:algorithm]}"
     end
   end
 end
