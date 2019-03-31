@@ -43,7 +43,7 @@ Puppet::Type.type(:openssl_genparam).provide(:openssl_genparam) do
       return false if resource[:curve].to_s == '0'
     end
 
-    # check get age of file if refresh_interval is set
+    # check age of file if refresh_interval is set
     unless resource[:refresh_interval].nil?
       age = Time.now - File.stat(resource[:file]).mtime
       Puppet.debug("openssl_genparam: #{resource[:file]} age=#{age}")

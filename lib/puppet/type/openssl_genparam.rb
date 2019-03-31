@@ -2,9 +2,9 @@
 
 Puppet::Type.newtype(:openssl_genparam) do
   desc <<-DOC
-    Generate OpenSSL DH or EC parameter files.
+    @summary Generate Diffie-Hellman or Elliptic Curve parameter files
 
-    Example for a Diffie-Hellman parameter file:
+    @example Create a Diffie-Hellman parameter file using 2048 bits
 
       openssl_genparam { '/tmp/dhparam.pem':
         algorithm => 'DH',
@@ -12,13 +12,12 @@ Puppet::Type.newtype(:openssl_genparam) do
         generator => '2',
       }
 
-    Example for a Elliptic Curve parameter file:
+    @example Create an Elliptic Curve parameter file using the secp521e1 curve
 
       openssl_genparam { '/tmp/ecparam.pem':
         algorithm => 'EC',
         curve     => 'secp521r1',
       }
-
   DOC
 
   def munge_interval(value)
@@ -65,7 +64,7 @@ Puppet::Type.newtype(:openssl_genparam) do
   end
 
   newparam(:algorithm) do
-    desc 'The algorithm to generate parameters for.'
+    desc 'The algorithm to generate the parameters for.'
 
     newvalues('DH', 'EC')
     munge { |value| value.to_s }
@@ -76,7 +75,7 @@ Puppet::Type.newtype(:openssl_genparam) do
   end
 
   newparam(:bits) do
-    desc 'The number of bits to generate for Diffie-Hellman parameters.'
+    desc 'The number of bits to use for Diffie-Hellman parameters.'
 
     newvalues('2048', '4096', '8192')
     munge { |value| value.to_s }
@@ -90,15 +89,15 @@ Puppet::Type.newtype(:openssl_genparam) do
   end
 
   newparam(:curve) do
-    desc 'The EC curve to use for elliptic curve parameters.'
+    desc 'The name of the curve to use for Elliptic Curve parameters.'
 
     newvalues(%r{^[a-zA-Z][a-zA-Z0-9-]+[0-9]$})
     munge { |value| value.to_s }
   end
 
   newparam(:refresh_interval) do
-    desc 'The Refresh interval for the Diffie-Hellman parameter file. A new
-      parameter file will be generated after this time.
+    desc 'The Refresh interval for the parameter file. A new parameter file
+      will be generated after this time.
 
       The value must be a number optionally followed by a time unit. The
       following units are understood: `y` for year (365 days), `mo` for
