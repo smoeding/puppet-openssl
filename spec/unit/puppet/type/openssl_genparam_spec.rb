@@ -9,7 +9,8 @@ describe Puppet::Type.type(:openssl_genparam) do
     end
   end
   let :openssl_genparam do
-    Puppet::Type.type(:openssl_genparam).new(name: 'foo', file: tmp_file)
+    Puppet::Type.type(:openssl_genparam)
+                .new(name: tmp_file, algorithm: 'DH', bits: '2048', generator: '2')
   end
 
   it 'defaults to ensure => present' do

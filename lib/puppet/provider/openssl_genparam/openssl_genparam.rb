@@ -10,19 +10,20 @@ Puppet::Type.type(:openssl_genparam).provide(:openssl_genparam) do
   commands openssl: 'openssl'
 
   def exists?
-    param = ['openssl', 'pkeyparam', '-noout', '-text']
-    curve = generator = bits = '0'
-
     # file does not exist
     return false unless File.exist?(resource[:file])
+
+    param = ['openssl', 'pkeyparam', '-noout', '-text']
     param << '-in' << resource[:file]
 
-    # parse openssl output for properties
+    curve = bits = generator = ''
+
     Open3.popen2(*param) do |_stdin, stdout, process_status|
       Puppet.debug("openssl_genparam: #{resource[:file]} opened")
 
+      # parse output
       stdout.each_line do |line|
-        %r{^.*ECDSA-Parameters: \((\d+) bit\)}.match(line) { |m| curve = m[1] }
+        %r{^.*ASN1 OID: ([a-zA-Z0-9-]+)}.match(line) { |m| curve = m[1] }
         %r{^.*DH Parameters: \((\d+) bit\)}.match(line) { |m| bits = m[1] }
         %r{^.*generator: (\d) }.match(line) { |m| generator = m[1] }
       end
@@ -30,23 +31,22 @@ Puppet::Type.type(:openssl_genparam).provide(:openssl_genparam) do
       return false unless process_status.value.success?
     end
 
-    Puppet.debug("openssl_genparam: #{resource[:file]} curve=#{curve}")
-    Puppet.debug("openssl_genparam: #{resource[:file]} bits=#{bits}")
-    Puppet.debug("openssl_genparam: #{resource[:file]} generator=#{generator}")
-
     # validate
     case resource[:algorithm]
     when 'DH'
-      return false unless resource[:bits].to_s == bits
-      return false unless resource[:generator].to_s == generator
+      Puppet.debug("openssl_genparam: #{resource[:file]} DH bits=#{bits}")
+      Puppet.debug("openssl_genparam: #{resource[:file]} DH generator=#{generator}")
+      return false unless bits == resource[:bits]
+      return false unless generator == resource[:generator]
     when 'EC'
-      return false if resource[:curve].to_s == '0'
+      Puppet.debug("openssl_genparam: #{resource[:file]} EC curve=#{curve}")
+      return false unless curve.casecmp(resource[:curve]).zero?
     end
 
     # check age of file if refresh_interval is set
     unless resource[:refresh_interval].nil?
       age = Time.now - File.stat(resource[:file]).mtime
-      Puppet.debug("openssl_genparam: #{resource[:file]} age=#{age}")
+      Puppet.debug("openssl_genparam: #{resource[:file]} file age=#{age}")
 
       return false unless age < resource[:refresh_interval]
     end
@@ -55,25 +55,27 @@ Puppet::Type.type(:openssl_genparam).provide(:openssl_genparam) do
   end
 
   def create
-    param = ['genpkey', '-genparam']
-
-    param << '-algorithm' << resource[:algorithm]
+    cre_param = ['genpkey', '-genparam']
 
     # use a temporary file to generate the parameters and rename it when done
-    sfile = resource[:file] + '.' + SecureRandom.uuid
-    param << '-out' << sfile
+    tfile = resource[:file] + '.' + SecureRandom.uuid
+    cre_param << '-out' << tfile
 
     case resource[:algorithm]
     when 'DH'
-      param << '-pkeyopt' << "dh_paramgen_prime_len:#{resource[:bits]}"
-      param << '-pkeyopt' << "dh_paramgen_generator:#{resource[:generator]}"
+      cre_param << '-algorithm' << 'DH'
+      cre_param << '-pkeyopt' << "dh_paramgen_prime_len:#{resource[:bits]}"
+      cre_param << '-pkeyopt' << "dh_paramgen_generator:#{resource[:generator]}"
     when 'EC'
-      param << '-pkeyopt' << "ec_paramgen_curve:#{resource[:curve]}"
+      cre_param << '-algorithm' << 'EC'
+      cre_param << '-pkeyopt' << "ec_paramgen_curve:#{resource[:curve]}"
+      #cre_param << '-pkeyopt' << 'ec_param_enc:named_curve'
     end
 
-    openssl(*param)
+    # generate parameter file
+    openssl(*cre_param)
 
-    File.rename(sfile, resource[:file])
+    File.rename(tfile, resource[:file])
   end
 
   def destroy

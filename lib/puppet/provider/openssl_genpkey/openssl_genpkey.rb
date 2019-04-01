@@ -1,6 +1,7 @@
 # openssl_genpkey.rb --- Generate openssl private key files
 
 require 'securerandom'
+require 'tempfile'
 
 Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
   desc <<-EOT
@@ -10,13 +11,13 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
   commands openssl: 'openssl'
 
   def exists?
-    param = ['openssl', 'pkey', '-noout', '-text']
-
     # file does not exist
     return false unless File.exist?(resource[:file])
+
+    param = ['openssl', 'pkey', '-noout', '-text']
     param << '-in' << resource[:file]
 
-    # send cipher password on stdin for security reasons
+    # it is more secure to send cipher password on stdin
     unless resource[:cipher].nil? || resource[:password].nil?
       param << "-#{resource[:cipher]}"
       param << '-passin' << 'stdin'
@@ -37,29 +38,53 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
   end
 
   def create
-    param = ['openssl', 'genpkey']
+    cre_param = ['openssl', 'genpkey']
+    ptemp = nil
 
-    param << '-paramfile' << resource[:paramfile]
+    if resource[:paramfile].nil?
+      # no paramfile so generate a temporary parameter file
+      ptemp = Tempfile.new(['openssl_genpkey', '.pem'])
+      raise Puppet::Error, 'Failed to create temporary file' if ptemp.nil?
+
+      # close the file as another program will need to write it
+      ptemp.close
+
+      # build command to generate the temporary parameter file
+      gen_param = ['genpkey', '-genparam']
+
+      case resource[:algorithm]
+      when 'RSA'
+        gen_param << '-algorithm' << 'DH'
+        gen_param << '-pkeyopt' << "dh_paramgen_prime_len:#{resource[:bits]}"
+        gen_param << '-pkeyopt' << "dh_paramgen_generator:#{resource[:generator]}"
+      when 'EC'
+        gen_param << '-algorithm' << 'EC'
+        gen_param << '-pkeyopt' << "ec_paramgen_curve:#{resource[:curve]}"
+        #gen_param << '-pkeyopt' << 'ec_param_enc:named_curve'
+      end
+
+      gen_param << '-out' << ptemp.path
+
+      # generate parameter file
+      openssl(*gen_param)
+
+      cre_param << '-paramfile' << ptemp.path
+    else
+      # use supplied parameter file
+      cre_param << '-paramfile' << resource[:paramfile]
+    end
 
     # use a temporary file to generate the parameters and rename it when done
-    sfile = resource[:file] + '.' + SecureRandom.uuid
-    param << '-out' << sfile
+    tfile = resource[:file] + '.' + SecureRandom.uuid
+    cre_param << '-out' << tfile
 
-    # send cipher password on stdin for security reasons
+    # it is more secure to send cipher password on stdin
     unless resource[:cipher].nil? || resource[:password].nil?
-      param << "-#{resource[:cipher]}"
-      param << '-pass' << 'stdin'
+      cre_param << "-#{resource[:cipher]}"
+      cre_param << '-pass' << 'stdin'
     end
 
-    case resource[:algorithm]
-    when 'RSA'
-      param << '-pkeyopt' << "rsa_keygen_bits:#{resource[:bits]}"
-    when 'EC'
-      param << '-pkeyopt' << "ec_paramgen_curve:#{resource[:curve]}"
-      param << '-pkeyopt' << 'ec_param_enc:named_curve'
-    end
-
-    Open3.popen2(*param) do |stdin, stdout, process_status|
+    Open3.popen2(*cre_param) do |stdin, stdout, process_status|
       Puppet.debug("openssl_genpkey: create #{resource[:file]}")
 
       stdin.puts(resource[:password]) unless resource[:password].nil?
@@ -70,7 +95,8 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
       return false unless process_status.value.success?
     end
 
-    File.rename(sfile, resource[:file])
+    ptemp.unlink unless ptemp.nil?
+    File.rename(tfile, resource[:file])
   end
 
   def destroy
