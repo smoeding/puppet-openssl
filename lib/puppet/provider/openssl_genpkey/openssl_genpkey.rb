@@ -11,7 +11,6 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
   commands openssl: 'openssl'
 
   def exists?
-    # file does not exist
     return false unless File.exist?(resource[:file])
 
     param = ['openssl', 'pkey', '-noout', '-text']
@@ -41,16 +40,22 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
     cre_param = ['openssl', 'genpkey']
     ptemp = nil
 
+    # use a temporary file to generate the parameters and rename it when done
+    tfile = resource[:file] + '.' + SecureRandom.uuid
+    cre_param << '-out' << tfile
+
     if resource[:paramfile].nil?
       # no paramfile so generate a temporary parameter file
       ptemp = Tempfile.new(['openssl_genpkey', '.pem'])
       raise Puppet::Error, 'Failed to create temporary file' if ptemp.nil?
 
-      # close the file as another program will need to write it
+      # close the file as another program will write to it
       ptemp.close
 
       # build command to generate the temporary parameter file
       gen_param = ['genpkey', '-genparam']
+
+      gen_param << '-out' << ptemp.path
 
       case resource[:algorithm]
       when 'RSA'
@@ -60,10 +65,8 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
       when 'EC'
         gen_param << '-algorithm' << 'EC'
         gen_param << '-pkeyopt' << "ec_paramgen_curve:#{resource[:curve]}"
-        #gen_param << '-pkeyopt' << 'ec_param_enc:named_curve'
+        # gen_param << '-pkeyopt' << 'ec_param_enc:named_curve'
       end
-
-      gen_param << '-out' << ptemp.path
 
       # generate parameter file
       openssl(*gen_param)
@@ -73,10 +76,6 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
       # use supplied parameter file
       cre_param << '-paramfile' << resource[:paramfile]
     end
-
-    # use a temporary file to generate the parameters and rename it when done
-    tfile = resource[:file] + '.' + SecureRandom.uuid
-    cre_param << '-out' << tfile
 
     # it is more secure to send cipher password on stdin
     unless resource[:cipher].nil? || resource[:password].nil?
@@ -95,11 +94,13 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
       return false unless process_status.value.success?
     end
 
-    ptemp.unlink unless ptemp.nil?
     File.rename(tfile, resource[:file])
+  ensure
+    File.unlink(tfile) if File.exist?(tfile)
+    ptemp.unlink unless ptemp.nil?
   end
 
   def destroy
-    File.delete(resource[:file])
+    File.unlink(resource[:file])
   end
 end
