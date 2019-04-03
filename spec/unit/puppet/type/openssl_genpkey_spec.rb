@@ -10,7 +10,7 @@ describe Puppet::Type.type(:openssl_genpkey) do
   end
   let :openssl_genpkey do
     Puppet::Type.type(:openssl_genpkey)
-                .new(name: tmp_file, algorithm: 'RSA', bits: '2048', generator: '2')
+                .new(name: tmp_file, algorithm: 'RSA', bits: '2048')
   end
 
   it 'defaults to ensure => present' do
@@ -40,16 +40,6 @@ describe Puppet::Type.type(:openssl_genpkey) do
   it 'accepts bits 8192' do
     openssl_genpkey[:bits] = '8192'
     expect(openssl_genpkey[:bits]).to eq('8192')
-  end
-
-  it 'accepts generator 2' do
-    openssl_genpkey[:generator] = '2'
-    expect(openssl_genpkey[:generator]).to eq('2')
-  end
-
-  it 'accepts generator 5' do
-    openssl_genpkey[:generator] = '5'
-    expect(openssl_genpkey[:generator]).to eq('5')
   end
 
   it 'does not accept bits 512' do

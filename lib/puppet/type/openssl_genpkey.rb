@@ -4,17 +4,10 @@ Puppet::Type.newtype(:openssl_genpkey) do
   desc <<-DOC
     @summary Generate OpenSSL private key files.
 
-    The type generates an OpenSSL private key file. The key can be generated
-    using a given parameter file or the given parameters. The key can
-    optionally be encrypted using a supplied password.
+    The type generates an OpenSSL private key file. The key can optionally be
+    encrypted using a supplied password.
 
-    @example Generate a private key from Diffie-Hellman parameter file
-
-      openssl_genpkey { '/tmp/rsa-2048.key':
-        paramfile => '/tmp/dh-2048.pem',
-      }
-
-    @example Generate a private key using given Diffie-Hellman parameters
+    @example Generate a 2048 bit RSA key file
 
       openssl_genpkey { '/tmp/rsa-2048.key':
         algorithm => 'RSA',
@@ -50,16 +43,6 @@ Puppet::Type.newtype(:openssl_genpkey) do
     end
   end
 
-  newparam(:paramfile) do
-    desc 'The name of the parameter file to use when the key is generated.'
-
-    validate do |value|
-      unless Puppet::Util.absolute_path?(value)
-        raise Puppet::Error, "File paths must be fully qualified, not '#{value}'"
-      end
-    end
-  end
-
   newparam(:algorithm) do
     desc 'The algorithm to generate a private key for. The number of bits
       must be supplied if an RSA key is generated. For an EC key the curve
@@ -74,14 +57,6 @@ Puppet::Type.newtype(:openssl_genpkey) do
       `2048`, `4096` or `8192`. This parameter is mandatory for RSA keys.'
 
     newvalues('2048', '4096', '8192')
-    munge { |value| value.to_s }
-  end
-
-  newparam(:generator) do
-    desc 'The generator for the RSA key. Must be one of the strings `2` or
-      `5`. This parameter is mandatory for RSA keys.'
-
-    newvalues('2', '5')
     munge { |value| value.to_s }
   end
 
@@ -107,42 +82,20 @@ Puppet::Type.newtype(:openssl_genpkey) do
   end
 
   validate do
-    if self[:paramfile].nil?
-      # explicit parameters should be given
+    if self[:algorithm].nil?
+      raise Puppet::Error, 'Parameter algorithm must be set'
+    end
 
-      if self[:algorithm].nil?
-        raise Puppet::Error, 'Parameter algorithm must be set if no paramfile is used'
-      end
+    if (self[:algorithm] == 'RSA') && self[:bits].nil?
+      raise Puppet::Error, 'Parameter bits is mandatory for RSA keys'
+    end
 
-      if (self[:algorithm] == 'RSA') && self[:bits].nil?
-        raise Puppet::Error, 'Parameter bits is mandatory for RSA keys'
-      end
-
-      if (self[:algorithm] == 'RSA') && self[:generator].nil?
-        raise Puppet::Error, 'Parameter generator is mandatory for RSA keys'
-      end
-
-      if (self[:algorithm] == 'EC') && self[:curve].nil?
-        raise Puppet::Error, 'Parameter curve is mandatory for EC keys'
-      end
-    elsif self[:algorithm].nil?
-      # use give parameter file
-
-      if self[:paramfile].nil?
-        raise Puppet::Error, 'Parameter paramfile must be set if no algorithm is used'
-      end
-    else
-      # both parameters are set
-
-      raise Puppet::Error, 'Parameters paramfile and algorithm are mutually exclusive'
+    if (self[:algorithm] == 'EC') && self[:curve].nil?
+      raise Puppet::Error, 'Parameter curve is mandatory for EC keys'
     end
 
     if !self[:cipher].nil? && self[:password].nil?
       raise Puppet::Error, 'A password must be given when encryption is used.'
     end
-  end
-
-  autorequire(:openssl_genparam) do
-    [self[:paramfile]]
   end
 end
