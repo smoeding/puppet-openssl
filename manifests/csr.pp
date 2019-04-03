@@ -112,7 +112,6 @@ define openssl::csr (
   $basic_constraints = bool2str($basic_constraints_ca, 'CA:true', 'CA:false')
 
   $params = {
-    'self_signed'                 => true,
     'default_bits'                => '2048',
     'default_md'                  => 'sha512',
     'common_name'                 => $common_name,

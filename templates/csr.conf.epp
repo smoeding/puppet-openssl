@@ -12,11 +12,8 @@ default_bits       = <%= $default_bits %>
 [ req ]
 distinguished_name = req_dn
 attributes         = req_attributes
-<% if $self_signed { -%>
 x509_extensions    = ca_ext
-<% } else { -%>
 req_extensions     = v3_ext
-<% } -%>
 
 ####################################################################
 # distinguished_name
@@ -48,7 +45,6 @@ organizationalUnitName = "<%= $organization_unit_name -%>"
 # extra attributes
 [ req_attributes ]
 
-<% if $self_signed { -%>
 ####################################################################
 # extensions included in the self-signed certificate
 [ ca_ext ]
@@ -57,14 +53,16 @@ subjectKeyIdentifier   = hash
 authorityKeyIdentifier = keyid:always,issuer:always
 keyUsage               = <%= $key_usage.join(', ') %>
 extendedKeyUsage       = <%= $extended_key_usage.join(', ') %>
-<% } else { -%>
+<% if $use_subject_alternate_names { -%>
+subjectAltName         = @subject_alt_names
+<% } -%>
+
 ####################################################################
 # extensions included in the certificate request
 [ v3_ext ]
 basicConstraints       = <%= $basic_constraints %>
 keyUsage               = <%= $key_usage.join(', ') %>
 extendedKeyUsage       = <%= $extended_key_usage.join(', ') %>
-<% } -%>
 <% if $use_subject_alternate_names { -%>
 subjectAltName         = @subject_alt_names
 
