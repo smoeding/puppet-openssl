@@ -15,7 +15,7 @@ Puppet::Type.newtype(:openssl_signcsr) do
   end
 
   newparam(:file, namevar: true) do
-    desc 'The name of the signed CSR file to manage.'
+    desc 'The name of the signed certificate file to manage.'
 
     validate do |value|
       unless Puppet::Util.absolute_path?(value)
@@ -25,7 +25,7 @@ Puppet::Type.newtype(:openssl_signcsr) do
   end
 
   newparam(:csr_file) do
-    desc 'The file with the certificate signing request.'
+    desc 'The file containing the certificate signing request.'
 
     validate do |value|
       unless Puppet::Util.absolute_path?(value)
@@ -34,7 +34,7 @@ Puppet::Type.newtype(:openssl_signcsr) do
     end
   end
 
-  newparam(:config_file) do
+  newparam(:cnf_file) do
     desc 'The configuration file.'
 
     validate do |value|
@@ -54,8 +54,8 @@ Puppet::Type.newtype(:openssl_signcsr) do
     end
   end
 
-  newparam(:password) do
-    desc 'Use the supplied password when encrypting the key.'
+  newparam(:key_password) do
+    desc 'Use the supplied password for the key if it is encrypted.'
 
     munge { |value| value.to_s }
   end
@@ -67,7 +67,7 @@ Puppet::Type.newtype(:openssl_signcsr) do
   end
 
   autorequire(:file) do
-    [self[:csr_file].value, self[:config_file].value]
+    [self[:csr_file], self[:cnf_file]]
   end
 
   autorequire(:openssl_genpkey) do
