@@ -29,12 +29,12 @@ Puppet::Type.type(:openssl_signcsr).provide(:openssl_signcsr) do
     cre_param = ['openssl', 'req', '-new', '-x509']
 
     cre_param << '-out' << resource[:file]
-    cre_param << '-in' << resource[:csr_file]
+    cre_param << '-in' << resource[:csr]
     cre_param << '-key' << resource[:key_file]
-    cre_param << '-config' << resource[:cnf_file]
+    cre_param << '-config' << resource[:config]
     cre_param << '-days' << resource[:days]
 
-    # it is more secure to send cipher password on stdin
+    # security: send cipher password on stdin
     cre_param << '-passin' << 'stdin' unless resource[:key_password].nil?
 
     Open3.popen2e(*cre_param) do |stdin, stdout, process_status|

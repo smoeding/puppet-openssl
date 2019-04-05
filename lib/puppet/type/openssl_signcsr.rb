@@ -39,7 +39,7 @@ Puppet::Type.newtype(:openssl_signcsr) do
     end
   end
 
-  newparam(:csr_file) do
+  newparam(:csr) do
     desc 'The file containing the certificate signing request.'
 
     validate do |value|
@@ -49,7 +49,7 @@ Puppet::Type.newtype(:openssl_signcsr) do
     end
   end
 
-  newparam(:cnf_file) do
+  newparam(:config) do
     desc 'The configuration file.'
 
     validate do |value|
@@ -78,11 +78,12 @@ Puppet::Type.newtype(:openssl_signcsr) do
   newparam(:days) do
     desc 'The number of days the certificate should be valid.'
 
+    newvalues(%r{^[0-9]+$})
     munge { |value| value.to_s }
   end
 
   autorequire(:file) do
-    [self[:csr_file], self[:cnf_file]]
+    [self[:csr], self[:config]]
   end
 
   autorequire(:openssl_genpkey) do

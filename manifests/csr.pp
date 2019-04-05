@@ -2,19 +2,22 @@
 #
 # @example Creating a CSR with subject alternate names
 #
-#   openssl::csr { 'www.example.com':
-#     csr_file                    => '/etc/ssl/www.example.com.csr',
-#     cnf_file                    => '/etc/ssl/www.example.com.cnf',
-#     csr_file                    => '/etc/ssl/www.example.com.key',
+#   openssl::csr { '/etc/ssl/www.example.com.csr':
+#     common_name                 => 'www.example.com',
 #     subject_alternate_names_dns => [ 'www.example.com', 'example.com', ],
+#     config                      => '/etc/ssl/www.example.com.cnf',
+#     key_file                    => '/etc/ssl/www.example.com.key',
 #   }
+#
+# @param common_name
+#   The value of the X.509 CN attribute. This attribute is mandatory.
 #
 # @param csr_file
 #   The full path name of the signing request file that will be created. It
 #   contains the attributes that will be included in the certificate and also
-#   the public part of the key.
+#   the public part of the key. Default is the name of the resource.
 #
-# @param cnf_file
+# @param config
 #   The full path name of the OpenSSL configuration file that will be
 #   created. It contains a minimal set of configuration options that are
 #   needed to process the CSR. It will also be used when the CSR is used to
@@ -24,9 +27,6 @@
 # @param key_file
 #   The full path of the private key file. This file including the key must
 #   already be present to generate the CSR.
-#
-# @param common_name
-#   The value of the X.509 CN attribute. This attribute is mandatory.
 #
 # @param subject_alternate_names_dns
 #   An array of DNS names that will be added as subject alternate names using
@@ -80,10 +80,10 @@
 #
 #
 define openssl::csr (
-  Stdlib::Absolutepath       $csr_file,
-  Stdlib::Absolutepath       $cnf_file,
+  String                     $common_name,
+  Stdlib::Absolutepath       $config,
   Stdlib::Absolutepath       $key_file,
-  String                     $common_name                 = $name,
+  Stdlib::Absolutepath       $csr_file                    = $name,
   Array[Stdlib::Fqdn]        $subject_alternate_names_dns = [],
   Array[Stdlib::IP::Address] $subject_alternate_names_ip  = [],
   Array[Openssl::Keyusage]   $key_usage                   = [ 'keyEncipherment', 'dataEncipherment' ],
@@ -130,7 +130,7 @@ define openssl::csr (
     'use_subject_alternate_names' => $use_subject_alternate_names,
   }
 
-  file { $cnf_file:
+  file { $config:
     ensure  => file,
     owner   => $owner,
     group   => pick($group, $::openssl::root_group),
@@ -138,10 +138,10 @@ define openssl::csr (
     content => epp("${module_name}/csr.conf.epp", $params),
   }
 
-  exec { "openssl req -new -config ${cnf_file} -key ${key_file} -out ${csr_file}":
+  exec { "openssl req -new -config ${config} -key ${key_file} -out ${csr_file}":
     creates => $csr_file,
     path    => [ '/bin', '/usr/bin', '/usr/local/bin', ],
-    require => File[$cnf_file],
+    require => File[$config],
     before  => File[$csr_file],
   }
 
