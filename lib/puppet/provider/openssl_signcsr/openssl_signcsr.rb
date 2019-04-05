@@ -13,10 +13,9 @@ Puppet::Type.type(:openssl_signcsr).provide(:openssl_signcsr) do
     param = ['openssl', 'x509', '-noout']
     param << '-in' << resource[:file]
 
-    Open3.popen2e(*param) do |stdin, stdout, process_status|
+    Open3.popen2e(*param) do |_stdin, stdout, process_status|
       Puppet.debug("openssl_signcsr: exists? #{resource[:file]}")
 
-      # Ignore output
       stdout.each_line { |_| }
 
       return false unless process_status.value.success?
