@@ -4,8 +4,8 @@ Puppet::Type.newtype(:openssl_genpkey) do
   desc <<-DOC
     @summary Generate OpenSSL private key files.
 
-    The type generates an OpenSSL private key file. The key can optionally be
-    encrypted using a supplied password.
+    Generate an OpenSSL private key file. The key can optionally be encrypted
+    using a supplied password.
 
     @example Generate a 2048 bit RSA key file
 

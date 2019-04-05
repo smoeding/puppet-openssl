@@ -42,7 +42,6 @@ Puppet::Type.type(:openssl_signcsr).provide(:openssl_signcsr) do
 
       stdin.puts(resource[:key_password]) unless resource[:key_password].nil?
 
-      # Ignore output
       stdout.each_line { |_| }
 
       return false unless process_status.value.success?

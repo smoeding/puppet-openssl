@@ -18,7 +18,6 @@ Puppet::Type.type(:openssl_genparam).provide(:openssl_genparam) do
     Open3.popen2(*param) do |_stdin, stdout, process_status|
       Puppet.debug("openssl_genparam: #{resource[:file]} opened")
 
-      # ignore output
       stdout.each_line { |_| }
 
       return false unless process_status.value.success?

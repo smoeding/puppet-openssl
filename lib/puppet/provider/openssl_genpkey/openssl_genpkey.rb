@@ -16,7 +16,7 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
     param = ['openssl', 'pkey', '-noout', '-text']
     param << '-in' << resource[:file]
 
-    # it is more secure to send cipher password on stdin
+    # security: send cipher password on stdin
     unless resource[:cipher].nil? || resource[:password].nil?
       param << "-#{resource[:cipher]}"
       param << '-passin' << 'stdin'
@@ -27,7 +27,6 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
 
       stdin.puts(resource[:password]) unless resource[:password].nil?
 
-      # Ignore output
       stdout.each_line { |_| }
 
       return false unless process_status.value.success?
@@ -71,7 +70,7 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
       cre_param << '-paramfile' << ptemp.path
     end
 
-    # it is more secure to send cipher password on stdin
+    # security: send cipher password on stdin
     unless resource[:cipher].nil? || resource[:password].nil?
       cre_param << "-#{resource[:cipher]}"
       cre_param << '-pass' << 'stdin'
@@ -82,7 +81,6 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
 
       stdin.puts(resource[:password]) unless resource[:password].nil?
 
-      # Ignore output
       stdout.each_line { |_| }
 
       return false unless process_status.value.success?

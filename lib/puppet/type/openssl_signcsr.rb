@@ -3,6 +3,21 @@
 Puppet::Type.newtype(:openssl_signcsr) do
   desc <<-DOC
     @summary Sign OpenSSL certificate signing request
+
+    Take a certificate signing request (CSR), a config file providing the
+    cedrtificate extensions and a key file to generate a certificate. The
+    certificate will be valid for the given number of days. An encrypted key
+    can be used if the key password is supplied.
+
+    @example Sign a certificate for one year
+
+      openssl_signcert { '/tmp/cert.crt':
+        csr      => '/tmp/csr',
+        config   => '/tmp/cert.cnf',
+        key_file => '/tmp/cert.key',
+        days     => '365',
+      }
+
   DOC
 
   ensurable do

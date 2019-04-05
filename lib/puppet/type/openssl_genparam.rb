@@ -18,6 +18,15 @@ Puppet::Type.newtype(:openssl_genparam) do
         algorithm => 'EC',
         curve     => 'secp521r1',
       }
+
+    @example Automatically refresh a parameter file every 3 months
+
+      openssl_genparam { '/tmp/dhparam.pem':
+        algorithm        => 'DH',
+        bits             => '2048,
+        generator        => '2',
+        refresh_interval => '3mo',
+      }
   DOC
 
   def munge_interval(value)
