@@ -16,8 +16,9 @@
 
 **Resource types**
 
-* [`openssl_genparam`](#openssl_genparam): Generate OpenSSL DH or EC parameter files.  Example for a Diffie-Hellman parameter file:    openssl_genparam { '/tmp/dhparam.pem':     algori
+* [`openssl_genparam`](#openssl_genparam): Generate Diffie-Hellman or Elliptic Curve parameter files
 * [`openssl_genpkey`](#openssl_genpkey): Generate OpenSSL private key files.
+* [`openssl_signcsr`](#openssl_signcsr): Sign OpenSSL certificate signing request
 
 ## Classes
 
@@ -245,11 +246,11 @@ Manage OpenSSL certificate signing request (CSR)
 
 ```puppet
 
-openssl::csr { 'www.example.com':
-  csr_file                    => '/etc/ssl/www.example.com.csr',
-  cnf_file                    => '/etc/ssl/www.example.com.cnf',
-  csr_file                    => '/etc/ssl/www.example.com.key',
+openssl::csr { '/etc/ssl/www.example.com.csr':
+  common_name                 => 'www.example.com',
   subject_alternate_names_dns => [ 'www.example.com', 'example.com', ],
+  config                      => '/etc/ssl/www.example.com.cnf',
+  key_file                    => '/etc/ssl/www.example.com.key',
 }
 ```
 
@@ -257,15 +258,23 @@ openssl::csr { 'www.example.com':
 
 The following parameters are available in the `openssl::csr` defined type.
 
+##### `common_name`
+
+Data type: `String`
+
+The value of the X.509 CN attribute. This attribute is mandatory.
+
 ##### `csr_file`
 
 Data type: `Stdlib::Absolutepath`
 
 The full path name of the signing request file that will be created. It
 contains the attributes that will be included in the certificate and also
-the public part of the key.
+the public part of the key. Default is the name of the resource.
 
-##### `cnf_file`
+Default value: $name
+
+##### `config`
 
 Data type: `Stdlib::Absolutepath`
 
@@ -281,14 +290,6 @@ Data type: `Stdlib::Absolutepath`
 
 The full path of the private key file. This file including the key must
 already be present to generate the CSR.
-
-##### `common_name`
-
-Data type: `String`
-
-The value of the X.509 CN attribute. This attribute is mandatory.
-
-Default value: $name
 
 ##### `subject_alternate_names_dns`
 
@@ -623,22 +624,42 @@ Default value: `undef`
 
 ### openssl_genparam
 
-Generate OpenSSL DH or EC parameter files.
+Generate Diffie-Hellman or Elliptic Curve parameter files
 
-Example for a Diffie-Hellman parameter file:
+#### Examples
 
-  openssl_genparam { '/tmp/dhparam.pem':
-    algorithm => 'DH',
-    bits      => '2048,
-    generator => '2',
-  }
+##### Create a Diffie-Hellman parameter file using 2048 bits
 
-Example for a Elliptic Curve parameter file:
+```puppet
 
-  openssl_genparam { '/tmp/ecparam.pem':
-    algorithm => 'EC',
-    curve     => 'secp521r1',
-  }
+openssl_genparam { '/tmp/dhparam.pem':
+  algorithm => 'DH',
+  bits      => '2048,
+  generator => '2',
+}
+```
+
+##### Create an Elliptic Curve parameter file using the secp521e1 curve
+
+```puppet
+
+openssl_genparam { '/tmp/ecparam.pem':
+  algorithm => 'EC',
+  curve     => 'secp521r1',
+}
+```
+
+##### Automatically refresh a parameter file every 3 months
+
+```puppet
+
+openssl_genparam { '/tmp/dhparam.pem':
+  algorithm        => 'DH',
+  bits             => '2048,
+  generator        => '2',
+  refresh_interval => '3mo',
+}
+```
 
 #### Properties
 
@@ -664,13 +685,13 @@ The name of the parameter file to manage.
 
 Valid values: DH, EC
 
-The algorithm to generate parameters for.
+The algorithm to generate the parameters for.
 
 ##### `bits`
 
 Valid values: 2048, 4096, 8192
 
-The number of bits to generate for Diffie-Hellman parameters.
+The number of bits to use for Diffie-Hellman parameters.
 
 ##### `generator`
 
@@ -682,14 +703,14 @@ The generator to use for Diffie-Hellman parameters.
 
 Valid values: %r{^[a-zA-Z][a-zA-Z0-9-]+[0-9]$}
 
-The EC curve to use for elliptic curve parameters.
+The name of the curve to use for Elliptic Curve parameters.
 
 ##### `refresh_interval`
 
 Valid values: %r{^[0-9]+(y|mo|w|d|h|mi|s)?$}
 
-The Refresh interval for the Diffie-Hellman parameter file. A new
-parameter file will be generated after this time.
+The Refresh interval for the parameter file. A new parameter file
+will be generated after this time.
 
 The value must be a number optionally followed by a time unit. The
 following units are understood: `y` for year (365 days), `mo` for
@@ -700,12 +721,12 @@ seconds.
 
 ### openssl_genpkey
 
-The type generates OpenSSL private key file. The key can optionally be
-encrypted using a supplied password.
+Generate an OpenSSL private key file. The key can optionally be encrypted
+using a supplied password.
 
 #### Examples
 
-##### Generate RSA private key using 2048 bits
+##### Generate a 2048 bit RSA key file
 
 ```puppet
 
@@ -715,17 +736,7 @@ openssl_genpkey { '/tmp/rsa-2048.key':
 }
 ```
 
-##### Generate EC private key using secp521r1 curve
-
-```puppet
-
-openssl_genpkey { '/tmp/ec-secp521r1.key':
-  algorithm => 'EC',
-  curve     => 'secp521r1',
-}
-```
-
-##### Generate AES encrypted EC private key using secp256k1 curve
+##### Generate AES encrypted Elliptic Curve private key
 
 ```puppet
 
@@ -787,4 +798,67 @@ in this case.
 ##### `password`
 
 Use the supplied password when encrypting the key.
+
+### openssl_signcsr
+
+Take a certificate signing request (CSR), a config file providing the
+cedrtificate extensions and a key file to generate a certificate. The
+certificate will be valid for the given number of days. An encrypted key
+can be used if the key password is supplied.
+
+#### Examples
+
+##### Sign a certificate for one year
+
+```puppet
+
+openssl_signcert { '/tmp/cert.crt':
+  csr      => '/tmp/csr',
+  config   => '/tmp/cert.cnf',
+  key_file => '/tmp/cert.key',
+  days     => '365',
+}
+```
+
+#### Properties
+
+The following properties are available in the `openssl_signcsr` type.
+
+##### `ensure`
+
+Valid values: present, absent
+
+Specifies whether the resource should exist.
+
+Default value: present
+
+#### Parameters
+
+The following parameters are available in the `openssl_signcsr` type.
+
+##### `file`
+
+The name of the signed certificate file to manage.
+
+##### `csr`
+
+The file containing the certificate signing request.
+
+##### `config`
+
+The configuration file.
+
+##### `key_file`
+
+The file with the key to use for the signature.
+
+##### `key_password`
+
+Use the supplied password for the key if it is encrypted.
+
+##### `days`
+
+Valid values: %r{^[0-9]+$}
+
+The number of days the certificate should be valid.
 
