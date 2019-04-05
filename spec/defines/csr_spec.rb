@@ -10,14 +10,14 @@ describe 'openssl::csr' do
      }'
   end
 
-  let(:title) { 'example.com' }
+  let(:title) { '/tmp/example.com.csr' }
 
   on_supported_os.each do |os, facts|
     let(:facts) { facts }
     let(:params) do
       {
-        csr_file: '/tmp/example.com.csr',
-        cnf_file: '/tmp/example.com.cnf',
+        common_name: 'example.com',
+        config: '/tmp/example.com.cnf',
         key_file: '/tmp/example.com.key',
       }
     end
