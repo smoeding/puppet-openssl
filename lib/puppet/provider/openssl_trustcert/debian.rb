@@ -5,9 +5,9 @@ Puppet::Type.type(:openssl_trustcert).provide(:openssl_trustcert) do
     This provider implements the openssl_trustcert type on Debian.
   EOT
 
-  confine :operatingsystem => :debian
-
-  commands openssl: 'openssl'
+  confine    osfamily: :debian
+  defaultfor osfamily: :debian
+  commands   openssl: 'openssl'
 
   def gethash(certificate)
     param = ['openssl', 'x509', '-noout', '-hash']
