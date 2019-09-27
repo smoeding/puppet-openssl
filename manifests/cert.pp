@@ -133,7 +133,7 @@ define openssl::cert (
       exec { "openssl rehash ${_cert_file}":
         command     => $command,
         provider    => 'shell',
-        cwd         => '/',
+        cwd         => $_cert_dir,
         path        => [ '/bin', '/usr/bin', '/usr/local/bin', ],
         logoutput   => false,
         refreshonly => true,
