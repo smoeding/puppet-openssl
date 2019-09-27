@@ -1,6 +1,6 @@
 # debian.rb --- Create a trusted certificate on debian
 
-Puppet::Type.type(:openssl_trustcert).provide(:openssl_trustcert) do
+Puppet::Type.type(:openssl_trustcert).provide(:debian) do
   desc <<-EOT
     This provider implements the openssl_trustcert type on Debian.
   EOT
