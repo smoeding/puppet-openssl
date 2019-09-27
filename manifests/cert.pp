@@ -127,21 +127,18 @@ define openssl::cert (
     #
 
     if $makehash {
-      $genhash = "openssl x509 -hash -noout -in ${_cert_file}"
-      $command = "ln -s -f ${_cert_file} `${genhash}`.0"
-
-      exec { "openssl rehash ${_cert_file}":
-        command     => $command,
-        provider    => 'shell',
-        cwd         => $_cert_dir,
-        path        => [ '/bin', '/usr/bin', '/usr/local/bin', ],
-        logoutput   => false,
-        refreshonly => true,
-        subscribe   => Concat[$_cert_file],
+      openssl_trustcert { $_cert_file:
+        ensure  => present,
+        require => Concat[$_cert_file],
       }
     }
   }
   else {
+    openssl_trustcert { $_cert_file:
+      ensure => absent,
+      before => File[$_cert_file],
+    }
+
     file { $_cert_file:
       ensure => absent,
     }
