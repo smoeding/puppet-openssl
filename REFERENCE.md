@@ -19,6 +19,11 @@
 * [`openssl_genparam`](#openssl_genparam): Generate Diffie-Hellman or Elliptic Curve parameter files
 * [`openssl_genpkey`](#openssl_genpkey): Generate OpenSSL private key files.
 * [`openssl_signcsr`](#openssl_signcsr): Sign OpenSSL certificate signing request
+* [`openssl_trustcert`](#openssl_trustcert): Install a certificate file as trusted certificate
+
+**Data types**
+
+* [`Openssl::Keyusage`](#opensslkeyusage): Valid parameter values for the OpenSSL keyusage
 
 ## Classes
 
@@ -802,7 +807,7 @@ Use the supplied password when encrypting the key.
 ### openssl_signcsr
 
 Take a certificate signing request (CSR), a config file providing the
-cedrtificate extensions and a key file to generate a certificate. The
+certificate extensions and a key file to generate a certificate. The
 certificate will be valid for the given number of days. An encrypted key
 can be used if the key password is supplied.
 
@@ -861,4 +866,62 @@ Use the supplied password for the key if it is encrypted.
 Valid values: %r{^[0-9]+$}
 
 The number of days the certificate should be valid.
+
+### openssl_trustcert
+
+The certificate file is installed as a trusted certificate if
+'ensure => present'. If 'ensure => absent' the trust is removed.
+
+The certificate file itself is not managed by this type.
+
+For Debian the provider will create a symbolic link using the certificate
+hash value in the certificate directory.
+
+#### Examples
+
+##### Mark an existing certificate as trusted
+
+```puppet
+
+openssl_trustcert { '/etc/ssl/certs/My-Root-CA.crt':
+  ensure => present,
+}
+```
+
+##### Mark an existing certificate as not trusted
+
+```puppet
+
+openssl_trustcert { '/etc/ssl/certs/My-Root-CA.crt':
+  ensure => absent,
+}
+```
+
+#### Properties
+
+The following properties are available in the `openssl_trustcert` type.
+
+##### `ensure`
+
+Valid values: present, absent
+
+Specifies whether the resource should exist.
+
+Default value: present
+
+#### Parameters
+
+The following parameters are available in the `openssl_trustcert` type.
+
+##### `certificate`
+
+The name of the certificate file to manage.
+
+## Data types
+
+### Openssl::Keyusage
+
+Valid parameter values for the OpenSSL keyusage
+
+Alias of `Enum['digitalSignature', 'nonRepudiation', 'keyEncipherment', 'dataEncipherment', 'keyAgreement', 'keyCertSign', 'cRLSign', 'encipherOnly', 'decipherOnly']`
 
