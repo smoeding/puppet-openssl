@@ -1,6 +1,6 @@
-# openssl_signcsr.rb --- Sign openssl certificate signing request files
+# openssl.rb --- Sign openssl certificate signing request files
 
-Puppet::Type.type(:openssl_signcsr).provide(:openssl_signcsr) do
+Puppet::Type.type(:openssl_signcsr).provide(:openssl) do
   desc <<-EOT
     This provider implements the openssl_signcsr type.
   EOT

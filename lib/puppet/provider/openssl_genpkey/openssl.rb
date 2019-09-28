@@ -1,9 +1,9 @@
-# openssl_genpkey.rb --- Generate openssl private key files
+# openssl.rb --- Generate openssl private key files
 
 require 'securerandom'
 require 'tempfile'
 
-Puppet::Type.type(:openssl_genpkey).provide(:openssl_genpkey) do
+Puppet::Type.type(:openssl_genpkey).provide(:openssl) do
   desc <<-EOT
     This provider implements the openssl_genpkey type.
   EOT

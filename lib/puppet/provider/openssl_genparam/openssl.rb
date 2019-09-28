@@ -1,8 +1,8 @@
-# openssl_genparam.rb --- Generate openssl parameter files
+# openssl.rb --- Generate openssl parameter files
 
 require 'securerandom'
 
-Puppet::Type.type(:openssl_genparam).provide(:openssl_genparam) do
+Puppet::Type.type(:openssl_genparam).provide(:openssl) do
   desc <<-EOT
     This provider implements the openssl_genparam type.
   EOT

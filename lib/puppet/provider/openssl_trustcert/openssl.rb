@@ -1,12 +1,12 @@
-# debian.rb --- Create a trusted certificate on debian
+# openssl.rb --- Create a trusted certificate using openssl
 
-Puppet::Type.type(:openssl_trustcert).provide(:debian) do
+Puppet::Type.type(:openssl_trustcert).provide(:openssl) do
   desc <<-EOT
-    This provider implements the openssl_trustcert type on Debian.
+    This provider implements the openssl_trustcert type using openssl.
   EOT
 
-  confine    osfamily: :debian
-  defaultfor osfamily: :debian
+  confine    osfamily: [:debian, :freebsd]
+  defaultfor osfamily: [:debian, :freebsd]
   commands   openssl: 'openssl'
 
   def gethash(certificate)
@@ -28,12 +28,12 @@ Puppet::Type.type(:openssl_trustcert).provide(:debian) do
   def exists?
     return false unless File.exist?(resource[:certificate])
 
-    dest = File.dirname(resource[:certificate])
+    path = File.dirname(resource[:certificate])
     hash = gethash(resource[:certificate])
 
     return false if hash.nil?
 
-    link = File.join(dest, hash + '.0')
+    link = File.join(path, hash + '.0')
     return false unless File.exist?(link)
 
     Puppet.debug("openssl_trustcert: #{link} exists")
@@ -52,11 +52,11 @@ Puppet::Type.type(:openssl_trustcert).provide(:debian) do
   end
 
   def create
-    dest = File.dirname(resource[:certificate])
+    path = File.dirname(resource[:certificate])
     hash = gethash(resource[:certificate])
-    link = File.join(dest, hash + '.0')
+    link = File.join(path, hash + '.0')
 
-    Puppet.debug("openssl_trustcert: creating link #{link} -> #{resource[:certificate]}")
+    Puppet.debug("openssl_trustcert: creating #{link} -> #{resource[:certificate]}")
 
     # Remove old junk first
     File.unlink(link) if File.exist?(link)
@@ -64,11 +64,11 @@ Puppet::Type.type(:openssl_trustcert).provide(:debian) do
   end
 
   def destroy
-    dest = File.dirname(resource[:certificate])
+    path = File.dirname(resource[:certificate])
     hash = gethash(resource[:certificate])
-    link = File.join(dest, hash + '.0')
+    link = File.join(path, hash + '.0')
 
-    Puppet.debug("openssl_trustcert: removing link #{link} -> #{resource[:certificate]}")
+    Puppet.debug("openssl_trustcert: removing #{link}")
 
     File.unlink(link)
   end
