@@ -13,12 +13,12 @@ Puppet::Type.type(:openssl_trustcert).provide(:certutil) do
     certs = []
     certutil('-L', '-d', 'sql:/etc/pki/nssdb').each_line do |line|
       match = line.match(%r{^(.*)\s+([pPcTCu,]+)\s*$})
-      if match
-        nickname, _trust = match.captures
-        nickname.strip!
-        Puppet.debug("openssl_trustcert: found instance #{nickname}")
-        certs << new(name: nickname, ensure: :present)
-      end
+      next unless match
+
+      nickname, _trust = match.captures
+      nickname.strip!
+      Puppet.debug("openssl_trustcert: found instance #{nickname}")
+      certs << new(name: nickname, ensure: :present)
     end
     certs
   end
@@ -27,9 +27,8 @@ Puppet::Type.type(:openssl_trustcert).provide(:certutil) do
     certificates = instances
 
     resources.keys.each do |name|
-      if provider = certificates.find { |crt| crt.name == name }
-        resources[name].provider = provider
-      end
+      provider = certificates.find { |crt| crt.name == name }
+      resources[name].provider = provider if provider
     end
   end
 
