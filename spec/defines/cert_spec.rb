@@ -175,7 +175,7 @@ describe 'openssl::cert' do
           .with_content("# /foo/cert.crt\n")
           .with_order('10')
 
-        is_expected.to contain_openssl_trustcert('/crt/cert.crt')
+        is_expected.to contain_openssl_hash('/crt/cert.crt')
           .with_ensure('present')
           .that_requires('Concat[/crt/cert.crt]')
       }
