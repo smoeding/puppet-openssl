@@ -115,26 +115,19 @@ define openssl::cert (
 
     #
     # Create a hash for the installed certificate. The hash must be
-    # calculated on the client, since openssl implementation before 1.0.0
-    # used a different hash algorithm.
-    #
-    # Hash collisions are not handled by this implementation (all hashed are
-    # created with a .0 suffix).
-    #
-    # The '-f' option seems to be valid on major operatings systems (AIX,
-    # Solaris, FreeBSD, Linux). This may need more work on other operating
-    # systems.
+    # calculated on the client, since different openssl implementations use
+    # different hash algorithms.
     #
 
     if $makehash {
-      openssl_trustcert { $_cert_file:
+      openssl_hash { $_cert_file:
         ensure  => present,
         require => Concat[$_cert_file],
       }
     }
   }
   else {
-    openssl_trustcert { $_cert_file:
+    openssl_hash { $_cert_file:
       ensure => absent,
       before => File[$_cert_file],
     }
