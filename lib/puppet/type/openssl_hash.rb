@@ -1,16 +1,13 @@
-# openssl_trustcert.rb --- Install certificate as trusted
+# openssl_hash.rb --- Manage certificate hash as symbolic link
 
-Puppet::Type.newtype(:openssl_trustcert) do
+Puppet::Type.newtype(:openssl_hash) do
   desc <<-DOC
-    @summary Install a certificate file as trusted certificate
+    @summary Manage certificate hash as symbolic link
 
     The certificate file is installed as a trusted certificate if
     'ensure => present'. If 'ensure => absent' the trust is removed.
 
     The certificate file itself is not managed by this type.
-
-    For Debian the provider will create a symbolic link using the certificate
-    hash value in the certificate directory.
 
     @example Mark an existing certificate as trusted
 
@@ -35,7 +32,7 @@ Puppet::Type.newtype(:openssl_trustcert) do
     defaultto :present
   end
 
-  newparam(:certificate, namevar: true) do
+  newparam(:name) do
     desc 'The name of the certificate file to manage.'
 
     validate do |value|
