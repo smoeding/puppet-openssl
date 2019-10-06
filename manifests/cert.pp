@@ -45,7 +45,16 @@
 #
 # @param makehash
 #   A boolean value that determines if a symbolic link using the certificate
-#   hash value should be generated on the client.
+#   hash value should be generated on the client. This is used on Debian
+#   based distributions to locate the correct certificate in a trust chain.
+#
+# @param certtrust
+#   A boolean value that determines if the certificate should be marked as a
+#   trusted certificate in the system-wide NSS database. The certutil binary
+#   is required for this to work. Nothing is done if the parameter value is
+#   undefed, which is the default. The mark is set if the parameter value is
+#   'true' and removed if the parameter value is 'false'. The parameter is
+#   only used on RedHat based distributions.
 #
 # @param mode
 #   The file mode used for the resource.
@@ -73,6 +82,7 @@ define openssl::cert (
   String                         $owner            = 'root',
   Optional[String]               $group            = undef,
   Optional[Stdlib::Absolutepath] $cert_dir         = undef,
+  Optional[Boolean]              $certtrust        = undef,
 ) {
 
   # The base class must be included first
