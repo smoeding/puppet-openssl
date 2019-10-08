@@ -1,8 +1,8 @@
 # openssl_genparam.rb --- Generate openssl parameter files
 
 Puppet::Type.newtype(:openssl_genparam) do
-  desc <<-DOC
-    @summary Generate Diffie-Hellman or Elliptic Curve parameter files
+  @doc = <<-DOC
+    @summary Generate Diffie-Hellman or Elliptic Curve parameter file.
 
     @example Create a Diffie-Hellman parameter file using 2048 bits
 
@@ -75,7 +75,7 @@ Puppet::Type.newtype(:openssl_genparam) do
   newparam(:algorithm) do
     desc 'The algorithm to generate the parameters for.'
 
-    newvalues('DH', 'EC')
+    newvalues 'DH', 'EC'
     munge { |value| value.to_s }
 
     validate do |value|
@@ -86,21 +86,21 @@ Puppet::Type.newtype(:openssl_genparam) do
   newparam(:bits) do
     desc 'The number of bits to use for Diffie-Hellman parameters.'
 
-    newvalues('2048', '4096', '8192')
+    newvalues '2048', '4096', '8192'
     munge { |value| value.to_s }
   end
 
   newparam(:generator) do
     desc 'The generator to use for Diffie-Hellman parameters.'
 
-    newvalues('2', '5')
+    newvalues '2', '5'
     munge { |value| value.to_s }
   end
 
   newparam(:curve) do
     desc 'The name of the curve to use for Elliptic Curve parameters.'
 
-    newvalues(%r{^[a-zA-Z][a-zA-Z0-9-]+[0-9]$})
+    newvalues %r{^[a-zA-Z][a-zA-Z0-9-]+[0-9]$}
     munge { |value| value.to_s }
   end
 
@@ -115,7 +115,7 @@ Puppet::Type.newtype(:openssl_genparam) do
       or no unit is used then the value is interpreted as the number of
       seconds.'
 
-    newvalues(%r{^[0-9]+(y|mo|w|d|h|mi|s)?$})
+    newvalues %r{^[0-9]+(y|mo|w|d|h|mi|s)?$}
     munge { |value| @resource.munge_interval(value) }
   end
 

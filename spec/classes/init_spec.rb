@@ -34,7 +34,12 @@ describe 'openssl' do
       let(:params) { default_params.merge(ca_certs: ['cert']) }
 
       it {
-        is_expected.to contain_openssl__cert('cert').with_makehash('true')
+        case facts[:os][:family]
+        when 'RedHat'
+          is_expected.to contain_openssl__cert('cert').with_certtrust('true')
+        when 'Debian', 'FreeBSD'
+          is_expected.to contain_openssl__cert('cert').with_makehash('true')
+        end
       }
     end
 
@@ -42,8 +47,14 @@ describe 'openssl' do
       let(:params) { default_params.merge(ca_certs: ['cert', 'ca']) }
 
       it {
-        is_expected.to contain_openssl__cert('cert').with_makehash('true')
-        is_expected.to contain_openssl__cert('ca').with_makehash('true')
+        case facts[:os][:family]
+        when 'RedHat'
+          is_expected.to contain_openssl__cert('cert').with_certtrust('true')
+          is_expected.to contain_openssl__cert('ca').with_certtrust('true')
+        when 'Debian', 'FreeBSD'
+          is_expected.to contain_openssl__cert('cert').with_makehash('true')
+          is_expected.to contain_openssl__cert('ca').with_makehash('true')
+        end
       }
     end
   end

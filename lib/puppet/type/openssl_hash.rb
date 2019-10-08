@@ -1,13 +1,21 @@
 # openssl_hash.rb --- Manage certificate hash as symbolic link
 
 Puppet::Type.newtype(:openssl_hash) do
-  desc <<-DOC
-    @summary Manage certificate hash as symbolic link
+  @doc = <<-DOC
+    @summary Manage a symbolic link using the certificate hash.
 
-    The certificate file is installed as a trusted certificate if
-    'ensure => present'. If 'ensure => absent' the trust is removed.
+    If 'ensure => present' a symbolic link using the certificate hash will be
+    created in the same directory as the certificate. The link is removed if
+    'ensure => absent'.
+
+    This link is used to find a trusted cert when a certificate chain is
+    validated.
 
     The certificate file itself is not managed by this type.
+
+    The file must exist before the link can be created as it is accessed by
+    OpenSSL to calculate the hash. For the same reason the file can only be
+    deleted after the link has been removed.
 
     @example Mark an existing certificate as trusted
 
@@ -20,13 +28,10 @@ Puppet::Type.newtype(:openssl_hash) do
       openssl_trustcert { '/etc/ssl/certs/My-Root-CA.crt':
         ensure => absent,
       }
-
   DOC
 
   ensurable do
-    desc <<-EOT
-      Specifies whether the resource should exist.
-    EOT
+    desc 'Specifies whether the resource should exist.'
 
     defaultvalues
     defaultto :present

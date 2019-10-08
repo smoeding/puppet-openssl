@@ -61,8 +61,19 @@ class openssl (
   }
 
   unless empty($ca_certs) {
+    $makehash = $facts['os']['family'] ? {
+      'Debian' => true,
+      default  => false,
+    }
+
+    $certtrust = $facts['os']['family'] ? {
+      'RedHat' => true,
+      default  => false,
+    }
+
     openssl::cert { $ca_certs:
-      makehash => true,
+      makehash  => $makehash,
+      certtrust => $certtrust,
     }
   }
 }

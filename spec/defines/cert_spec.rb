@@ -181,6 +181,33 @@ describe 'openssl::cert' do
       }
     end
 
+    context "on #{os} with certtrust => true" do
+      let(:params) do
+        { certtrust: true }
+      end
+
+      it {
+        is_expected.to contain_concat('/crt/cert.crt')
+          .with_owner('root')
+          .with_group('wheel')
+          .with_mode('0444')
+          .with_backup(false)
+          .with_show_diff(false)
+          .with_ensure_newline(true)
+
+        is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
+          .with_target('/crt/cert.crt')
+          .with_content("# /foo/cert.crt\n")
+          .with_order('10')
+
+        is_expected.to contain_openssl_certutil('/crt/cert.crt')
+          .with_ensure('present')
+          .with_filename('/crt/cert.crt')
+          .with_ssl_trust('C')
+          .that_requires('Concat[/crt/cert.crt]')
+      }
+    end
+
     context "on #{os} with mode => 0642" do
       let(:params) do
         { mode: '0642' }

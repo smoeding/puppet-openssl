@@ -52,8 +52,8 @@
 #   A boolean value that determines if the certificate should be marked as a
 #   trusted certificate in the system-wide NSS database. The certutil binary
 #   is required for this to work. Nothing is done if the parameter value is
-#   undefed, which is the default. The mark is set if the parameter value is
-#   'true' and removed if the parameter value is 'false'. The parameter is
+#   undefined, which is the default. The mark is set if the parameter value
+#   is 'true' and removed if the parameter value is 'false'. The parameter is
 #   only used on RedHat based distributions.
 #
 # @param mode
@@ -123,16 +123,29 @@ define openssl::cert (
       }
     }
 
-    #
-    # Create a hash for the installed certificate. The hash must be
-    # calculated on the client, since different openssl implementations use
-    # different hash algorithms.
-    #
-
     if $makehash {
+      #
+      # Create a hash for the installed certificate. The hash must be
+      # calculated on the client, since different openssl implementations use
+      # different hash algorithms.
+      #
       openssl_hash { $_cert_file:
         ensure  => present,
         require => Concat[$_cert_file],
+      }
+    }
+
+    if $certtrust {
+      #
+      # Add the installed certificate to the system-wide NSS database and
+      # mark it as trusted for SSL. This requires the certutil executable
+      # which is generally only available on RedHat-based distributions.
+      #
+      openssl_certutil { $_cert_file:
+        ensure    => present,
+        filename  => $_cert_file,
+        ssl_trust => 'C',
+        require   => Concat[$_cert_file],
       }
     }
   }
@@ -140,6 +153,13 @@ define openssl::cert (
     openssl_hash { $_cert_file:
       ensure => absent,
       before => File[$_cert_file],
+    }
+
+    if $certtrust {
+      openssl_certutil { $_cert_file:
+        ensure => absent,
+        before => File[$_cert_file],
+      }
     }
 
     file { $_cert_file:

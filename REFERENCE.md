@@ -16,10 +16,11 @@
 
 **Resource types**
 
-* [`openssl_genparam`](#openssl_genparam): Generate Diffie-Hellman or Elliptic Curve parameter files
+* [`openssl_certutil`](#openssl_certutil): Manage trusted certificates in the system-wide NSS database.
+* [`openssl_genparam`](#openssl_genparam): Generate Diffie-Hellman or Elliptic Curve parameter file.
 * [`openssl_genpkey`](#openssl_genpkey): Generate OpenSSL private key files.
-* [`openssl_signcsr`](#openssl_signcsr): Sign OpenSSL certificate signing request
-* [`openssl_trustcert`](#openssl_trustcert): Install a certificate file as trusted certificate
+* [`openssl_hash`](#openssl_hash): Manage a symbolic link using the certificate hash.
+* [`openssl_signcsr`](#openssl_signcsr): Sign OpenSSL certificate signing request.
 
 **Data types**
 
@@ -204,9 +205,23 @@ Default value: 'crt'
 Data type: `Boolean`
 
 A boolean value that determines if a symbolic link using the certificate
-hash value should be generated on the client.
+hash value should be generated on the client. This is used on Debian
+based distributions to locate the correct certificate in a trust chain.
 
 Default value: `false`
+
+##### `certtrust`
+
+Data type: `Optional[Boolean]`
+
+A boolean value that determines if the certificate should be marked as a
+trusted certificate in the system-wide NSS database. The certutil binary
+is required for this to work. Nothing is done if the parameter value is
+undefined, which is the default. The mark is set if the parameter value
+is 'true' and removed if the parameter value is 'false'. The parameter is
+only used on RedHat based distributions.
+
+Default value: `undef`
 
 ##### `mode`
 
@@ -627,9 +642,87 @@ Default value: `undef`
 
 ## Resource types
 
+### openssl_certutil
+
+The certificate specified with 'filename' is installed as a trusted
+certificate if 'ensure => present'. The trust is removed if
+'ensure => absent'.
+
+The 'certutil' executable must be installed on the system for this type.
+In general it is only available on RedHat-based distributions.
+
+The certificate file itself is not managed by this type.
+
+The file must exist before it can be added to the NSS database.
+
+#### Examples
+
+##### Add a certificate to the NSS database and trust it for SSL
+
+```puppet
+
+openssl_certutil { '/etc/ssl/certs/My-Root-CA.crt':
+  ensure    => present,
+  ssl_trust => 'C',
+}
+```
+
+##### Remove a certificate frpm the NSS database
+
+```puppet
+
+openssl_certutil { '/etc/ssl/certs/My-Root-CA.crt':
+  ensure => absent,
+}
+```
+
+#### Properties
+
+The following properties are available in the `openssl_certutil` type.
+
+##### `ensure`
+
+Valid values: present, absent
+
+Specifies whether the resource should exist.
+
+Default value: present
+
+##### `ssl_trust`
+
+Valid values: %r{[pPcCT]*}
+
+SSL trust attributes for the certificate.
+
+##### `email_trust`
+
+Valid values: %r{[pPcCT]*}
+
+Email trust attributes for the certificate.
+
+##### `object_signing_trust`
+
+Valid values: %r{[pPcCT]*}
+
+Object signing trust attributes for the certificate.
+
+#### Parameters
+
+The following parameters are available in the `openssl_certutil` type.
+
+##### `name`
+
+namevar
+
+The nickname of the certificate in the certificate database.
+
+##### `filename`
+
+The filename of the certificate.
+
 ### openssl_genparam
 
-Generate Diffie-Hellman or Elliptic Curve parameter files
+Generate Diffie-Hellman or Elliptic Curve parameter file.
 
 #### Examples
 
@@ -726,6 +819,8 @@ seconds.
 
 ### openssl_genpkey
 
+**This type is still beta!**
+
 Generate an OpenSSL private key file. The key can optionally be encrypted
 using a supplied password.
 
@@ -804,7 +899,66 @@ in this case.
 
 Use the supplied password when encrypting the key.
 
+### openssl_hash
+
+If 'ensure => present' a symbolic link using the certificate hash will be
+created in the same directory as the certificate. The link is removed if
+'ensure => absent'.
+
+This link is used to find a trusted cert when a certificate chain is
+validated.
+
+The certificate file itself is not managed by this type.
+
+The file must exist before the link can be created as it is accessed by
+OpenSSL to calculate the hash. For the same reason the file can only be
+deleted after the link has been removed.
+
+#### Examples
+
+##### Mark an existing certificate as trusted
+
+```puppet
+
+openssl_trustcert { '/etc/ssl/certs/My-Root-CA.crt':
+  ensure => present,
+}
+```
+
+##### Mark an existing certificate as not trusted
+
+```puppet
+
+openssl_trustcert { '/etc/ssl/certs/My-Root-CA.crt':
+  ensure => absent,
+}
+```
+
+#### Properties
+
+The following properties are available in the `openssl_hash` type.
+
+##### `ensure`
+
+Valid values: present, absent
+
+Specifies whether the resource should exist.
+
+Default value: present
+
+#### Parameters
+
+The following parameters are available in the `openssl_hash` type.
+
+##### `name`
+
+namevar
+
+The name of the certificate file to manage.
+
 ### openssl_signcsr
+
+**This type is still beta!**
 
 Take a certificate signing request (CSR), a config file providing the
 certificate extensions and a key file to generate a certificate. The
@@ -866,56 +1020,6 @@ Use the supplied password for the key if it is encrypted.
 Valid values: %r{^[0-9]+$}
 
 The number of days the certificate should be valid.
-
-### openssl_trustcert
-
-The certificate file is installed as a trusted certificate if
-'ensure => present'. If 'ensure => absent' the trust is removed.
-
-The certificate file itself is not managed by this type.
-
-For Debian the provider will create a symbolic link using the certificate
-hash value in the certificate directory.
-
-#### Examples
-
-##### Mark an existing certificate as trusted
-
-```puppet
-
-openssl_trustcert { '/etc/ssl/certs/My-Root-CA.crt':
-  ensure => present,
-}
-```
-
-##### Mark an existing certificate as not trusted
-
-```puppet
-
-openssl_trustcert { '/etc/ssl/certs/My-Root-CA.crt':
-  ensure => absent,
-}
-```
-
-#### Properties
-
-The following properties are available in the `openssl_trustcert` type.
-
-##### `ensure`
-
-Valid values: present, absent
-
-Specifies whether the resource should exist.
-
-Default value: present
-
-#### Parameters
-
-The following parameters are available in the `openssl_trustcert` type.
-
-##### `certificate`
-
-The name of the certificate file to manage.
 
 ## Data types
 

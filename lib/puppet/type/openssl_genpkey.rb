@@ -1,8 +1,10 @@
 # openssl_genpkey.rb --- Generate openssl private key files
 
 Puppet::Type.newtype(:openssl_genpkey) do
-  desc <<-DOC
+  @doc = <<-DOC
     @summary Generate OpenSSL private key files.
+
+    **This type is still beta!**
 
     Generate an OpenSSL private key file. The key can optionally be encrypted
     using a supplied password.
@@ -25,9 +27,7 @@ Puppet::Type.newtype(:openssl_genpkey) do
   DOC
 
   ensurable do
-    desc <<-EOT
-      Specifies whether the resource should exist.
-    EOT
+    desc 'Specifies whether the resource should exist.'
 
     defaultvalues
     defaultto :present
@@ -48,7 +48,7 @@ Puppet::Type.newtype(:openssl_genpkey) do
       must be supplied if an RSA key is generated. For an EC key the curve
       name must be given'
 
-    newvalues('RSA', 'EC')
+    newvalues 'RSA', 'EC'
     munge { |value| value.to_s }
   end
 
@@ -56,7 +56,7 @@ Puppet::Type.newtype(:openssl_genpkey) do
     desc 'The number of bits for the RSA key. Must be one of the strings
       `2048`, `4096` or `8192`. This parameter is mandatory for RSA keys.'
 
-    newvalues('2048', '4096', '8192')
+    newvalues '2048', '4096', '8192'
     munge { |value| value.to_s }
   end
 
@@ -64,7 +64,7 @@ Puppet::Type.newtype(:openssl_genpkey) do
     desc 'The curve to use for elliptic curve key. This parameter is
       mandatory for EC keys.'
 
-    newvalues(%r{^[a-zA-Z][a-zA-Z0-9-]+[0-9]$})
+    newvalues %r{^[a-zA-Z][a-zA-Z0-9-]+[0-9]$}
     munge { |value| value.to_s }
   end
 

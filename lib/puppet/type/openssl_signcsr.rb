@@ -1,8 +1,10 @@
 # openssl_signcsr.rb --- Sign openssl CSR files
 
 Puppet::Type.newtype(:openssl_signcsr) do
-  desc <<-DOC
-    @summary Sign OpenSSL certificate signing request
+  @doc = <<-DOC
+    @summary Sign OpenSSL certificate signing request.
+
+    **This type is still beta!**
 
     Take a certificate signing request (CSR), a config file providing the
     certificate extensions and a key file to generate a certificate. The
@@ -17,13 +19,10 @@ Puppet::Type.newtype(:openssl_signcsr) do
         key_file => '/tmp/cert.key',
         days     => '365',
       }
-
   DOC
 
   ensurable do
-    desc <<-EOT
-      Specifies whether the resource should exist.
-    EOT
+    desc 'Specifies whether the resource should exist.'
 
     defaultvalues
     defaultto :present
@@ -78,7 +77,7 @@ Puppet::Type.newtype(:openssl_signcsr) do
   newparam(:days) do
     desc 'The number of days the certificate should be valid.'
 
-    newvalues(%r{^[0-9]+$})
+    newvalues %r{^[0-9]+$}
     munge { |value| value.to_s }
   end
 

@@ -14,7 +14,7 @@ Puppet::Type.type(:openssl_certutil).provide(:certutil) do
     @property_flush = {}
   end
 
-  def canonicalize_trustargs(value)
+  def self.canonicalize_trustargs(value)
     value.delete('u').chars.sort.join unless value.nil?
   end
 
@@ -47,6 +47,18 @@ Puppet::Type.type(:openssl_certutil).provide(:certutil) do
 
   def exists?
     @property_hash[:ensure] == :present
+  end
+
+  def ssl_trust
+    @property_hash[:ssl_trust]
+  end
+
+  def email_trust
+    @property_hash[:email_trust]
+  end
+
+  def object_signing_trust
+    @property_hash[:object_signing_trust]
   end
 
   def ssl_trust=(value)
