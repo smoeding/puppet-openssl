@@ -27,174 +27,167 @@ describe 'openssl::key' do
   end
 
   on_supported_os.each do |os, facts|
-    context "on #{os} with default parameters" do
+    context "on #{os}" do
       let(:facts) { facts }
 
-      it {
-        is_expected.to contain_file('/key/key.key')
-          .with_ensure('file')
-          .with_owner('root')
-          .with_group('wheel')
-          .with_mode('0400')
-          .with_content("# /foo/key.key\n")
-          .with_backup(false)
-          .with_show_diff(false)
-      }
-    end
-
-    context "on #{os} with key => secret" do
-      let(:facts) { facts }
-      let(:params) do
-        { key: 'secret' }
+      context 'with default parameters' do
+        it {
+          is_expected.to contain_file('/key/key.key')
+            .with_ensure('file')
+            .with_owner('root')
+            .with_group('wheel')
+            .with_mode('0400')
+            .with_content("# /foo/key.key\n")
+            .with_backup(false)
+            .with_show_diff(false)
+        }
       end
 
-      it {
-        is_expected.to contain_file('/key/secret.key')
-          .with_ensure('file')
-          .with_owner('root')
-          .with_group('wheel')
-          .with_mode('0400')
-          .with_content("# /foo/key.key\n")
-          .with_backup(false)
-          .with_show_diff(false)
-      }
-    end
+      context 'with key => secret' do
+        let(:params) do
+          { key: 'secret' }
+        end
 
-    context "on #{os} with source => secret" do
-      let(:facts) { facts }
-      let(:params) do
-        { source: 'secret' }
+        it {
+          is_expected.to contain_file('/key/secret.key')
+            .with_ensure('file')
+            .with_owner('root')
+            .with_group('wheel')
+            .with_mode('0400')
+            .with_content("# /foo/key.key\n")
+            .with_backup(false)
+            .with_show_diff(false)
+        }
       end
 
-      it {
-        is_expected.to contain_file('/key/key.key')
-          .with_ensure('file')
-          .with_owner('root')
-          .with_group('wheel')
-          .with_mode('0400')
-          .with_content("# /foo/secret.key\n")
-          .with_backup(false)
-          .with_show_diff(false)
-      }
-    end
+      context 'with source => secret' do
+        let(:params) do
+          { source: 'secret' }
+        end
 
-    context "on #{os} with extension => pem" do
-      let(:facts) { facts }
-      let(:params) do
-        { extension: 'pem' }
+        it {
+          is_expected.to contain_file('/key/key.key')
+            .with_ensure('file')
+            .with_owner('root')
+            .with_group('wheel')
+            .with_mode('0400')
+            .with_content("# /foo/secret.key\n")
+            .with_backup(false)
+            .with_show_diff(false)
+        }
       end
 
-      it {
-        is_expected.to contain_file('/key/key.pem')
-          .with_ensure('file')
-          .with_owner('root')
-          .with_group('wheel')
-          .with_mode('0400')
-          .with_content("# /foo/key.key\n")
-          .with_backup(false)
-          .with_show_diff(false)
-      }
-    end
+      context 'with extension => pem' do
+        let(:params) do
+          { extension: 'pem' }
+        end
 
-    context "on #{os} with source_extension => baz" do
-      let(:facts) { facts }
-      let(:params) do
-        { source_extension: 'baz' }
+        it {
+          is_expected.to contain_file('/key/key.pem')
+            .with_ensure('file')
+            .with_owner('root')
+            .with_group('wheel')
+            .with_mode('0400')
+            .with_content("# /foo/key.key\n")
+            .with_backup(false)
+            .with_show_diff(false)
+        }
       end
 
-      it {
-        is_expected.to contain_file('/key/key.key')
-          .with_ensure('file')
-          .with_owner('root')
-          .with_group('wheel')
-          .with_mode('0400')
-          .with_content("# /foo/key.baz\n")
-          .with_backup(false)
-          .with_show_diff(false)
-      }
-    end
+      context 'with source_extension => baz' do
+        let(:params) do
+          { source_extension: 'baz' }
+        end
 
-    context "on #{os} with mode => 0642" do
-      let(:facts) { facts }
-      let(:params) do
-        { mode: '0642' }
+        it {
+          is_expected.to contain_file('/key/key.key')
+            .with_ensure('file')
+            .with_owner('root')
+            .with_group('wheel')
+            .with_mode('0400')
+            .with_content("# /foo/key.baz\n")
+            .with_backup(false)
+            .with_show_diff(false)
+        }
       end
 
-      it {
-        is_expected.to contain_file('/key/key.key')
-          .with_ensure('file')
-          .with_owner('root')
-          .with_group('wheel')
-          .with_mode('0642')
-          .with_content("# /foo/key.key\n")
-          .with_backup(false)
-          .with_show_diff(false)
-      }
-    end
+      context 'with mode => 0642' do
+        let(:params) do
+          { mode: '0642' }
+        end
 
-    context "on #{os} with owner => mysql" do
-      let(:facts) { facts }
-      let(:params) do
-        { owner: 'mysql' }
+        it {
+          is_expected.to contain_file('/key/key.key')
+            .with_ensure('file')
+            .with_owner('root')
+            .with_group('wheel')
+            .with_mode('0642')
+            .with_content("# /foo/key.key\n")
+            .with_backup(false)
+            .with_show_diff(false)
+        }
       end
 
-      it {
-        is_expected.to contain_file('/key/key.key')
-          .with_ensure('file')
-          .with_owner('mysql')
-          .with_group('wheel')
-          .with_mode('0400')
-          .with_content("# /foo/key.key\n")
-          .with_backup(false)
-          .with_show_diff(false)
-      }
-    end
+      context 'with owner => mysql' do
+        let(:params) do
+          { owner: 'mysql' }
+        end
 
-    context "on #{os} with group => mysql" do
-      let(:facts) { facts }
-      let(:params) do
-        { group: 'mysql' }
+        it {
+          is_expected.to contain_file('/key/key.key')
+            .with_ensure('file')
+            .with_owner('mysql')
+            .with_group('wheel')
+            .with_mode('0400')
+            .with_content("# /foo/key.key\n")
+            .with_backup(false)
+            .with_show_diff(false)
+        }
       end
 
-      it {
-        is_expected.to contain_file('/key/key.key')
-          .with_ensure('file')
-          .with_owner('root')
-          .with_group('mysql')
-          .with_mode('0400')
-          .with_content("# /foo/key.key\n")
-          .with_backup(false)
-          .with_show_diff(false)
-      }
-    end
+      context 'with group => mysql' do
+        let(:params) do
+          { group: 'mysql' }
+        end
 
-    context "on #{os} with key_dir => /baz" do
-      let(:facts) { facts }
-      let(:params) do
-        { key_dir: '/baz' }
+        it {
+          is_expected.to contain_file('/key/key.key')
+            .with_ensure('file')
+            .with_owner('root')
+            .with_group('mysql')
+            .with_mode('0400')
+            .with_content("# /foo/key.key\n")
+            .with_backup(false)
+            .with_show_diff(false)
+        }
       end
 
-      it {
-        is_expected.to contain_file('/baz/key.key')
-          .with_ensure('file')
-          .with_owner('root')
-          .with_group('wheel')
-          .with_mode('0400')
-          .with_content("# /foo/key.key\n")
-          .with_backup(false)
-          .with_show_diff(false)
-      }
-    end
+      context 'with key_dir => /baz' do
+        let(:params) do
+          { key_dir: '/baz' }
+        end
 
-    context "on #{os} with ensure => absent" do
-      let(:facts) { facts }
-      let(:params) do
-        { ensure: 'absent' }
+        it {
+          is_expected.to contain_file('/baz/key.key')
+            .with_ensure('file')
+            .with_owner('root')
+            .with_group('wheel')
+            .with_mode('0400')
+            .with_content("# /foo/key.key\n")
+            .with_backup(false)
+            .with_show_diff(false)
+        }
       end
 
-      it {
-        is_expected.to contain_file('/key/key.key').with_ensure('absent')
-      }
+      context 'with ensure => absent' do
+        let(:params) do
+          { ensure: 'absent' }
+        end
+
+        it {
+          is_expected.to contain_file('/key/key.key').with_ensure('absent')
+        }
+      end
     end
   end
 end

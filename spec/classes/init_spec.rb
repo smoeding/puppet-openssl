@@ -17,36 +17,37 @@ describe 'openssl' do
     end
   end
 
-  on_supported_os.each do |os, os_facts|
-    context "on #{os} with default parameters" do
-      let(:facts) { os_facts }
-      let(:params) { default_params }
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let(:facts) { facts }
 
-      it {
-        is_expected.to contain_class('openssl')
-        is_expected.to contain_package('openssl')
-          .with_ensure('installed')
-          .with_name('openssl')
-      }
-    end
+      context 'with default parameters' do
+        let(:params) { default_params }
 
-    context "on #{os} with one element for ca_cert" do
-      let(:facts) { os_facts }
-      let(:params) { default_params.merge(ca_certs: ['cert']) }
+        it {
+          is_expected.to contain_class('openssl')
+          is_expected.to contain_package('openssl')
+            .with_ensure('installed')
+            .with_name('openssl')
+        }
+      end
 
-      it {
-        is_expected.to contain_openssl__cert('cert').with_manage_trust('true')
-      }
-    end
+      context 'with one element for ca_cert' do
+        let(:params) { default_params.merge(ca_certs: ['cert']) }
 
-    context "on #{os} with two elements for ca_cert" do
-      let(:facts) { os_facts }
-      let(:params) { default_params.merge(ca_certs: ['cert', 'ca']) }
+        it {
+          is_expected.to contain_openssl__cert('cert').with_manage_trust('true')
+        }
+      end
 
-      it {
-        is_expected.to contain_openssl__cert('cert').with_manage_trust('true')
-        is_expected.to contain_openssl__cert('ca').with_manage_trust('true')
-      }
+      context 'with two elements for ca_cert' do
+        let(:params) { default_params.merge(ca_certs: ['cert', 'ca']) }
+
+        it {
+          is_expected.to contain_openssl__cert('cert').with_manage_trust('true')
+          is_expected.to contain_openssl__cert('ca').with_manage_trust('true')
+        }
+      end
     end
   end
 end
