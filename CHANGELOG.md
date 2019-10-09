@@ -1,3 +1,17 @@
+## 2019-10-09 - Release 2.0.0
+
+### Breaking changes
+
+- Remove support for Puppet 4.
+- For the `openssl::cert` defined type the attribute `makehash` has been replaced by the more general attribute `manage_trust`. On RedHat based distributions the certificate will now be added to the system-wide NSS database when this parameter is `true`.
+
+### Enhancements
+
+- Add support for Stdlib 6.x.
+- Add support for Concat 6.x.
+- Add new custom type `openssl_hash` to manage symbolic links using a certificate hash as name.
+- Add new custom type `openssl_certutil` to manage certificates in the system-wide NSS database.
+
 ## 2019-02-23 - Release 1.4.0
 
 ### Summary

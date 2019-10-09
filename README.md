@@ -34,7 +34,7 @@ The modules installs the openssl package and provides defined types to manage ce
 
 ### Setup Requirements
 
-The module requires the Puppetlabs modules `stdlib` and `concat`.
+The module requires the Puppetlabs modules `stdlib` and `concat`. The `openssl` executable must be installed on the node. On RedHat based distributions the `certutil` executable is also needed.
 
 ### Beginning with openssl
 
