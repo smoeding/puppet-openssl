@@ -141,7 +141,8 @@ define openssl::cert (
       # mark it as trusted for SSL. This requires the certutil executable
       # which is generally only available on RedHat-based distributions.
       #
-      openssl_certutil { $_cert_file:
+
+      openssl_certutil { $cert:
         ensure    => present,
         filename  => $_cert_file,
         ssl_trust => 'C',
@@ -156,7 +157,7 @@ define openssl::cert (
     }
 
     if $certtrust {
-      openssl_certutil { $_cert_file:
+      openssl_certutil { $cert:
         ensure => absent,
         before => File[$_cert_file],
       }

@@ -200,7 +200,7 @@ describe 'openssl::cert' do
           .with_content("# /foo/cert.crt\n")
           .with_order('10')
 
-        is_expected.to contain_openssl_certutil('/crt/cert.crt')
+        is_expected.to contain_openssl_certutil('cert')
           .with_ensure('present')
           .with_filename('/crt/cert.crt')
           .with_ssl_trust('C')
