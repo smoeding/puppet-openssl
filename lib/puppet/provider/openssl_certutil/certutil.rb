@@ -15,7 +15,8 @@ Puppet::Type.type(:openssl_certutil).provide(:certutil) do
   end
 
   def self.canonicalize_trustargs(value)
-    value.delete('u').chars.sort.join unless value.nil?
+    # Map nil to the empty string, otherwise delete 'u' and sort chars
+    value.nil? ? '' : value.delete('u').chars.sort.join
   end
 
   def self.instances
@@ -74,48 +75,43 @@ Puppet::Type.type(:openssl_certutil).provide(:certutil) do
   end
 
   def flush
-    if @property_flush
+    Puppet.debug("openssl_certutil: flush #{resource[:name]}")
+
+    unless @property_flush.empty?
       trust = []
       trust << (@property_flush[:ssl_trust] || resource[:ssl_trust])
       trust << (@property_flush[:email_trust] || resource[:email_trust])
       trust << (@property_flush[:object_signing_trust] || resource[:object_signing_trust])
 
-      args = ['-M']
-      args << ['-d', NSSDATABASE]
+      args = ['-M', '-d', NSSDATABASE]
       args << ['-n', resource[:name]]
       args << ['-t', trust.join(',')]
 
-      Puppet.debug("openssl_certutil: flush #{resource[:name]}")
-
       certutil(*args)
     end
+
     @property_hash = resource.to_hash
   end
 
   def create
     Puppet.debug("openssl_certutil: create #{resource[:name]}")
 
-    trust = []
-    trust << resource[:ssl_trust]
-    trust << resource[:email_trust]
-    trust << resource[:object_signing_trust]
+    trust = [resource[:ssl_trust], resource[:email_trust], resource[:object_signing_trust]]
 
-    args = ['-A']
-    args << ['-d', NSSDATABASE]
+    args = ['-A', '-d', NSSDATABASE]
     args << ['-n', resource[:name]]
-    args << ['-i', resource[:filename]]
     args << ['-t', trust.join(',')]
+    args << ['-i', resource[:filename]]
 
     certutil(*args)
 
-    @property_hash[:ensure] = :present
+    @property_hash = resource.to_hash
   end
 
   def destroy
     Puppet.debug("openssl_certutil: destroy #{resource[:name]}")
 
-    args = ['-D']
-    args << ['-d', NSSDATABASE]
+    args = ['-D', '-d', NSSDATABASE]
     args << ['-n', resource[:name]]
 
     certutil(*args)

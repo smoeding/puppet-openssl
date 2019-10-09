@@ -4,16 +4,24 @@ Puppet::Type.newtype(:openssl_certutil) do
   @doc = <<-DOC
     @summary Manage trusted certificates in the system-wide NSS database.
 
-    The certificate specified with 'filename' is installed as a trusted
-    certificate if 'ensure => present'. The trust is removed if
-    'ensure => absent'.
+    The certificate specified with `filename` is installed as a trusted
+    certificate if `ensure => present`. The trust is removed if
+    `ensure => absent`.
 
-    The 'certutil' executable must be installed on the system for this type.
-    In general it is only available on RedHat-based distributions.
+    The `certutil` executable is required for this type. In general it is
+    only available on RedHat-based distributions.
 
     The certificate file itself is not managed by this type.
 
-    The file must exist before it can be added to the NSS database.
+    The file must already exist on the node before it can be added to the NSS
+    database. Make sure you add the correct dependency if you manage the
+    certificate file with Puppet.
+
+    There is an unsolved issue if a certificate is added a second time to the
+    NSS database using a different name. In this case `certutil` does not add
+    the certificate but also does not report an error. Therefore Puppet will
+    try to add the certificate every time it runs. As a workaround the
+    already installed certificate should be removed.
 
     @example Add a certificate to the NSS database and trust it for SSL
 
