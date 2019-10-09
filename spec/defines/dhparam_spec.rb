@@ -13,9 +13,9 @@ describe 'openssl::dhparam' do
   let(:title) { '/foo/dh.pem' }
 
   on_supported_os.each do |os, facts|
-    let(:facts) { facts }
-
     context "on #{os} with default parameters" do
+      let(:facts) { facts }
+
       it {
         is_expected.to contain_openssl_genparam('/foo/dh.pem')
           .with_ensure('present')
@@ -33,6 +33,7 @@ describe 'openssl::dhparam' do
     end
 
     context "on #{os} with bits => 4096" do
+      let(:facts) { facts }
       let(:params) do
         { bits: '4096' }
       end
@@ -54,6 +55,7 @@ describe 'openssl::dhparam' do
     end
 
     context "on #{os} with generator => 5" do
+      let(:facts) { facts }
       let(:params) do
         { generator: '5' }
       end
@@ -75,6 +77,7 @@ describe 'openssl::dhparam' do
     end
 
     context "on #{os} with mode => 0642" do
+      let(:facts) { facts }
       let(:params) do
         { mode: '0642' }
       end
@@ -96,6 +99,7 @@ describe 'openssl::dhparam' do
     end
 
     context "on #{os} with owner => mysql" do
+      let(:facts) { facts }
       let(:params) do
         { owner: 'mysql' }
       end
@@ -117,6 +121,7 @@ describe 'openssl::dhparam' do
     end
 
     context "on #{os} with group => mysql" do
+      let(:facts) { facts }
       let(:params) do
         { group: 'mysql' }
       end
@@ -138,6 +143,7 @@ describe 'openssl::dhparam' do
     end
 
     context "on #{os} with ensure => absent" do
+      let(:facts) { facts }
       let(:params) do
         { ensure: 'absent' }
       end

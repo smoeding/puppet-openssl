@@ -200,28 +200,23 @@ The file extension used for files read on the server.
 
 Default value: 'crt'
 
-##### `makehash`
+##### `manage_trust`
 
 Data type: `Boolean`
 
-A boolean value that determines if a symbolic link using the certificate
-hash value should be generated on the client. This is used on Debian
-based distributions to locate the correct certificate in a trust chain.
+A boolean value that determines if the certificate should be marked as a
+trusted certificate. The mark is set if the parameter value is 'true' and
+removed if the parameter value is 'false'. This is mostly useful for CA
+certificates to establish a proper trust chain.
+
+On Debian based distributions this is done by creating a symbolic link
+pointing to the certificate file using the certificate hash as name.
+
+On RedHat based distributions the certificate is added to the system-wide
+NSS database in `/etc/pki/nssdb`. The `certutil` binary is required for
+this.
 
 Default value: `false`
-
-##### `certtrust`
-
-Data type: `Optional[Boolean]`
-
-A boolean value that determines if the certificate should be marked as a
-trusted certificate in the system-wide NSS database. The certutil binary
-is required for this to work. Nothing is done if the parameter value is
-undefined, which is the default. The mark is set if the parameter value
-is 'true' and removed if the parameter value is 'false'. The parameter is
-only used on RedHat based distributions.
-
-Default value: `undef`
 
 ##### `mode`
 

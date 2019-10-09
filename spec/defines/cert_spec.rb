@@ -27,9 +27,9 @@ describe 'openssl::cert' do
   end
 
   on_supported_os.each do |os, facts|
-    let(:facts) { facts }
-
     context "on #{os} with default parameters" do
+      let(:facts) { facts }
+
       it {
         is_expected.to contain_concat('/crt/cert.crt')
           .with_owner('root')
@@ -47,6 +47,7 @@ describe 'openssl::cert' do
     end
 
     context "on #{os} with cert => ca" do
+      let(:facts) { facts }
       let(:params) do
         { cert: 'ca' }
       end
@@ -68,6 +69,7 @@ describe 'openssl::cert' do
     end
 
     context "on #{os} with source => ca" do
+      let(:facts) { facts }
       let(:params) do
         { source: 'ca' }
       end
@@ -89,6 +91,7 @@ describe 'openssl::cert' do
     end
 
     context "on #{os} with cert_chain => [ ca ]" do
+      let(:facts) { facts }
       let(:params) do
         { cert_chain: ['ca'] }
       end
@@ -115,6 +118,7 @@ describe 'openssl::cert' do
     end
 
     context "on #{os} with extension => pem" do
+      let(:facts) { facts }
       let(:params) do
         { extension: 'pem' }
       end
@@ -136,6 +140,7 @@ describe 'openssl::cert' do
     end
 
     context "on #{os} with source_extension => baz" do
+      let(:facts) { facts }
       let(:params) do
         { source_extension: 'baz' }
       end
@@ -156,9 +161,10 @@ describe 'openssl::cert' do
       }
     end
 
-    context "on #{os} with makehash => true" do
+    context "on #{os} with manage_trust => true" do
+      let(:facts) { facts }
       let(:params) do
-        { makehash: true }
+        { manage_trust: true }
       end
 
       it {
@@ -174,41 +180,26 @@ describe 'openssl::cert' do
           .with_target('/crt/cert.crt')
           .with_content("# /foo/cert.crt\n")
           .with_order('10')
-
-        is_expected.to contain_openssl_hash('/crt/cert.crt')
-          .with_ensure('present')
-          .that_requires('Concat[/crt/cert.crt]')
       }
-    end
-
-    context "on #{os} with certtrust => true" do
-      let(:params) do
-        { certtrust: true }
-      end
 
       it {
-        is_expected.to contain_concat('/crt/cert.crt')
-          .with_owner('root')
-          .with_group('wheel')
-          .with_mode('0444')
-          .with_backup(false)
-          .with_show_diff(false)
-          .with_ensure_newline(true)
-
-        is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
-          .with_target('/crt/cert.crt')
-          .with_content("# /foo/cert.crt\n")
-          .with_order('10')
-
-        is_expected.to contain_openssl_certutil('cert')
-          .with_ensure('present')
-          .with_filename('/crt/cert.crt')
-          .with_ssl_trust('C')
-          .that_requires('Concat[/crt/cert.crt]')
+        case facts[:os]['family']
+        when 'Debian', 'FreeBSD'
+          is_expected.to contain_openssl_hash('/crt/cert.crt')
+            .with_ensure('present')
+            .that_requires('Concat[/crt/cert.crt]')
+        when 'RedHat'
+          is_expected.to contain_openssl_certutil('cert')
+            .with_ensure('present')
+            .with_filename('/crt/cert.crt')
+            .with_ssl_trust('C')
+            .that_requires('Concat[/crt/cert.crt]')
+        end
       }
     end
 
     context "on #{os} with mode => 0642" do
+      let(:facts) { facts }
       let(:params) do
         { mode: '0642' }
       end
@@ -230,6 +221,7 @@ describe 'openssl::cert' do
     end
 
     context "on #{os} with owner => mysql" do
+      let(:facts) { facts }
       let(:params) do
         { owner: 'mysql' }
       end
@@ -251,6 +243,7 @@ describe 'openssl::cert' do
     end
 
     context "on #{os} with group => mysql" do
+      let(:facts) { facts }
       let(:params) do
         { group: 'mysql' }
       end
@@ -272,6 +265,7 @@ describe 'openssl::cert' do
     end
 
     context "on #{os} with cert_dir => /baz" do
+      let(:facts) { facts }
       let(:params) do
         { cert_dir: '/baz' }
       end
@@ -293,12 +287,39 @@ describe 'openssl::cert' do
     end
 
     context "on #{os} with ensure => absent" do
+      let(:facts) { facts }
       let(:params) do
         { ensure: 'absent' }
       end
 
       it {
         is_expected.to contain_file('/crt/cert.crt').with_ensure('absent')
+        is_expected.not_to contain_openssl_hash('/crt/cert.crt')
+        is_expected.not_to contain_openssl_certutil('cert')
+      }
+    end
+
+    context "on #{os} with ensure => absent, manage_trust => true" do
+      let(:facts) { facts }
+      let(:params) do
+        { ensure: 'absent', manage_trust: true }
+      end
+
+      it {
+        is_expected.to contain_file('/crt/cert.crt').with_ensure('absent')
+      }
+
+      it {
+        case facts[:os]['family']
+        when 'Debian', 'FreeBSD'
+          is_expected.to contain_openssl_hash('/crt/cert.crt')
+            .with_ensure('absent')
+            .that_comes_before('File[/crt/cert.crt]')
+        when 'RedHat'
+          is_expected.to contain_openssl_certutil('cert')
+            .with_ensure('absent')
+            .that_comes_before('File[/crt/cert.crt]')
+        end
       }
     end
   end

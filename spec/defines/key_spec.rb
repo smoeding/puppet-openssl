@@ -27,9 +27,9 @@ describe 'openssl::key' do
   end
 
   on_supported_os.each do |os, facts|
-    let(:facts) { facts }
-
     context "on #{os} with default parameters" do
+      let(:facts) { facts }
+
       it {
         is_expected.to contain_file('/key/key.key')
           .with_ensure('file')
@@ -43,6 +43,7 @@ describe 'openssl::key' do
     end
 
     context "on #{os} with key => secret" do
+      let(:facts) { facts }
       let(:params) do
         { key: 'secret' }
       end
@@ -60,6 +61,7 @@ describe 'openssl::key' do
     end
 
     context "on #{os} with source => secret" do
+      let(:facts) { facts }
       let(:params) do
         { source: 'secret' }
       end
@@ -77,6 +79,7 @@ describe 'openssl::key' do
     end
 
     context "on #{os} with extension => pem" do
+      let(:facts) { facts }
       let(:params) do
         { extension: 'pem' }
       end
@@ -94,6 +97,7 @@ describe 'openssl::key' do
     end
 
     context "on #{os} with source_extension => baz" do
+      let(:facts) { facts }
       let(:params) do
         { source_extension: 'baz' }
       end
@@ -111,6 +115,7 @@ describe 'openssl::key' do
     end
 
     context "on #{os} with mode => 0642" do
+      let(:facts) { facts }
       let(:params) do
         { mode: '0642' }
       end
@@ -128,6 +133,7 @@ describe 'openssl::key' do
     end
 
     context "on #{os} with owner => mysql" do
+      let(:facts) { facts }
       let(:params) do
         { owner: 'mysql' }
       end
@@ -145,6 +151,7 @@ describe 'openssl::key' do
     end
 
     context "on #{os} with group => mysql" do
+      let(:facts) { facts }
       let(:params) do
         { group: 'mysql' }
       end
@@ -162,6 +169,7 @@ describe 'openssl::key' do
     end
 
     context "on #{os} with key_dir => /baz" do
+      let(:facts) { facts }
       let(:params) do
         { key_dir: '/baz' }
       end
@@ -179,6 +187,7 @@ describe 'openssl::key' do
     end
 
     context "on #{os} with ensure => absent" do
+      let(:facts) { facts }
       let(:params) do
         { ensure: 'absent' }
       end

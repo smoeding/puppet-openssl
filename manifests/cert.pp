@@ -43,18 +43,18 @@
 # @param source_extension
 #   The file extension used for files read on the server.
 #
-# @param makehash
-#   A boolean value that determines if a symbolic link using the certificate
-#   hash value should be generated on the client. This is used on Debian
-#   based distributions to locate the correct certificate in a trust chain.
-#
-# @param certtrust
+# @param manage_trust
 #   A boolean value that determines if the certificate should be marked as a
-#   trusted certificate in the system-wide NSS database. The certutil binary
-#   is required for this to work. Nothing is done if the parameter value is
-#   undefined, which is the default. The mark is set if the parameter value
-#   is 'true' and removed if the parameter value is 'false'. The parameter is
-#   only used on RedHat based distributions.
+#   trusted certificate. The mark is set if the parameter value is 'true' and
+#   removed if the parameter value is 'false'. This is mostly useful for CA
+#   certificates to establish a proper trust chain.
+#
+#   On Debian based distributions this is done by creating a symbolic link
+#   pointing to the certificate file using the certificate hash as name.
+#
+#   On RedHat based distributions the certificate is added to the system-wide
+#   NSS database in `/etc/pki/nssdb`. The `certutil` binary is required for
+#   this.
 #
 # @param mode
 #   The file mode used for the resource.
@@ -77,12 +77,11 @@ define openssl::cert (
   Array[String]                  $cert_chain       = [],
   String                         $extension        = 'crt',
   String                         $source_extension = 'crt',
-  Boolean                        $makehash         = false,
+  Boolean                        $manage_trust     = false,
   Stdlib::Filemode               $mode             = '0444',
   String                         $owner            = 'root',
   Optional[String]               $group            = undef,
   Optional[Stdlib::Absolutepath] $cert_dir         = undef,
-  Optional[Boolean]              $certtrust        = undef,
 ) {
 
   # The base class must be included first
@@ -123,48 +122,61 @@ define openssl::cert (
       }
     }
 
-    if $makehash {
-      #
-      # Create a hash for the installed certificate. The hash must be
-      # calculated on the client, since different openssl implementations use
-      # different hash algorithms.
-      #
-      openssl_hash { $_cert_file:
-        ensure  => present,
-        require => Concat[$_cert_file],
-      }
-    }
+    if $manage_trust {
+      case $facts['os']['family'] {
+        'Debian',
+        'FreeBSD': {
+          # Create a hash for the installed certificate. The hash must be
+          # calculated on the client, since different openssl implementations
+          # use different hash algorithms.
 
-    if $certtrust {
-      #
-      # Add the installed certificate to the system-wide NSS database and
-      # mark it as trusted for SSL. This requires the certutil executable
-      # which is generally only available on RedHat-based distributions.
-      #
+          openssl_hash { $_cert_file:
+            ensure  => $ensure,
+            require => Concat[$_cert_file],
+          }
+        }
+        'RedHat': {
+          # Add the installed certificate to the system-wide NSS database and
+          # mark it as trusted for SSL. This requires the certutil executable
+          # which is generally only available on RedHat-based distributions.
 
-      openssl_certutil { $cert:
-        ensure    => present,
-        filename  => $_cert_file,
-        ssl_trust => 'C',
-        require   => Concat[$_cert_file],
+          openssl_certutil { $cert:
+            ensure    => $ensure,
+            filename  => $_cert_file,
+            ssl_trust => 'C',
+            require   => Concat[$_cert_file],
+          }
+        }
+        default: {
+          warn("Unsupported operating system family: ${facts['os']['family']}")
+        }
       }
     }
   }
   else {
-    openssl_hash { $_cert_file:
-      ensure => absent,
-      before => File[$_cert_file],
-    }
-
-    if $certtrust {
-      openssl_certutil { $cert:
-        ensure => absent,
-        before => File[$_cert_file],
+    if $manage_trust {
+      case $facts['os']['family'] {
+        'Debian',
+        'FreeBSD': {
+          openssl_hash { $_cert_file:
+            ensure => $ensure,
+            before => File[$_cert_file],
+          }
+        }
+        'RedHat': {
+          openssl_certutil { $cert:
+            ensure => $ensure,
+            before => File[$_cert_file],
+          }
+        }
+        default: {
+          warn("Unsupported operating system family: ${facts['os']['family']}")
+        }
       }
     }
 
     file { $_cert_file:
-      ensure => absent,
+      ensure => $ensure,
     }
   }
 }

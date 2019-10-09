@@ -13,7 +13,6 @@ describe 'openssl::csr' do
   let(:title) { '/tmp/example.com.csr' }
 
   on_supported_os.each do |os, facts|
-    let(:facts) { facts }
     let(:params) do
       {
         common_name: 'example.com',
@@ -23,6 +22,8 @@ describe 'openssl::csr' do
     end
 
     context "on #{os} with default parameters" do
+      let(:facts) { facts }
+
       it {
         is_expected.to contain_file('/tmp/example.com.cnf')
           .with_ensure('file')
