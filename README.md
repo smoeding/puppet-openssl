@@ -75,12 +75,14 @@ class { 'openssl':
 }
 ```
 
-This would install the Let's Encrypt certificate stored in the `letsencrypt-ca.crt` file. For CA certificates the module automatically creates hashes pointing to the installed file. On a Debian client node this would create the following file and link:
+This would install the Let's Encrypt certificate stored in the `letsencrypt-ca.crt` file. For these certificates the module automatically adds a trust attribute. On Debian based distributions a symbolic link pointing to the installed file will be created using the certificate hash as name:
 
 ``` text
 lrwxrwxrwx 1 root root   18 Jul 14 13:27 /etc/ssl/certs/4f06f81d.0 -> letsencrypt-ca.crt
 -r--r--r-- 1 root root 1647 May 17 09:09 /etc/ssl/certs/letsencrypt-ca.crt
 ```
+
+On RedHat based distributions the `certutil` binary is used to add the certificate to the system-wide NSS database in `/etc/pki/nssdb`.
 
 ### Install a certificate and key using defaults
 
@@ -97,6 +99,8 @@ This would take the files from the directory on the Puppet server (e.g. `/etc/pu
 r-------- 1 root root 1679 Jan  3  2017 /etc/ssl/private/imap.key
 r--r--r-- 1 root root 1570 Mar  1 20:07 /etc/ssl/certs/imap.crt
 ```
+
+The default destination directories are distribution specific and can be configured using the class parameters `default_key_dir` and `default_cert_dir`.
 
 ### Install a certificate and key for a specific application
 

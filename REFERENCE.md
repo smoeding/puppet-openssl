@@ -214,7 +214,10 @@ pointing to the certificate file using the certificate hash as name.
 
 On RedHat based distributions the certificate is added to the system-wide
 NSS database in `/etc/pki/nssdb`. The `certutil` binary is required for
-this.
+this. The value of the parameter `cert` is used as the nickname for the
+certificate. Do not try to add the same certificate a second time with a
+different nickname to the database. This will fail silently and Puppet
+will try to add the certificate on every subsequent run.
 
 Default value: `false`
 
