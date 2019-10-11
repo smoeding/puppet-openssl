@@ -6,8 +6,15 @@ Puppet::Type.newtype(:openssl_genpkey) do
 
     **This type is still beta!**
 
-    Generate an OpenSSL private key file. The key can optionally be encrypted
-    using a supplied password.
+    Generate an OpenSSL private key file. The type creates RSA or Elliptic
+    Curve keys depending on the parameter `algorithm`.
+
+    The key can optionally be encrypted using a supplied password. Encryption
+    uses the `-passin` option when calling `openssl` so the password is not
+    visible in the process listing.
+
+    The type is refreshable. The `openssl_genpkey` type will regenerate the
+    key if the resource is notified from another resource.
 
     @example Generate a 2048 bit RSA key file
 
@@ -23,6 +30,14 @@ Puppet::Type.newtype(:openssl_genpkey) do
         curve     => 'secp256k1',
         cipher    => 'aes128',
         password  => 'rosebud',
+      }
+
+    @example Regenerate the key if a file changes
+
+      openssl_genpkey { '/tmp/rsa-2048.key':
+        algorithm => 'RSA',
+        bits      => '2048',
+        subscribe => File['/etc/ssl/key.trigger'],
       }
   DOC
 
@@ -97,5 +112,9 @@ Puppet::Type.newtype(:openssl_genpkey) do
     if !self[:cipher].nil? && self[:password].nil?
       raise Puppet::Error, 'A password must be given when encryption is used.'
     end
+  end
+
+  def refresh
+    provider.refresh if self[:ensure] == :present
   end
 end

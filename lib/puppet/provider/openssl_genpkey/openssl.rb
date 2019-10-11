@@ -10,7 +10,14 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl) do
 
   commands openssl: 'openssl'
 
+  def initialize(value={})
+    super(value)
+    @trigger_refresh = true
+  end
+
   def exists?
+    Puppet.debug("openssl_genpkey: exists? #{resource[:file]}")
+
     return false unless File.exist?(resource[:file])
 
     param = ['openssl', 'pkey', '-noout', '-text']
@@ -23,8 +30,6 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl) do
     end
 
     Open3.popen2e(*param) do |stdin, stdout, process_status|
-      Puppet.debug("openssl_genpkey: exists? #{resource[:file]}")
-
       stdin.puts(resource[:password]) unless resource[:password].nil?
 
       stdout.each_line { |_| }
@@ -90,9 +95,20 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl) do
   ensure
     File.unlink(tfile) if File.exist?(tfile)
     ptemp.unlink unless ptemp.nil?
+    @trigger_refresh = false
   end
 
   def destroy
     File.unlink(resource[:file])
+    @trigger_refresh = false
+  end
+
+  def refresh
+    if @trigger_refresh
+      Puppet.debug("openssl_genpkey: recreating #{resource[:file]}")
+      create
+    else
+      Puppet.debug("openssl_genpkey: skipping recreation of #{resource[:file]}")
+    end
   end
 end
