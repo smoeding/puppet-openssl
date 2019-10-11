@@ -10,7 +10,7 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl) do
 
   commands openssl: 'openssl'
 
-  def initialize(value={})
+  def initialize(value = {})
     super(value)
     @trigger_refresh = true
   end
