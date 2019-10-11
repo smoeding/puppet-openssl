@@ -827,8 +827,15 @@ seconds.
 
 **This type is still beta!**
 
-Generate an OpenSSL private key file. The key can optionally be encrypted
-using a supplied password.
+Generate an OpenSSL private key file. The type creates RSA or Elliptic
+Curve keys depending on the parameter `algorithm`.
+
+The key can optionally be encrypted using a supplied password. Encryption
+uses the `-passin` option when calling `openssl` so the password is not
+visible in the process listing.
+
+The type is refreshable. The `openssl_genpkey` type will regenerate the
+key if the resource is notified from another resource.
 
 #### Examples
 
@@ -851,6 +858,17 @@ openssl_genpkey { '/tmp/ec-secp256k1.key':
   curve     => 'secp256k1',
   cipher    => 'aes128',
   password  => 'rosebud',
+}
+```
+
+##### Regenerate the key if a file changes
+
+```puppet
+
+openssl_genpkey { '/tmp/rsa-2048.key':
+  algorithm => 'RSA',
+  bits      => '2048',
+  subscribe => File['/etc/ssl/key.trigger'],
 }
 ```
 
