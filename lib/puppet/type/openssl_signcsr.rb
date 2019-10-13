@@ -11,13 +11,26 @@ Puppet::Type.newtype(:openssl_signcsr) do
     certificate will be valid for the given number of days. An encrypted key
     can be used if the key password is supplied.
 
-    @example Sign a certificate for one year
+    The type is refreshable. The `openssl_signcsr` type will regenerate the
+    certificate if the resource is notified from another resource.
+
+    @example Sign a self-signed certificate valid for one year
 
       openssl_signcert { '/tmp/cert.crt':
-        csr      => '/tmp/csr',
+        csr      => '/tmp/cert.csr',
         config   => '/tmp/cert.cnf',
         key_file => '/tmp/cert.key',
         days     => '365',
+      }
+
+    @example Regenerate the certificate if the CSR changes
+
+      openssl_signcert { '/tmp/cert.crt':
+        csr      => '/tmp/cert.csr',
+        config   => '/tmp/cert.cnf',
+        key_file => '/tmp/cert.key',
+        days     => '365',
+        subscribe => File['/tmp/cert.csr'],
       }
   DOC
 
@@ -87,5 +100,9 @@ Puppet::Type.newtype(:openssl_signcsr) do
 
   autorequire(:openssl_genpkey) do
     [self[:key_file]]
+  end
+
+  def refresh
+    provider.refresh if self[:ensure] == :present
   end
 end

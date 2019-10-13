@@ -728,7 +728,8 @@ The filename of the certificate.
 
 ### openssl_genparam
 
-Generate Diffie-Hellman or Elliptic Curve parameter file.
+The type is refreshable. The `openssl_genaram` type will regenerate the
+parameters if the resource is notified from another resource.
 
 #### Examples
 
@@ -762,6 +763,17 @@ openssl_genparam { '/tmp/dhparam.pem':
   bits             => '2048,
   generator        => '2',
   refresh_interval => '3mo',
+}
+```
+
+##### Refresh a parameter file if another file changes
+
+```puppet
+
+openssl_genparam { '/tmp/dhparam.pem':
+  algorithm => 'DH',
+  bits      => '2048,
+  subscribe => File['/etc/ssl/parameters.trigger'],
 }
 ```
 
@@ -861,7 +873,7 @@ openssl_genpkey { '/tmp/ec-secp256k1.key':
 }
 ```
 
-##### Regenerate the key if a file changes
+##### Regenerate the key if another file changes
 
 ```puppet
 
@@ -989,17 +1001,33 @@ certificate extensions and a key file to generate a certificate. The
 certificate will be valid for the given number of days. An encrypted key
 can be used if the key password is supplied.
 
+The type is refreshable. The `openssl_signcsr` type will regenerate the
+certificate if the resource is notified from another resource.
+
 #### Examples
 
-##### Sign a certificate for one year
+##### Sign a self-signed certificate valid for one year
 
 ```puppet
 
 openssl_signcert { '/tmp/cert.crt':
-  csr      => '/tmp/csr',
+  csr      => '/tmp/cert.csr',
   config   => '/tmp/cert.cnf',
   key_file => '/tmp/cert.key',
   days     => '365',
+}
+```
+
+##### Regenerate the certificate if the CSR changes
+
+```puppet
+
+openssl_signcert { '/tmp/cert.crt':
+  csr      => '/tmp/cert.csr',
+  config   => '/tmp/cert.cnf',
+  key_file => '/tmp/cert.key',
+  days     => '365',
+  subscribe => File['/tmp/cert.csr'],
 }
 ```
 

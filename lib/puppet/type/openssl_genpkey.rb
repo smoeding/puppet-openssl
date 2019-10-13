@@ -32,7 +32,7 @@ Puppet::Type.newtype(:openssl_genpkey) do
         password  => 'rosebud',
       }
 
-    @example Regenerate the key if a file changes
+    @example Regenerate the key if another file changes
 
       openssl_genpkey { '/tmp/rsa-2048.key':
         algorithm => 'RSA',

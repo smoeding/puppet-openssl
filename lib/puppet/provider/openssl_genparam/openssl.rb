@@ -9,6 +9,11 @@ Puppet::Type.type(:openssl_genparam).provide(:openssl) do
 
   commands openssl: 'openssl'
 
+  def initialize(value = {})
+    super(value)
+    @trigger_refresh = true
+  end
+
   def exists?
     return false unless File.exist?(resource[:file])
 
@@ -58,9 +63,20 @@ Puppet::Type.type(:openssl_genparam).provide(:openssl) do
     File.rename(tfile, resource[:file])
   ensure
     File.unlink(tfile) if File.exist?(tfile)
+    @trigger_refresh = false
   end
 
   def destroy
     File.unlink(resource[:file])
+    @trigger_refresh = false
+  end
+
+  def refresh
+    if @trigger_refresh
+      Puppet.debug("openssl_genparam: recreating #{resource[:file]}")
+      create
+    else
+      Puppet.debug("openssl_genparam: skipping recreation of #{resource[:file]}")
+    end
   end
 end

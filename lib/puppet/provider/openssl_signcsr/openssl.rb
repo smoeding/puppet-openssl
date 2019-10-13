@@ -7,6 +7,11 @@ Puppet::Type.type(:openssl_signcsr).provide(:openssl) do
 
   commands openssl: 'openssl'
 
+  def initialize(value = {})
+    super(value)
+    @trigger_refresh = true
+  end
+
   def exists?
     return false unless File.exist?(resource[:file])
 
@@ -45,9 +50,20 @@ Puppet::Type.type(:openssl_signcsr).provide(:openssl) do
 
       return false unless process_status.value.success?
     end
+    @trigger_refresh = false
   end
 
   def destroy
     File.unlink(resource[:file])
+    @trigger_refresh = false
+  end
+
+  def refresh
+    if @trigger_refresh
+      Puppet.debug("openssl_signcsr: recreating #{resource[:file]}")
+      create
+    else
+      Puppet.debug("openssl_signcsr: skipping recreation of #{resource[:file]}")
+    end
   end
 end

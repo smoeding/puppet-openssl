@@ -4,6 +4,9 @@ Puppet::Type.newtype(:openssl_genparam) do
   @doc = <<-DOC
     @summary Generate Diffie-Hellman or Elliptic Curve parameter file.
 
+    The type is refreshable. The `openssl_genaram` type will regenerate the
+    parameters if the resource is notified from another resource.
+
     @example Create a Diffie-Hellman parameter file using 2048 bits
 
       openssl_genparam { '/tmp/dhparam.pem':
@@ -26,6 +29,14 @@ Puppet::Type.newtype(:openssl_genparam) do
         bits             => '2048,
         generator        => '2',
         refresh_interval => '3mo',
+      }
+
+    @example Refresh a parameter file if another file changes
+
+      openssl_genparam { '/tmp/dhparam.pem':
+        algorithm => 'DH',
+        bits      => '2048,
+        subscribe => File['/etc/ssl/parameters.trigger'],
       }
   DOC
 
@@ -127,5 +138,9 @@ Puppet::Type.newtype(:openssl_genparam) do
     else
       raise Puppet::Error, "Unsupported algorithm #{self[:algorithm]}"
     end
+  end
+
+  def refresh
+    provider.refresh if self[:ensure] == :present
   end
 end
