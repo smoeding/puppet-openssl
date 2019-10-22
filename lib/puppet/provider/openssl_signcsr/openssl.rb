@@ -15,10 +15,10 @@ Puppet::Type.type(:openssl_signcsr).provide(:openssl) do
   def exists?
     return false unless File.exist?(resource[:file])
 
-    param = ['openssl', 'x509', '-noout']
-    param << '-in' << resource[:file]
+    cmd = ['openssl', 'x509', '-noout']
+    cmd << '-in' << resource[:file]
 
-    Open3.popen2e(*param) do |_stdin, stdout, process_status|
+    Open3.popen2e(*cmd) do |_stdin, stdout, process_status|
       Puppet.debug("openssl_signcsr: exists? #{resource[:file]}")
 
       stdout.each_line { |_| }
@@ -30,25 +30,39 @@ Puppet::Type.type(:openssl_signcsr).provide(:openssl) do
   end
 
   def create
-    cre_param = ['openssl', 'req', '-new', '-x509']
+    out = []
+    cmd = ['openssl']
 
-    cre_param << '-out' << resource[:file]
-    cre_param << '-in' << resource[:csr]
-    cre_param << '-key' << resource[:key_file]
-    cre_param << '-config' << resource[:config]
-    cre_param << '-days' << resource[:days]
+    if resource[:selfsigned]
+      cmd << 'x509' << '-req' << '-signkey' << resource[:signkey]
+    else
+      cmd << 'ca' << '-batch' << '-create_serial'
+      cmd << '-config' << resource[:ca_config]
+      cmd << '-name' << resource[:ca_name]
+    end
+
+    cmd << '-in' << resource[:csr]
+    cmd << '-out' << resource[:file]
 
     # security: send cipher password on stdin
-    cre_param << '-passin' << 'stdin' unless resource[:key_password].nil?
+    cmd << '-passin' << 'stdin' unless resource[:password].nil?
 
-    Open3.popen2e(*cre_param) do |stdin, stdout, process_status|
+    cmd << '-extfile' << resource[:extfile] unless resource[:extfile].nil?
+    cmd << '-extensions' << resource[:extensions] unless resource[:extensions].nil?
+
+    cmd << '-days' << resource[:days]
+
+    Open3.popen2e(*cmd) do |stdin, stdout, process_status|
       Puppet.debug("openssl_signcsr: create #{resource[:file]}")
 
-      stdin.puts(resource[:key_password]) unless resource[:key_password].nil?
+      stdin.puts(resource[:password]) unless resource[:password].nil?
 
-      stdout.each_line { |_| }
+      stdout.each_line { |line| out << line }
 
-      return false unless process_status.value.success?
+      unless process_status.value.success?
+        out.each { |line| Puppet.notice("openssl_signcsr: #{line}") }
+        return false
+      end
     end
     @trigger_refresh = false
   end
