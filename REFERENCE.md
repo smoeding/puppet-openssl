@@ -10,18 +10,18 @@
 **Defined types**
 
 * [`openssl::cert`](#opensslcert): Manage an X.509 certificate file in PEM format
-* [`openssl::csr`](#opensslcsr): Manage OpenSSL certificate signing request (CSR)
-* [`openssl::dhparam`](#openssldhparam): Manage Diffie-Hellman parameter files.
+* [`openssl::csr`](#opensslcsr): Create OpenSSL certificate signing request (CSR)
+* [`openssl::dhparam`](#openssldhparam): Manage Diffie-Hellman parameter files
 * [`openssl::key`](#opensslkey): Manage an X.509 key file in PEM format
 
 **Resource types**
 
-* [`openssl_certutil`](#openssl_certutil): Manage trusted certificates in the system-wide NSS database.
-* [`openssl_genparam`](#openssl_genparam): Generate Diffie-Hellman or Elliptic Curve parameter file.
-* [`openssl_genpkey`](#openssl_genpkey): Generate OpenSSL private key files.
-* [`openssl_hash`](#openssl_hash): Manage a symbolic link using the certificate hash.
-* [`openssl_selfsign`](#openssl_selfsign): Create an OpenSSL self-signed certificate.
-* [`openssl_signcsr`](#openssl_signcsr): Sign OpenSSL certificate signing request using a CA.
+* [`openssl_certutil`](#openssl_certutil): Manage trusted certificates in the system-wide NSS database
+* [`openssl_genparam`](#openssl_genparam): Generate Diffie-Hellman or Elliptic Curve parameter file
+* [`openssl_genpkey`](#openssl_genpkey): Generate OpenSSL private key files
+* [`openssl_hash`](#openssl_hash): Manage a symbolic link using the certificate hash
+* [`openssl_selfsign`](#openssl_selfsign): Create an OpenSSL self-signed certificate
+* [`openssl_signcsr`](#openssl_signcsr): Sign OpenSSL certificate signing request using a CA
 
 **Data types**
 
@@ -108,7 +108,8 @@ Linux this is normally `root`. On FreeBSD this is `wheel`.
 
 Data type: `Array[String]`
 
-An array of CA certificates that are installed by default.
+An array of CA certificates that are installed by default. Internally
+this uses the `openssl::cert` defined type.
 
 ## Defined types
 
@@ -147,7 +148,7 @@ The following parameters are available in the `openssl::cert` defined type.
 
 Data type: `Enum['present','absent']`
 
-The state of the resource. Can be `present` or `absent`.
+The state of the resource.
 
 Default value: 'present'
 
@@ -206,8 +207,8 @@ Default value: 'crt'
 Data type: `Boolean`
 
 A boolean value that determines if the certificate should be marked as a
-trusted certificate. The mark is set if the parameter value is 'true' and
-removed if the parameter value is 'false'. This is mostly useful for CA
+trusted certificate. The mark is set if the parameter value is `true` and
+removed if the parameter value is `false`. This is mostly useful for CA
 certificates to establish a proper trust chain.
 
 On Debian based distributions this is done by creating a symbolic link
@@ -257,7 +258,7 @@ Default value: `undef`
 
 ### openssl::csr
 
-Manage OpenSSL certificate signing request (CSR)
+Create OpenSSL certificate signing request (CSR)
 
 #### Examples
 
@@ -281,7 +282,7 @@ The following parameters are available in the `openssl::csr` defined type.
 
 Data type: `String`
 
-The value of the X.509 CN attribute. This attribute is mandatory.
+The value of the X.509 `CN` attribute. This attribute is mandatory.
 
 ##### `csr_file`
 
@@ -299,7 +300,7 @@ Data type: `Stdlib::Absolutepath`
 
 The full path name of the OpenSSL configuration file that will be
 created. It contains a minimal set of configuration options that are
-needed to process the CSR. It will also be used when the CSR is used to
+needed to process the CSR. It can also be used when the CSR is used to
 create a self-signed certificate. Updates to the config file will not
 trigger the generation of a new certificate.
 
@@ -315,7 +316,7 @@ already be present to generate the CSR.
 Data type: `Array[Stdlib::Fqdn]`
 
 An array of DNS names that will be added as subject alternate names using
-the 'DNS' prefix. The certificate can be used for all names given in this
+the `DNS` prefix. The certificate can be used for all names given in this
 list. Normally the common name should be in this list or the certificate
 may be rejected by modern web browsers.
 
@@ -326,7 +327,7 @@ Default value: []
 Data type: `Array[Stdlib::IP::Address]`
 
 An array of IP addresses that wull be added as subject alternate names
-using the 'IP' prefix. The certificate can be used for all IP addresses
+using the `IP` prefix. The certificate can be used for all IP addresses
 given in this list.
 
 Default value: []
@@ -437,7 +438,7 @@ Default value: `undef`
 
 ### openssl::dhparam
 
-Manage Diffie-Hellman parameter files.
+Manage Diffie-Hellman parameter files
 
 #### Examples
 
@@ -476,7 +477,7 @@ The following parameters are available in the `openssl::dhparam` defined type.
 
 Data type: `Enum['present','absent']`
 
-The state of the resource. Can be `present` or `absent`.
+The state of the resource.
 
 Default value: 'present'
 
@@ -493,8 +494,7 @@ Default value: $name
 
 Data type: `Enum['2048','4096','8192']`
 
-The number of bits to generate. Must be one of the strings `2048`, `4096`
-or `8192`.
+The number of bits to generate.
 
 Default value: '2048'
 
@@ -502,8 +502,8 @@ Default value: '2048'
 
 Data type: `Enum['2','5']`
 
-The generator to use. Must be the string `2` or `5`. Check the openssl
-documentation for details about this parameter.
+The generator to use. Check the openssl documentation for details about
+this parameter.
 
 Default value: '2'
 
@@ -566,7 +566,7 @@ The following parameters are available in the `openssl::key` defined type.
 
 Data type: `Enum['present','absent']`
 
-The state of the resource. Can be `present` or `absent`.
+The state of the resource.
 
 Default value: 'present'
 
@@ -643,9 +643,9 @@ Default value: `undef`
 
 ### openssl_certutil
 
-The certificate specified with `filename` is installed as a trusted
-certificate if `ensure => present`. The trust is removed if
-`ensure => absent`.
+This type installs the certificate specified with `filename` as a trusted
+certificate if `ensure => present`. The trust is removed if `ensure =>
+absent`.
 
 The `certutil` executable is required for this type. In general it is
 only available on RedHat-based distributions.
@@ -664,7 +664,7 @@ already installed certificate should be removed.
 
 #### Examples
 
-##### Add a certificate to the NSS database and trust it for SSL
+##### Add a certificate to the NSS database and set trust level for SSL
 
 ```puppet
 
@@ -674,7 +674,7 @@ openssl_certutil { '/etc/ssl/certs/My-Root-CA.crt':
 }
 ```
 
-##### Remove a certificate frpm the NSS database
+##### Remove a certificate from the NSS database
 
 ```puppet
 
@@ -917,8 +917,8 @@ name must be given
 
 Valid values: 2048, 4096, 8192
 
-The number of bits for the RSA key. Must be one of the strings
-`2048`, `4096` or `8192`. This parameter is mandatory for RSA keys.
+The number of bits for the RSA key. This parameter is mandatory for
+RSA keys.
 
 ##### `curve`
 
@@ -938,9 +938,9 @@ Use the supplied password when encrypting the key.
 
 ### openssl_hash
 
-If 'ensure => present' a symbolic link using the certificate hash will be
+If `ensure => present` a symbolic link using the certificate hash will be
 created in the same directory as the certificate. The link is removed if
-'ensure => absent'.
+`ensure => absent`.
 
 This link is used to find a trusted cert when a certificate chain is
 validated.
@@ -1064,7 +1064,7 @@ Valid values: %r{^[0-9]+$}
 
 The number of days the certificate should be valid.
 
-Default value: 365
+Default value: 370
 
 ##### `extfile`
 
@@ -1160,7 +1160,7 @@ Valid values: %r{^[0-9]+$}
 
 The number of days the certificate should be valid.
 
-Default value: 365
+Default value: 370
 
 ##### `extfile`
 

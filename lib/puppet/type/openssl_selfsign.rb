@@ -2,7 +2,7 @@
 
 Puppet::Type.newtype(:openssl_selfsign) do
   @doc = <<-DOC
-    @summary Create an OpenSSL self-signed certificate.
+    @summary Create an OpenSSL self-signed certificate
 
     **This type is still beta!**
 

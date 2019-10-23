@@ -2,7 +2,7 @@
 
 Puppet::Type.newtype(:openssl_genpkey) do
   @doc = <<-DOC
-    @summary Generate OpenSSL private key files.
+    @summary Generate OpenSSL private key files
 
     **This type is still beta!**
 
@@ -68,8 +68,8 @@ Puppet::Type.newtype(:openssl_genpkey) do
   end
 
   newparam(:bits) do
-    desc 'The number of bits for the RSA key. Must be one of the strings
-      `2048`, `4096` or `8192`. This parameter is mandatory for RSA keys.'
+    desc 'The number of bits for the RSA key. This parameter is mandatory for
+      RSA keys.'
 
     newvalues '2048', '4096', '8192'
     munge { |value| value.to_s }
@@ -98,15 +98,15 @@ Puppet::Type.newtype(:openssl_genpkey) do
 
   validate do
     if self[:algorithm].nil?
-      raise Puppet::Error, 'Parameter algorithm must be set'
+      raise Puppet::Error, "Parameter 'algorithm' must be set"
     end
 
     if (self[:algorithm] == 'RSA') && self[:bits].nil?
-      raise Puppet::Error, 'Parameter bits is mandatory for RSA keys'
+      raise Puppet::Error, "Parameter 'bits' is mandatory for RSA keys"
     end
 
     if (self[:algorithm] == 'EC') && self[:curve].nil?
-      raise Puppet::Error, 'Parameter curve is mandatory for EC keys'
+      raise Puppet::Error, "Parameter 'curve' is mandatory for EC keys"
     end
 
     if !self[:cipher].nil? && self[:password].nil?

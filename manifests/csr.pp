@@ -1,4 +1,4 @@
-# @summary Manage OpenSSL certificate signing request (CSR)
+# @summary Create OpenSSL certificate signing request (CSR)
 #
 # @example Creating a CSR with subject alternate names
 #
@@ -10,7 +10,7 @@
 #   }
 #
 # @param common_name
-#   The value of the X.509 CN attribute. This attribute is mandatory.
+#   The value of the X.509 `CN` attribute. This attribute is mandatory.
 #
 # @param csr_file
 #   The full path name of the signing request file that will be created. It
@@ -20,7 +20,7 @@
 # @param config
 #   The full path name of the OpenSSL configuration file that will be
 #   created. It contains a minimal set of configuration options that are
-#   needed to process the CSR. It will also be used when the CSR is used to
+#   needed to process the CSR. It can also be used when the CSR is used to
 #   create a self-signed certificate. Updates to the config file will not
 #   trigger the generation of a new certificate.
 #
@@ -30,13 +30,13 @@
 #
 # @param subject_alternate_names_dns
 #   An array of DNS names that will be added as subject alternate names using
-#   the 'DNS' prefix. The certificate can be used for all names given in this
+#   the `DNS` prefix. The certificate can be used for all names given in this
 #   list. Normally the common name should be in this list or the certificate
 #   may be rejected by modern web browsers.
 #
 # @param subject_alternate_names_ip
 #   An array of IP addresses that wull be added as subject alternate names
-#   using the 'IP' prefix. The certificate can be used for all IP addresses
+#   using the `IP` prefix. The certificate can be used for all IP addresses
 #   given in this list.
 #
 # @param key_usage

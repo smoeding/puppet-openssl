@@ -16,7 +16,7 @@
 #   }
 #
 # @param ensure
-#   The state of the resource. Can be `present` or `absent`.
+#   The state of the resource.
 #
 # @param cert
 #   The basename of the file where the certificate will be stored on the
@@ -45,8 +45,8 @@
 #
 # @param manage_trust
 #   A boolean value that determines if the certificate should be marked as a
-#   trusted certificate. The mark is set if the parameter value is 'true' and
-#   removed if the parameter value is 'false'. This is mostly useful for CA
+#   trusted certificate. The mark is set if the parameter value is `true` and
+#   removed if the parameter value is `false`. This is mostly useful for CA
 #   certificates to establish a proper trust chain.
 #
 #   On Debian based distributions this is done by creating a symbolic link

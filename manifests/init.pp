@@ -42,7 +42,8 @@
 #   Linux this is normally `root`. On FreeBSD this is `wheel`.
 #
 # @param ca_certs
-#   An array of CA certificates that are installed by default.
+#   An array of CA certificates that are installed by default. Internally
+#   this uses the `openssl::cert` defined type.
 #
 #
 class openssl (

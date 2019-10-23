@@ -16,7 +16,7 @@
 #   }
 #
 # @param ensure
-#   The state of the resource. Can be `present` or `absent`.
+#   The state of the resource.
 #
 # @param key
 #   The basename of the file where the key will be stored on the client. The

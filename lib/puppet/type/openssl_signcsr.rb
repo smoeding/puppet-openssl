@@ -2,7 +2,7 @@
 
 Puppet::Type.newtype(:openssl_signcsr) do
   @doc = <<-DOC
-    @summary Sign OpenSSL certificate signing request using a CA.
+    @summary Sign OpenSSL certificate signing request using a CA
 
     **This type is still beta!**
 

@@ -1,4 +1,4 @@
-# @summary Manage Diffie-Hellman parameter files.
+# @summary Manage Diffie-Hellman parameter files
 #
 # @example Create a parameter file using default parameters
 #
@@ -19,19 +19,18 @@
 #   }
 #
 # @param ensure
-#   The state of the resource. Can be `present` or `absent`.
+#   The state of the resource.
 #
 # @param file
 #   The file name where the DH parameters are stored on the node. Must be an
 #   absolute path.
 #
 # @param bits
-#   The number of bits to generate. Must be one of the strings `2048`, `4096`
-#   or `8192`.
+#   The number of bits to generate.
 #
 # @param generator
-#   The generator to use. Must be the string `2` or `5`. Check the openssl
-#   documentation for details about this parameter.
+#   The generator to use. Check the openssl documentation for details about
+#   this parameter.
 #
 # @param mode
 #   The file mode used for the resource.

@@ -2,7 +2,7 @@
 
 Puppet::Type.newtype(:openssl_genparam) do
   @doc = <<-DOC
-    @summary Generate Diffie-Hellman or Elliptic Curve parameter file.
+    @summary Generate Diffie-Hellman or Elliptic Curve parameter file
 
     The type is refreshable. The `openssl_genaram` type will regenerate the
     parameters if the resource is notified from another resource.

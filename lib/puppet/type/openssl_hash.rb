@@ -2,11 +2,11 @@
 
 Puppet::Type.newtype(:openssl_hash) do
   @doc = <<-DOC
-    @summary Manage a symbolic link using the certificate hash.
+    @summary Manage a symbolic link using the certificate hash
 
-    If 'ensure => present' a symbolic link using the certificate hash will be
+    If `ensure => present` a symbolic link using the certificate hash will be
     created in the same directory as the certificate. The link is removed if
-    'ensure => absent'.
+    `ensure => absent`.
 
     This link is used to find a trusted cert when a certificate chain is
     validated.
