@@ -1,12 +1,13 @@
-# openssl_signcsr.rb --- Sign openssl CSR file using a CA
+# openssl_selfsign.rb --- Create an OpenSSL self-signed certificate
 
-Puppet::Type.newtype(:openssl_signcsr) do
+Puppet::Type.newtype(:openssl_selfsign) do
   @doc = <<-DOC
-    @summary Sign OpenSSL certificate signing request using a CA.
+    @summary Create an OpenSSL self-signed certificate.
 
     **This type is still beta!**
 
-    The name and configuration file of a CA is required.
+    The type takes a certificate signing request (CSR) and a key file to
+    generate a self-signed certificate.
 
     Certificate extensions can be added by using the `extensions` and
     `extfile` parameters.
@@ -15,25 +16,17 @@ Puppet::Type.newtype(:openssl_signcsr) do
 
     The certificate will be valid for the given number of days.
 
-    The type is refreshable. The `openssl_signcsr` type will regenerate the
+    The type is refreshable. The `openssl_selfsign` type will regenerate the
     certificate if the resource is notified from another resource.
 
-    @example Use a CA to sign a CSR
+    @example Create a self-signed certificate with extensions valid for one year
 
       openssl_signcert { '/tmp/cert.crt':
-        csr       => '/tmp/cert.csr',
-        ca_name   => 'My-Root-CA',
-        ca_config => '/etc/ssl/CA.cnf',
-        days      => '365',
-      }
-
-    @example Regenerate a certificate if the CSR changes
-
-      openssl_signcert { '/tmp/cert.crt':
-        csr       => '/tmp/cert.csr',
-        ca_name   => 'My-Root-CA',
-        ca_config => '/etc/ssl/CA.cnf',
-        subscribe => File['/tmp/cert.csr'],
+        csr        => '/tmp/cert.csr',
+        signkey    => '/tmp/cert.key',
+        extfile    => '/tmp/cert.cnf',
+        extensions => 'v3_ext',
+        days       => '365',
       }
   DOC
 
@@ -64,12 +57,8 @@ Puppet::Type.newtype(:openssl_signcsr) do
     end
   end
 
-  newparam(:ca_name) do
-    desc 'Required. The name of the CA that is used to sign the CSR.'
-  end
-
-  newparam(:ca_config) do
-    desc 'Required. The configuration file of the CA that is used to sign the CSR.'
+  newparam(:signkey) do
+    desc 'Required. The file with the OpenSSL key to use for the self-signed certificate.'
 
     validate do |value|
       unless Puppet::Util.absolute_path?(value)
@@ -80,7 +69,7 @@ Puppet::Type.newtype(:openssl_signcsr) do
 
   newparam(:password) do
     desc <<-DOC
-      The password to decrypt the CA key.
+      The password to decrypt the key.
       Leave the parameter undefined if the key is not encrypted.
     DOC
 
@@ -113,13 +102,16 @@ Puppet::Type.newtype(:openssl_signcsr) do
   end
 
   autorequire(:file) do
-    [self[:csr], self[:ca_config], self[:extfile]]
+    [self[:csr], self[:extfile]]
+  end
+
+  autorequire(:openssl_genpkey) do
+    [self[:signkey]]
   end
 
   validate do
     raise Puppet::ParseError, "Parameter 'csr' is mandatory" if self[:csr].nil?
-    raise Puppet::ParseError, "Parameter 'ca_name' is mandatory" if self[:ca_name].nil?
-    raise Puppet::ParseError, "Parameter 'ca_config' is mandatory" if self[:ca_config].nil?
+    raise Puppet::ParseError, "Parameter 'signkey' is mandatory" if self[:signkey].nil?
   end
 
   def refresh

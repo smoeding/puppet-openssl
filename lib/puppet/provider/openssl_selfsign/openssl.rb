@@ -1,8 +1,8 @@
-# openssl.rb --- Sign openssl certificate signing request files
+# openssl.rb --- Create an OpenSSL self-signed certificate
 
-Puppet::Type.type(:openssl_signcsr).provide(:openssl) do
+Puppet::Type.type(:openssl_selfsign).provide(:openssl) do
   desc <<-EOT
-    This provider implements the openssl_signcsr type.
+    This provider implements the openssl_selfsign type.
   EOT
 
   commands openssl: 'openssl'
@@ -19,7 +19,7 @@ Puppet::Type.type(:openssl_signcsr).provide(:openssl) do
     cmd << '-in' << resource[:file]
 
     Open3.popen2e(*cmd) do |_stdin, stdout, process_status|
-      Puppet.debug("openssl_signcsr: exists? #{resource[:file]}")
+      Puppet.debug("openssl_selfsign: exists? #{resource[:file]}")
 
       stdout.each_line { |_| }
 
@@ -31,11 +31,9 @@ Puppet::Type.type(:openssl_signcsr).provide(:openssl) do
 
   def create
     out = []
-    cmd = ['openssl', 'ca']
+    cmd = ['openssl', 'x509']
 
-    cmd << '-batch' << '-create_serial'
-    cmd << '-config' << resource[:ca_config]
-    cmd << '-name' << resource[:ca_name]
+    cmd << '-req' << '-signkey' << resource[:signkey]
 
     cmd << '-in' << resource[:csr]
     cmd << '-out' << resource[:file]
@@ -49,14 +47,14 @@ Puppet::Type.type(:openssl_signcsr).provide(:openssl) do
     cmd << '-days' << resource[:days]
 
     Open3.popen2e(*cmd) do |stdin, stdout, process_status|
-      Puppet.debug("openssl_signcsr: create #{resource[:file]}")
+      Puppet.debug("openssl_selfsign: create #{resource[:file]}")
 
       stdin.puts(resource[:password]) unless resource[:password].nil?
 
       stdout.each_line { |line| out << line }
 
       unless process_status.value.success?
-        out.each { |line| Puppet.notice("openssl_signcsr: #{line}") }
+        out.each { |line| Puppet.notice("openssl_selfsign: #{line}") }
         return false
       end
     end
@@ -70,10 +68,10 @@ Puppet::Type.type(:openssl_signcsr).provide(:openssl) do
 
   def refresh
     if @trigger_refresh
-      Puppet.debug("openssl_signcsr: recreating #{resource[:file]}")
+      Puppet.debug("openssl_selfsign: recreating #{resource[:file]}")
       create
     else
-      Puppet.debug("openssl_signcsr: skipping recreation of #{resource[:file]}")
+      Puppet.debug("openssl_selfsign: skipping recreation of #{resource[:file]}")
     end
   end
 end

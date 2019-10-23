@@ -20,7 +20,8 @@
 * [`openssl_genparam`](#openssl_genparam): Generate Diffie-Hellman or Elliptic Curve parameter file.
 * [`openssl_genpkey`](#openssl_genpkey): Generate OpenSSL private key files.
 * [`openssl_hash`](#openssl_hash): Manage a symbolic link using the certificate hash.
-* [`openssl_signcsr`](#openssl_signcsr): Sign OpenSSL certificate signing request.
+* [`openssl_selfsign`](#openssl_selfsign): Create an OpenSSL self-signed certificate.
+* [`openssl_signcsr`](#openssl_signcsr): Sign OpenSSL certificate signing request using a CA.
 
 **Data types**
 
@@ -992,41 +993,126 @@ namevar
 
 The name of the certificate file to manage.
 
+### openssl_selfsign
+
+**This type is still beta!**
+
+The type takes a certificate signing request (CSR) and a key file to
+generate a self-signed certificate.
+
+Certificate extensions can be added by using the `extensions` and
+`extfile` parameters.
+
+Optionally a key password can be provided if the used key is encrypted.
+
+The certificate will be valid for the given number of days.
+
+The type is refreshable. The `openssl_selfsign` type will regenerate the
+certificate if the resource is notified from another resource.
+
+#### Examples
+
+##### Create a self-signed certificate with extensions valid for one year
+
+```puppet
+
+openssl_signcert { '/tmp/cert.crt':
+  csr        => '/tmp/cert.csr',
+  signkey    => '/tmp/cert.key',
+  extfile    => '/tmp/cert.cnf',
+  extensions => 'v3_ext',
+  days       => '365',
+}
+```
+
+#### Properties
+
+The following properties are available in the `openssl_selfsign` type.
+
+##### `ensure`
+
+Valid values: present, absent
+
+Specifies whether the resource should exist.
+
+Default value: present
+
+#### Parameters
+
+The following parameters are available in the `openssl_selfsign` type.
+
+##### `file`
+
+The signed certificate file to manage.
+
+##### `csr`
+
+Required. The file containing the certificate signing request.
+
+##### `signkey`
+
+Required. The file with the OpenSSL key to use for the self-signed certificate.
+
+##### `password`
+
+The password to decrypt the key.
+Leave the parameter undefined if the key is not encrypted.
+
+##### `days`
+
+Valid values: %r{^[0-9]+$}
+
+The number of days the certificate should be valid.
+
+Default value: 365
+
+##### `extfile`
+
+The file with the certificate extensions.
+
+##### `extensions`
+
+The section name of the extensions. The OpenSSL defaults will be used
+if the parameter is `undef`.
+
 ### openssl_signcsr
 
 **This type is still beta!**
 
-Take a certificate signing request (CSR), a config file providing the
-certificate extensions and a key file to generate a certificate. The
-certificate will be valid for the given number of days. An encrypted key
-can be used if the key password is supplied.
+The name and configuration file of a CA is required.
+
+Certificate extensions can be added by using the `extensions` and
+`extfile` parameters.
+
+Optionally a key password can be provided if the used key is encrypted.
+
+The certificate will be valid for the given number of days.
 
 The type is refreshable. The `openssl_signcsr` type will regenerate the
 certificate if the resource is notified from another resource.
 
 #### Examples
 
-##### Sign a self-signed certificate valid for one year
+##### Use a CA to sign a CSR
 
 ```puppet
 
 openssl_signcert { '/tmp/cert.crt':
-  csr      => '/tmp/cert.csr',
-  config   => '/tmp/cert.cnf',
-  key_file => '/tmp/cert.key',
-  days     => '365',
+  csr       => '/tmp/cert.csr',
+  ca_name   => 'My-Root-CA',
+  ca_config => '/etc/ssl/CA.cnf',
+  days      => '365',
 }
 ```
 
-##### Regenerate the certificate if the CSR changes
+##### Regenerate a certificate if the CSR changes
 
 ```puppet
 
 openssl_signcert { '/tmp/cert.crt':
-  csr      => '/tmp/cert.csr',
-  config   => '/tmp/cert.cnf',
-  key_file => '/tmp/cert.key',
-  days     => '365',
+  csr       => '/tmp/cert.csr',
+  ca_name   => 'My-Root-CA',
+  ca_config => '/etc/ssl/CA.cnf',
   subscribe => File['/tmp/cert.csr'],
 }
 ```
@@ -1049,29 +1135,41 @@ The following parameters are available in the `openssl_signcsr` type.
 
 ##### `file`
 
-The name of the signed certificate file to manage.
+The signed certificate file to manage.
 
 ##### `csr`
 
-The file containing the certificate signing request.
+Required. The file containing the certificate signing request.
 
-##### `config`
+##### `ca_name`
 
-The configuration file.
+Required. The name of the CA that is used to sign the CSR.
 
-##### `key_file`
+##### `ca_config`
 
-The file with the key to use for the signature.
+Required. The configuration file of the CA that is used to sign the CSR.
 
-##### `key_password`
+##### `password`
 
-Use the supplied password for the key if it is encrypted.
+The password to decrypt the CA key.
+Leave the parameter undefined if the key is not encrypted.
 
 ##### `days`
 
 Valid values: %r{^[0-9]+$}
 
 The number of days the certificate should be valid.
+
+Default value: 365
+
+##### `extfile`
+
+The file with the certificate extensions.
+
+##### `extensions`
+
+The section name of the extensions. The OpenSSL defaults will be used
+if the parameter is `undef`.
 
 ## Data types
 
