@@ -91,7 +91,7 @@ Puppet::Type.newtype(:openssl_signcsr) do
     desc 'The number of days the certificate should be valid.'
 
     newvalues %r{^[0-9]+$}
-    defaultto '365'
+    defaultto '370'
     munge { |value| value.to_s }
   end
 
