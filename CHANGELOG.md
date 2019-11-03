@@ -1,3 +1,13 @@
+## 2019-11-03 - Release 2.1.0
+
+### Features
+
+- Add support for Debian-10, CentOS-8, RedHat-8.
+
+### Bugfixes
+
+- Fix `openssl_version` fact to handle versions without a trailing letter.
+
 ## 2019-10-09 - Release 2.0.0
 
 ### Breaking changes
@@ -20,7 +30,7 @@
 
 ## 2018-10-14 - Release 1.3.0
 
-### Feature
+### Features
 
 - Support Puppet 6
 
