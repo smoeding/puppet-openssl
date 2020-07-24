@@ -5,3 +5,4 @@ openssl::package_name: 'openssl'
 openssl::package_ensure: 'installed'
 
 openssl::ca_certs: []
+openssl::use_ca_certificates: false

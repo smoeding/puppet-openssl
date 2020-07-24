@@ -29,6 +29,7 @@ describe 'openssl' do
           is_expected.to contain_package('openssl')
             .with_ensure('installed')
             .with_name('openssl')
+          is_expected.not_to contain_package('ca-certificates')
         }
       end
 
@@ -46,6 +47,29 @@ describe 'openssl' do
         it {
           is_expected.to contain_openssl__cert('cert').with_manage_trust('true')
           is_expected.to contain_openssl__cert('ca').with_manage_trust('true')
+        }
+      end
+
+      context 'with use_ca_certificates => true' do
+        let(:params) { default_params.merge(use_ca_certificates: true) }
+
+        it {
+          case facts[:os]['family']
+          when 'Debian'
+            is_expected.to contain_package('ca-certificates')
+              .with_ensure('present')
+          else
+            is_expected.not_to contain_package('ca-certificates')
+
+          end
+        }
+      end
+
+      context 'with use_ca_certificates => false' do
+        let(:params) { default_params.merge(use_ca_certificates: false) }
+
+        it {
+          is_expected.not_to contain_package('ca-certificates')
         }
       end
     end

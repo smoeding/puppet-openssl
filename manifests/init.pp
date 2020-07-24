@@ -45,6 +45,20 @@
 #   An array of CA certificates that are installed by default. Internally
 #   this uses the `openssl::cert` defined type.
 #
+# @param use_ca_certificates
+#   Enables management of CA certificates using the `ca-certificates`
+#   package. This parameter is only used on Debian/Ubuntu systems and
+#   it is ignored on other operating systems.
+#
+#   Setting this parameter to `true` will change the way that trusted
+#   certificates are managed. First of all the `ca-certificates`
+#   package will be installed by the module. Also all certificates
+#   installed using then `openssl::cert` defined type where the
+#   `manage_trust` parameter is `true` will be managed by the
+#   `ca-certificates` package. See the documentation of the
+#   `openssl::cert` defined type for details.
+#
+#   The default value is `false`.
 #
 class openssl (
   Stdlib::Absolutepath $cert_source_directory,
@@ -54,11 +68,16 @@ class openssl (
   String               $package_ensure,
   String               $root_group,
   Array[String]        $ca_certs,
+  Boolean              $use_ca_certificates,
 ) {
 
   package { 'openssl':
     ensure => $package_ensure,
     name   => $package_name,
+  }
+
+  if ($use_ca_certificates and ($facts['os']['family'] == 'Debian')) {
+    ensure_packages([ 'ca-certificates' ])
   }
 
   unless empty($ca_certs) {
