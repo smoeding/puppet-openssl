@@ -1,3 +1,9 @@
+## 2020-xx-yy
+
+### Features
+
+- Add support for Ubuntu 20.04
+
 ## 2019-11-03 - Release 2.1.0
 
 ### Features
