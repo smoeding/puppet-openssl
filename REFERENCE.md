@@ -203,6 +203,8 @@ chain is included in the generated certificate file. The certificates
 must be available in `cert_source_directory` on the server just like the
 ordinary certificate.
 
+This parameter can't be used if `managed_trust` is set to `true`.
+
 Default value: `[]`
 
 ##### `extension`
@@ -239,6 +241,9 @@ this. The value of the parameter `cert` is used as the nickname for the
 certificate. Do not try to add the same certificate a second time with a
 different nickname to the database. This will fail silently and Puppet
 will try to add the certificate on every subsequent run.
+
+If this parameter is set to `true` then the certificate chain must
+be empty.
 
 Default value: ``false``
 

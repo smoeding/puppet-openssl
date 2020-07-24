@@ -37,6 +37,8 @@
 #   must be available in `cert_source_directory` on the server just like the
 #   ordinary certificate.
 #
+#   This parameter can't be used if `managed_trust` is set to `true`.
+#
 # @param extension
 #   The file extension used for files created on the client.
 #
@@ -58,6 +60,9 @@
 #   certificate. Do not try to add the same certificate a second time with a
 #   different nickname to the database. This will fail silently and Puppet
 #   will try to add the certificate on every subsequent run.
+#
+#   If this parameter is set to `true` then the certificate chain must
+#   be empty.
 #
 # @param mode
 #   The file mode used for the resource.
@@ -90,6 +95,10 @@ define openssl::cert (
   # The base class must be included first
   unless defined(Class['openssl']) {
     fail('You must include the openssl base class before using any openssl defined resources')
+  }
+
+  if ($manage_trust and !empty($cert_chain)) {
+    fail('The parameter cert_chain must be empty if manage_trust is true')
   }
 
   $_cert_dir  = pick($cert_dir, $::openssl::default_cert_dir)

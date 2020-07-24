@@ -160,6 +160,16 @@ describe 'openssl::cert' do
         }
       end
 
+      context 'with manage_trust => true and cert_chain' do
+        let(:params) do
+          { manage_trust: true, cert_chain: ['ca'] }
+        end
+
+        it {
+          is_expected.to compile.and_raise_error(%r{cert_chain must be empty if manage_trust is true})
+        }
+      end
+
       context 'with manage_trust => true' do
         let(:params) do
           { manage_trust: true }
