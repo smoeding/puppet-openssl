@@ -58,9 +58,18 @@ describe 'openssl' do
           when 'Debian'
             is_expected.to contain_package('ca-certificates')
               .with_ensure('present')
+
+            is_expected.to contain_exec('openssl::update-ca-certificates')
+              .with_command('update-ca-certificates')
+              .with_user('root')
+              .with_cwd('/')
+              .with_path(['/usr/bin', '/bin', '/usr/sbin', '/sbin'])
+              .with_refreshonly(true)
+              .that_requires('Package[ca-certificates]')
+
           else
             is_expected.not_to contain_package('ca-certificates')
-
+            is_expected.not_to contain_exec('openssl::update-ca-certificates')
           end
         }
       end
@@ -70,6 +79,7 @@ describe 'openssl' do
 
         it {
           is_expected.not_to contain_package('ca-certificates')
+          is_expected.not_to contain_exec('openssl::update-ca-certificates')
         }
       end
     end

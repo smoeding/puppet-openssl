@@ -78,6 +78,15 @@ class openssl (
 
   if ($use_ca_certificates and ($facts['os']['family'] == 'Debian')) {
     ensure_packages([ 'ca-certificates' ])
+
+    exec { 'openssl::update-ca-certificates':
+      command     => 'update-ca-certificates',
+      user        => 'root',
+      cwd         => '/',
+      path        => [ '/usr/bin', '/bin', '/usr/sbin', '/sbin', ],
+      refreshonly => true,
+      require     => Package['ca-certificates'],
+    }
   }
 
   unless empty($ca_certs) {
