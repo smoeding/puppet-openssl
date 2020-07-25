@@ -232,8 +232,16 @@ trusted certificate. The mark is set if the parameter value is `true` and
 removed if the parameter value is `false`. This is mostly useful for CA
 certificates to establish a proper trust chain.
 
-On Debian based distributions this is done by creating a symbolic link
-pointing to the certificate file using the certificate hash as name.
+On Debian based distributions this depends on the `openssl` class
+parameter `use_ca_certificates`. If the parameter is `false` (the
+default) then it is done by creating a symbolic link pointing to
+the certificate file using the certificate hash as name. If the
+`use_ca_certificates` parameter is `true` then the trust is
+managed by the `ca-certificates` package. In this case the
+certificate is installed in `/usr/local/share/ca-certificates`
+using a `.crt` extension. The certificate hashes are created by
+the `update-ca-certificates` script which is called automatically
+by `openssl::cert`.
 
 On RedHat based distributions the certificate is added to the system-wide
 NSS database in `/etc/pki/nssdb`. The `certutil` binary is required for

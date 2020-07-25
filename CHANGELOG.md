@@ -2,6 +2,7 @@
 
 ### Features
 
+- Add class parameter `use_ca_certificates` to manage trusted certificates using the `ca-certificates` package on Debian/Ubuntu.
 - Add support for Ubuntu 20.04
 
 ## 2019-11-03 - Release 2.1.0

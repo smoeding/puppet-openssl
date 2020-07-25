@@ -6,7 +6,8 @@ describe 'openssl::cert' do
        default_key_dir       => "/key",
        default_cert_dir      => "/crt",
        cert_source_directory => "/foo",
-       root_group            => "wheel"
+       root_group            => "wheel",
+       use_ca_certificates   => false
      }'
   end
 
@@ -176,29 +177,136 @@ describe 'openssl::cert' do
         end
 
         it {
-          is_expected.to contain_concat('/crt/cert.crt')
-            .with_owner('root')
-            .with_group('wheel')
-            .with_mode('0444')
-            .with_backup(false)
-            .with_show_diff(false)
-            .with_ensure_newline(true)
-
-          is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
-            .with_target('/crt/cert.crt')
-            .with_content("# /foo/cert.crt\n")
-            .with_order('10')
-        }
-
-        it {
           case facts[:os]['family']
-          when 'Debian', 'FreeBSD'
+          when 'Debian'
+            is_expected.to contain_concat('/crt/cert.crt')
+              .with_owner('root')
+              .with_group('wheel')
+              .with_mode('0444')
+              .with_backup(false)
+              .with_show_diff(false)
+              .with_ensure_newline(true)
+
+            is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
+              .with_target('/crt/cert.crt')
+              .with_content("# /foo/cert.crt\n")
+              .with_order('10')
+
+            is_expected.to contain_openssl_hash('/crt/cert.crt')
+              .with_ensure('present')
+              .that_requires('Concat[/crt/cert.crt]')
+
+            is_expected.not_to contain_openssl_certutil('cert')
+          when 'FreeBSD'
+            is_expected.to contain_concat('/crt/cert.crt')
+              .with_owner('root')
+              .with_group('wheel')
+              .with_mode('0444')
+              .with_backup(false)
+              .with_show_diff(false)
+              .with_ensure_newline(true)
+
+            is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
+              .with_target('/crt/cert.crt')
+              .with_content("# /foo/cert.crt\n")
+              .with_order('10')
+
             is_expected.to contain_openssl_hash('/crt/cert.crt')
               .with_ensure('present')
               .that_requires('Concat[/crt/cert.crt]')
 
             is_expected.not_to contain_openssl_certutil('cert')
           when 'RedHat'
+            is_expected.to contain_concat('/crt/cert.crt')
+              .with_owner('root')
+              .with_group('wheel')
+              .with_mode('0444')
+              .with_backup(false)
+              .with_show_diff(false)
+              .with_ensure_newline(true)
+
+            is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
+              .with_target('/crt/cert.crt')
+              .with_content("# /foo/cert.crt\n")
+              .with_order('10')
+
+            is_expected.to contain_openssl_certutil('cert')
+              .with_ensure('present')
+              .with_filename('/crt/cert.crt')
+              .with_ssl_trust('C')
+              .that_requires('Concat[/crt/cert.crt]')
+
+            is_expected.not_to contain_openssl_hash('/crt/cert.crt')
+          end
+        }
+      end
+
+      context 'with manage_trust => true, use_ca_certificates => true' do
+        let(:pre_condition) do
+          'class { "::openssl":
+             default_key_dir       => "/key",
+             default_cert_dir      => "/crt",
+             cert_source_directory => "/foo",
+             root_group            => "wheel",
+             use_ca_certificates   => true
+           }'
+        end
+        let(:params) do
+          { manage_trust: true }
+        end
+
+        it {
+          case facts[:os]['family']
+          when 'Debian'
+            is_expected.to contain_concat('/usr/local/share/ca-certificates/cert.crt')
+              .with_owner('root')
+              .with_group('wheel')
+              .with_mode('0444')
+              .with_backup(false)
+              .with_show_diff(false)
+              .with_ensure_newline(true)
+              .that_notifies('Exec[openssl::update-ca-certificates]')
+
+            is_expected.to contain_concat__fragment('/usr/local/share/ca-certificates/cert.crt-cert')
+              .with_target('/usr/local/share/ca-certificates/cert.crt')
+              .with_content("# /foo/cert.crt\n")
+              .with_order('10')
+
+            is_expected.not_to contain_openssl_hash('/crt/cert.crt')
+            is_expected.not_to contain_openssl_certutil('cert')
+          when 'FreeBSD'
+            is_expected.to contain_concat('/crt/cert.crt')
+              .with_owner('root')
+              .with_group('wheel')
+              .with_mode('0444')
+              .with_backup(false)
+              .with_show_diff(false)
+              .with_ensure_newline(true)
+
+            is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
+              .with_target('/crt/cert.crt')
+              .with_content("# /foo/cert.crt\n")
+              .with_order('10')
+
+            is_expected.to contain_openssl_hash('/crt/cert.crt')
+              .with_ensure('present')
+              .that_requires('Concat[/crt/cert.crt]')
+
+            is_expected.not_to contain_openssl_certutil('cert')
+          when 'RedHat'
+            is_expected.to contain_concat('/crt/cert.crt')
+              .with_owner('root')
+              .with_group('wheel')
+              .with_mode('0444')
+              .with_backup(false)
+              .with_show_diff(false)
+              .with_ensure_newline(true)
+
+            is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
+              .with_target('/crt/cert.crt')
+              .with_content("# /foo/cert.crt\n")
+              .with_order('10')
+
             is_expected.to contain_openssl_certutil('cert')
               .with_ensure('present')
               .with_filename('/crt/cert.crt')
@@ -312,19 +420,70 @@ describe 'openssl::cert' do
         end
 
         it {
-          is_expected.to contain_file('/crt/cert.crt').with_ensure('absent')
-        }
-
-        it {
           case facts[:os]['family']
-          when 'Debian', 'FreeBSD'
+          when 'Debian'
+            is_expected.to contain_file('/crt/cert.crt')
+              .with_ensure('absent')
+
             is_expected.to contain_openssl_hash('/crt/cert.crt')
               .with_ensure('absent')
               .that_comes_before('File[/crt/cert.crt]')
+
+          when 'FreeBSD'
+            is_expected.to contain_file('/crt/cert.crt')
+              .with_ensure('absent')
+
+            is_expected.to contain_openssl_hash('/crt/cert.crt')
+              .with_ensure('absent')
+              .that_comes_before('File[/crt/cert.crt]')
+
           when 'RedHat'
             is_expected.to contain_openssl_certutil('cert')
               .with_ensure('absent')
               .that_comes_before('File[/crt/cert.crt]')
+          end
+        }
+      end
+
+      context 'with ensure => absent, manage_trust => true, use_ca_certificates => true' do
+        let(:pre_condition) do
+          'class { "::openssl":
+             default_key_dir       => "/key",
+             default_cert_dir      => "/crt",
+             cert_source_directory => "/foo",
+             root_group            => "wheel",
+             use_ca_certificates   => true
+           }'
+        end
+        let(:params) do
+          { ensure: 'absent', manage_trust: true }
+        end
+
+        it {
+          case facts[:os]['family']
+          when 'Debian'
+            is_expected.to contain_file('/usr/local/share/ca-certificates/cert.crt')
+              .with_ensure('absent')
+              .that_notifies('Exec[openssl::update-ca-certificates]')
+
+            is_expected.not_to contain_openssl_hash('/crt/cert.crt')
+
+          when 'FreeBSD'
+            is_expected.to contain_file('/crt/cert.crt')
+              .with_ensure('absent')
+
+            is_expected.to contain_openssl_hash('/crt/cert.crt')
+              .with_ensure('absent')
+              .that_comes_before('File[/crt/cert.crt]')
+
+          when 'RedHat'
+            is_expected.to contain_file('/crt/cert.crt')
+              .with_ensure('absent')
+
+            is_expected.to contain_openssl_certutil('cert')
+              .with_ensure('absent')
+              .that_comes_before('File[/crt/cert.crt]')
+
           end
         }
       end

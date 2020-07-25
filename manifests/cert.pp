@@ -51,8 +51,16 @@
 #   removed if the parameter value is `false`. This is mostly useful for CA
 #   certificates to establish a proper trust chain.
 #
-#   On Debian based distributions this is done by creating a symbolic link
-#   pointing to the certificate file using the certificate hash as name.
+#   On Debian based distributions this depends on the `openssl` class
+#   parameter `use_ca_certificates`. If the parameter is `false` (the
+#   default) then it is done by creating a symbolic link pointing to
+#   the certificate file using the certificate hash as name. If the
+#   `use_ca_certificates` parameter is `true` then the trust is
+#   managed by the `ca-certificates` package. In this case the
+#   certificate is installed in `/usr/local/share/ca-certificates`
+#   using a `.crt` extension. The certificate hashes are created by
+#   the `update-ca-certificates` script which is called automatically
+#   by `openssl::cert`.
 #
 #   On RedHat based distributions the certificate is added to the system-wide
 #   NSS database in `/etc/pki/nssdb`. The `certutil` binary is required for
@@ -101,8 +109,17 @@ define openssl::cert (
     fail('The parameter cert_chain must be empty if manage_trust is true')
   }
 
+  # Local scope variable to indicate if we should use ca_certificates
+  $use_ca_certificates = ($::openssl::use_ca_certificates and ($facts['os']['family'] == 'Debian'))
+
   $_cert_dir  = pick($cert_dir, $::openssl::default_cert_dir)
-  $_cert_file = "${_cert_dir}/${cert}.${extension}"
+
+  # Use static certificate directory and extension if
+  # $use_ca_certificates is true
+  $_cert_file = ($use_ca_certificates) ? {
+    true    => "/usr/local/share/ca-certificates/${cert}.crt",
+    default => "${_cert_dir}/${cert}.${extension}",
+  }
 
   if ($ensure == 'present') {
     concat { $_cert_file:
@@ -136,7 +153,21 @@ define openssl::cert (
 
     if $manage_trust {
       case $facts['os']['family'] {
-        'Debian',
+        'Debian': {
+          if $use_ca_certificates {
+            Concat[$_cert_file] ~> Exec['openssl::update-ca-certificates']
+          }
+          else {
+            # Create a hash for the installed certificate. The hash must be
+            # calculated on the client, since different openssl implementations
+            # use different hash algorithms.
+
+            openssl_hash { $_cert_file:
+              ensure  => $ensure,
+              require => Concat[$_cert_file],
+            }
+          }
+        }
         'FreeBSD': {
           # Create a hash for the installed certificate. The hash must be
           # calculated on the client, since different openssl implementations
@@ -168,7 +199,17 @@ define openssl::cert (
   else {
     if $manage_trust {
       case $facts['os']['family'] {
-        'Debian',
+        'Debian': {
+          if $use_ca_certificates {
+            File[$_cert_file] ~> Exec['openssl::update-ca-certificates']
+          }
+          else {
+            openssl_hash { $_cert_file:
+              ensure => $ensure,
+              before => File[$_cert_file],
+            }
+          }
+        }
         'FreeBSD': {
           openssl_hash { $_cert_file:
             ensure => $ensure,
