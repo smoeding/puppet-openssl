@@ -66,4 +66,14 @@ class openssl (
       manage_trust => true,
     }
   }
+
+  if ($facts['os']['family'] == 'Debian') {
+    exec { 'openssl::update-ca-certificates':
+      command     => 'update-ca-certificates',
+      user        => 'root',
+      cwd         => '/',
+      path        => [ '/usr/bin', '/bin', '/usr/sbin', '/sbin', ],
+      refreshonly => true,
+    }
+  }
 }

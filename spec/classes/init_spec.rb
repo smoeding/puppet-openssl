@@ -30,6 +30,20 @@ describe 'openssl' do
             .with_ensure('installed')
             .with_name('openssl')
         }
+
+        case facts[:os]['family']
+        when 'Debian'
+          it {
+            is_expected.to contain_exec('openssl::update-ca-certificates')
+              .with_command('update-ca-certificates')
+              .with_user('root')
+              .with_refreshonly(true)
+          }
+        else
+          it {
+            is_expected.not_to contain_exec('openssl::update-ca-certificates')
+          }
+        end
       end
 
       context 'with one element for ca_cert' do
