@@ -61,12 +61,6 @@ class openssl (
     name   => $package_name,
   }
 
-  unless empty($ca_certs) {
-    openssl::cert { $ca_certs:
-      manage_trust => true,
-    }
-  }
-
   if ($facts['os']['family'] == 'Debian') {
     exec { 'openssl::update-ca-certificates':
       command     => 'update-ca-certificates',
@@ -74,6 +68,12 @@ class openssl (
       cwd         => '/',
       path        => [ '/usr/bin', '/bin', '/usr/sbin', '/sbin', ],
       refreshonly => true,
+    }
+  }
+
+  unless empty($ca_certs) {
+    openssl::cert { $ca_certs:
+      manage_trust => true,
     }
   }
 }
