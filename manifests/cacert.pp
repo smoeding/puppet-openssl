@@ -1,8 +1,8 @@
 # @summary Manage an X.509 CA certificate file in PEM format
 #
-# @example Install the 'my-root-ca' cert in the default location
+# @example Install the 'my-root-ca' trusted cert in the default location
 #
-#   openssl::cert { 'my-root-ca': }
+#   openssl::cacert { 'my-root-ca': }
 #
 # @param ensure
 #   The state of the resource.
