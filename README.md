@@ -84,6 +84,8 @@ lrwxrwxrwx 1 root root   18 Jul 14 13:27 /etc/ssl/certs/4f06f81d.0 -> letsencryp
 
 On RedHat based distributions the `certutil` binary is used to add the certificate to the system-wide NSS database in `/etc/pki/nssdb`.
 
+*Note:* The functionality behind this parameter will change in the next major version. Currently the certificates are installed using the `openssl::cert` defined type. Starting with the next major release the new type `openssl::cacert` will be used. On Debian/Ubuntu this will change the directory where trusted certificates are installed.
+
 ### Install a root CA certificate
 
 The defined type `openssl::cacert` installs a trusted CA certificate:

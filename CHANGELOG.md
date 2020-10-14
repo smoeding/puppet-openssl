@@ -1,8 +1,9 @@
-## 2020-xx-yy
+## 2020-10-14 - Release 2.2.0
 
 ### Features
 
 - Add support for Ubuntu 20.04
+- Add new defined type `openssl::cacert` to install a trusted CA certificate. The parameter `manage_trust` for the defined type `openssl::cert` is now deprecated and will be removed in the next major version.
 
 ## 2019-11-03 - Release 2.1.0
 
