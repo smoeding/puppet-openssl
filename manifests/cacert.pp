@@ -38,10 +38,11 @@
 #   The file group used for the resource.
 #
 # @param cert_dir
-#   The destination directory on the client where the certificate will
-#   be stored. This parameter is ignored on Debian based distributions
-#   as the `update-ca-certificates` tool requires certificates to be
-#   stored in `/usr/local/share/ca-certificates`.
+#   The destination directory on the client where the certificate will be
+#   stored. This parameter is ignored on Debian and RedHat based
+#   distributions. Currently Debian requires certificates to be stored in
+#   `/usr/local/share/ca-certificates` and RedHat requires certificates to be
+#   stored in `/etc/pki/ca-trust/source/anchors`.
 #
 #
 define openssl::cacert (
@@ -67,6 +68,7 @@ define openssl::cacert (
   # directory using a fixed extenstion.
   $_cert_file = $facts['os']['family'] ? {
     'Debian' => "/usr/local/share/ca-certificates/${cert}.crt",
+    'RedHat' => "/etc/pki/ca-trust/source/anchors/${cert}.crt",
     default  => "${_cert_dir}/${cert}.${extension}",
   }
 
@@ -109,6 +111,7 @@ define openssl::cacert (
           group   => pick($group, $::openssl::root_group),
           mode    => $mode,
           content => $content,
+          notify  => Exec['openssl::update-ca-trust'],
         }
 
         # Add the installed certificate to the system-wide NSS database and
@@ -153,6 +156,7 @@ define openssl::cacert (
 
         file { $_cert_file:
           ensure => $ensure,
+          notify => Exec['openssl::update-ca-trust'],
         }
       }
       default: {

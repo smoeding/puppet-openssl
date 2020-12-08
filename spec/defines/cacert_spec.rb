@@ -60,18 +60,19 @@ describe 'openssl::cacert' do
             is_expected.not_to contain_openssl_certutil('cert')
 
           when 'RedHat'
-            is_expected.to contain_file('/crt/cert.crt')
+            is_expected.to contain_file('/etc/pki/ca-trust/source/anchors/cert.crt')
               .with_ensure('file')
               .with_owner('root')
               .with_group('wheel')
               .with_mode('0444')
               .with_content("# /foo/cert.crt\n")
+              .that_notifies('Exec[openssl::update-ca-trust]')
 
             is_expected.to contain_openssl_certutil('cert')
               .with_ensure('present')
-              .with_filename('/crt/cert.crt')
+              .with_filename('/etc/pki/ca-trust/source/anchors/cert.crt')
               .with_ssl_trust('C')
-              .that_requires('File[/crt/cert.crt]')
+              .that_requires('File[/etc/pki/ca-trust/source/anchors/cert.crt]')
 
             is_expected.not_to contain_openssl_hash('/crt/cert.crt')
           end
@@ -93,7 +94,15 @@ describe 'openssl::cacert' do
               .with_mode('0444')
               .with_content("# /foo/cert.crt\n")
               .that_notifies('Exec[openssl::update-ca-certificates]')
-          when 'FreeBSD', 'RedHat'
+          when 'RedHat'
+            is_expected.to contain_file('/etc/pki/ca-trust/source/anchors/ca.crt')
+              .with_ensure('file')
+              .with_owner('root')
+              .with_group('wheel')
+              .with_mode('0444')
+              .with_content("# /foo/cert.crt\n")
+              .that_notifies('Exec[openssl::update-ca-trust]')
+          when 'FreeBSD'
             is_expected.to contain_file('/crt/ca.crt')
               .with_ensure('file')
               .with_owner('root')
@@ -119,7 +128,15 @@ describe 'openssl::cacert' do
               .with_mode('0444')
               .with_content("# /foo/ca.crt\n")
               .that_notifies('Exec[openssl::update-ca-certificates]')
-          when 'FreeBSD', 'RedHat'
+          when 'RedHat'
+            is_expected.to contain_file('/etc/pki/ca-trust/source/anchors/cert.crt')
+              .with_ensure('file')
+              .with_owner('root')
+              .with_group('wheel')
+              .with_mode('0444')
+              .with_content("# /foo/ca.crt\n")
+              .that_notifies('Exec[openssl::update-ca-trust]')
+          when 'FreeBSD'
             is_expected.to contain_file('/crt/cert.crt')
               .with_ensure('file')
               .with_owner('root')
@@ -145,7 +162,15 @@ describe 'openssl::cacert' do
               .with_mode('0444')
               .with_content("# /foo/cert.crt\n")
               .that_notifies('Exec[openssl::update-ca-certificates]')
-          when 'FreeBSD', 'RedHat'
+          when 'RedHat'
+            is_expected.to contain_file('/etc/pki/ca-trust/source/anchors/cert.crt')
+              .with_ensure('file')
+              .with_owner('root')
+              .with_group('wheel')
+              .with_mode('0444')
+              .with_content("# /foo/cert.crt\n")
+              .that_notifies('Exec[openssl::update-ca-trust]')
+          when 'FreeBSD'
             is_expected.to contain_file('/crt/cert.pem')
               .with_ensure('file')
               .with_owner('root')
@@ -171,7 +196,15 @@ describe 'openssl::cacert' do
               .with_mode('0444')
               .with_content("# /foo/cert.baz\n")
               .that_notifies('Exec[openssl::update-ca-certificates]')
-          when 'FreeBSD', 'RedHat'
+          when 'RedHat'
+            is_expected.to contain_file('/etc/pki/ca-trust/source/anchors/cert.crt')
+              .with_ensure('file')
+              .with_owner('root')
+              .with_group('wheel')
+              .with_mode('0444')
+              .with_content("# /foo/cert.baz\n")
+              .that_notifies('Exec[openssl::update-ca-trust]')
+          when 'FreeBSD'
             is_expected.to contain_file('/crt/cert.crt')
               .with_ensure('file')
               .with_owner('root')
@@ -197,7 +230,15 @@ describe 'openssl::cacert' do
               .with_mode('0642')
               .with_content("# /foo/cert.crt\n")
               .that_notifies('Exec[openssl::update-ca-certificates]')
-          when 'FreeBSD', 'RedHat'
+          when 'RedHat'
+            is_expected.to contain_file('/etc/pki/ca-trust/source/anchors/cert.crt')
+              .with_ensure('file')
+              .with_owner('root')
+              .with_group('wheel')
+              .with_mode('0642')
+              .with_content("# /foo/cert.crt\n")
+              .that_notifies('Exec[openssl::update-ca-trust]')
+          when 'FreeBSD'
             is_expected.to contain_file('/crt/cert.crt')
               .with_ensure('file')
               .with_owner('root')
@@ -223,7 +264,15 @@ describe 'openssl::cacert' do
               .with_mode('0444')
               .with_content("# /foo/cert.crt\n")
               .that_notifies('Exec[openssl::update-ca-certificates]')
-          when 'FreeBSD', 'RedHat'
+          when 'RedHat'
+            is_expected.to contain_file('/etc/pki/ca-trust/source/anchors/cert.crt')
+              .with_ensure('file')
+              .with_owner('mysql')
+              .with_group('wheel')
+              .with_mode('0444')
+              .with_content("# /foo/cert.crt\n")
+              .that_notifies('Exec[openssl::update-ca-trust]')
+          when 'FreeBSD'
             is_expected.to contain_file('/crt/cert.crt')
               .with_ensure('file')
               .with_owner('mysql')
@@ -249,7 +298,15 @@ describe 'openssl::cacert' do
               .with_mode('0444')
               .with_content("# /foo/cert.crt\n")
               .that_notifies('Exec[openssl::update-ca-certificates]')
-          when 'FreeBSD', 'RedHat'
+          when 'RedHat'
+            is_expected.to contain_file('/etc/pki/ca-trust/source/anchors/cert.crt')
+              .with_ensure('file')
+              .with_owner('root')
+              .with_group('mysql')
+              .with_mode('0444')
+              .with_content("# /foo/cert.crt\n")
+              .that_notifies('Exec[openssl::update-ca-trust]')
+          when 'FreeBSD'
             is_expected.to contain_file('/crt/cert.crt')
               .with_ensure('file')
               .with_owner('root')
@@ -275,7 +332,15 @@ describe 'openssl::cacert' do
               .with_mode('0444')
               .with_content("# /foo/cert.crt\n")
               .that_notifies('Exec[openssl::update-ca-certificates]')
-          when 'FreeBSD', 'RedHat'
+          when 'RedHat'
+            is_expected.to contain_file('/etc/pki/ca-trust/source/anchors/cert.crt')
+              .with_ensure('file')
+              .with_owner('root')
+              .with_group('wheel')
+              .with_mode('0444')
+              .with_content("# /foo/cert.crt\n")
+              .that_notifies('Exec[openssl::update-ca-trust]')
+          when 'FreeBSD'
             is_expected.to contain_file('/baz/cert.crt')
               .with_ensure('file')
               .with_owner('root')
@@ -307,12 +372,13 @@ describe 'openssl::cacert' do
               .that_comes_before('File[/crt/cert.crt]')
 
           when 'RedHat'
-            is_expected.to contain_file('/crt/cert.crt')
+            is_expected.to contain_file('/etc/pki/ca-trust/source/anchors/cert.crt')
               .with_ensure('absent')
+              .that_notifies('Exec[openssl::update-ca-trust]')
 
             is_expected.to contain_openssl_certutil('cert')
               .with_ensure('absent')
-              .that_comes_before('File[/crt/cert.crt]')
+              .that_comes_before('File[/etc/pki/ca-trust/source/anchors/cert.crt]')
 
           end
         }

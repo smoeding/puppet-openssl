@@ -209,10 +209,11 @@ Default value: ``undef``
 
 Data type: `Optional[Stdlib::Absolutepath]`
 
-The destination directory on the client where the certificate will
-be stored. This parameter is ignored on Debian based distributions
-as the `update-ca-certificates` tool requires certificates to be
-stored in `/usr/local/share/ca-certificates`.
+The destination directory on the client where the certificate will be
+stored. This parameter is ignored on Debian and RedHat based
+distributions. Currently Debian requires certificates to be stored in
+`/usr/local/share/ca-certificates` and RedHat requires certificates to be
+stored in `/etc/pki/ca-trust/source/anchors`.
 
 Default value: ``undef``
 

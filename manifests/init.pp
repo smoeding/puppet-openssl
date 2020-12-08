@@ -70,6 +70,15 @@ class openssl (
       refreshonly => true,
     }
   }
+  elsif ($facts['os']['family'] == 'RedHat') {
+    exec { 'openssl::update-ca-trust':
+      command     => 'update-ca-trust extract',
+      user        => 'root',
+      cwd         => '/',
+      path        => [ '/usr/bin', '/bin', '/usr/sbin', '/sbin', ],
+      refreshonly => true,
+    }
+  }
 
   unless empty($ca_certs) {
     openssl::cert { $ca_certs:

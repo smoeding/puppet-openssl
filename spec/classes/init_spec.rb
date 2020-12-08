@@ -38,10 +38,22 @@ describe 'openssl' do
               .with_command('update-ca-certificates')
               .with_user('root')
               .with_refreshonly(true)
+
+            is_expected.not_to contain_exec('openssl::update-ca-trust')
+          }
+        when 'RedHat'
+          it {
+            is_expected.to contain_exec('openssl::update-ca-trust')
+              .with_command('update-ca-trust extract')
+              .with_user('root')
+              .with_refreshonly(true)
+
+            is_expected.not_to contain_exec('openssl::update-ca-certificates')
           }
         else
           it {
             is_expected.not_to contain_exec('openssl::update-ca-certificates')
+            is_expected.not_to contain_exec('openssl::update-ca-trust')
           }
         end
       end

@@ -96,13 +96,13 @@ openssl::cacert { 'letsencrypt-ca': }
 
 This would install the Let's Encrypt certificate stored in the `letsencrypt-ca.crt` file. For the certificate the module automatically adds a trust attribute.
 
-On Debian based distributions the certificate is stored in `/usr/local/share/ca-certificates` using a `.crt` extensions. The module uses the `update-ca-certificates` script (included in the `ca-certificates` package) to include the certificate in `/etc/ssl/certs/ca-certificates.crt` and also create a symbolic link in `/etc/ssl/certs` pointing to the installed file:
+On Debian based distributions the certificate is stored in `/usr/local/share/ca-certificates` using a `.crt` extension. The module uses the `update-ca-certificates` script (included in the `ca-certificates` package) to include the certificate in `/etc/ssl/certs/ca-certificates.crt` and also create a symbolic link in `/etc/ssl/certs` pointing to the installed file:
 
 ``` text
 lrwxrwxrwx 1 root root   18 Jul 14 13:27 /etc/ssl/certs/4f06f81d.0 -> /usr/local/share/ca-certificates/letsencrypt-ca.crt
 ```
 
-On RedHat based distributions the `certutil` binary is used to add the certificate to the system-wide NSS database in `/etc/pki/nssdb`.
+On RedHat based distributions certificate is stored in `/etc/pki/ca-trust/source/anchors` using a `.crt` extension. The module uses the `update-ca-trust` script and also the `certutil` binary to add the certificate to the system-wide NSS database in `/etc/pki/nssdb`.
 
 ### Install a certificate and key using defaults
 
