@@ -75,16 +75,7 @@ class { 'openssl':
 }
 ```
 
-This would install the Let's Encrypt certificate stored in the `letsencrypt-ca.crt` file. For these certificates the module automatically adds a trust attribute. On Debian based distributions a symbolic link pointing to the installed file will be created using the certificate hash as name:
-
-``` text
-lrwxrwxrwx 1 root root   18 Jul 14 13:27 /etc/ssl/certs/4f06f81d.0 -> letsencrypt-ca.crt
--r--r--r-- 1 root root 1647 May 17 09:09 /etc/ssl/certs/letsencrypt-ca.crt
-```
-
-On RedHat based distributions the `certutil` binary is used to add the certificate to the system-wide NSS database in `/etc/pki/nssdb`.
-
-*Note:* The functionality behind this parameter will change in the next major version. Currently the certificates are installed using the `openssl::cert` defined type. Starting with the next major release the new type `openssl::cacert` will be used. On Debian/Ubuntu this will change the directory where trusted certificates are installed.
+Internally the `openssl::cacert` defined type (see next section) is used.
 
 ### Install a root CA certificate
 
@@ -102,7 +93,7 @@ On Debian based distributions the certificate is stored in `/usr/local/share/ca-
 lrwxrwxrwx 1 root root   18 Jul 14 13:27 /etc/ssl/certs/4f06f81d.0 -> /usr/local/share/ca-certificates/letsencrypt-ca.crt
 ```
 
-On RedHat based distributions certificate is stored in `/etc/pki/ca-trust/source/anchors` using a `.crt` extension. The module uses the `update-ca-trust` script and also the `certutil` binary to add the certificate to the system-wide NSS database in `/etc/pki/nssdb`.
+On RedHat based distributions certificate is stored in `/etc/pki/ca-trust/source/anchors` using a `.crt` extension. The module uses the `update-ca-trust` script (included in the `ca-certificates` package) and also the `certutil` binary to add the certificate to the system-wide NSS database in `/etc/pki/nssdb`.
 
 ### Install a certificate and key using defaults
 
@@ -175,8 +166,6 @@ openssl::dhparam { '/etc/mail/tls/dh2048.pem':
 ## Reference
 
 See [REFERENCE.md](https://github.com/smoeding/puppet-openssl/blob/master/REFERENCE.md)
-
-## Limitations
 
 ## Development
 
