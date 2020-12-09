@@ -160,46 +160,6 @@ describe 'openssl::cert' do
         }
       end
 
-      context 'with manage_trust => true' do
-        let(:params) do
-          { manage_trust: true }
-        end
-
-        it {
-          is_expected.to contain_concat('/crt/cert.crt')
-            .with_owner('root')
-            .with_group('wheel')
-            .with_mode('0444')
-            .with_backup(false)
-            .with_show_diff(false)
-            .with_ensure_newline(true)
-
-          is_expected.to contain_concat__fragment('/crt/cert.crt-cert')
-            .with_target('/crt/cert.crt')
-            .with_content("# /foo/cert.crt\n")
-            .with_order('10')
-        }
-
-        it {
-          case facts[:os]['family']
-          when 'Debian', 'FreeBSD'
-            is_expected.to contain_openssl_hash('/crt/cert.crt')
-              .with_ensure('present')
-              .that_requires('Concat[/crt/cert.crt]')
-
-            is_expected.not_to contain_openssl_certutil('cert')
-          when 'RedHat'
-            is_expected.to contain_openssl_certutil('cert')
-              .with_ensure('present')
-              .with_filename('/crt/cert.crt')
-              .with_ssl_trust('C')
-              .that_requires('Concat[/crt/cert.crt]')
-
-            is_expected.not_to contain_openssl_hash('/crt/cert.crt')
-          end
-        }
-      end
-
       context 'with mode => 0642' do
         let(:params) do
           { mode: '0642' }
@@ -293,29 +253,6 @@ describe 'openssl::cert' do
           is_expected.to contain_file('/crt/cert.crt').with_ensure('absent')
           is_expected.not_to contain_openssl_hash('/crt/cert.crt')
           is_expected.not_to contain_openssl_certutil('cert')
-        }
-      end
-
-      context 'with ensure => absent, manage_trust => true' do
-        let(:params) do
-          { ensure: 'absent', manage_trust: true }
-        end
-
-        it {
-          is_expected.to contain_file('/crt/cert.crt').with_ensure('absent')
-        }
-
-        it {
-          case facts[:os]['family']
-          when 'Debian', 'FreeBSD'
-            is_expected.to contain_openssl_hash('/crt/cert.crt')
-              .with_ensure('absent')
-              .that_comes_before('File[/crt/cert.crt]')
-          when 'RedHat'
-            is_expected.to contain_openssl_certutil('cert')
-              .with_ensure('absent')
-              .that_comes_before('File[/crt/cert.crt]')
-          end
         }
       end
     end

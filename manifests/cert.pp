@@ -43,26 +43,6 @@
 # @param source_extension
 #   The file extension used for files read on the server.
 #
-# @param manage_trust
-#   *Deprecated:* A boolean value that determines if the certificate
-#   should be marked as a trusted certificate. The mark is set if the
-#   parameter value is `true` and removed if the parameter value is
-#   `false`. This is mostly useful for CA certificates to establish
-#   a proper trust chain.
-#
-#   On Debian based distributions this is done by creating a symbolic link
-#   pointing to the certificate file using the certificate hash as name.
-#
-#   On RedHat based distributions the certificate is added to the system-wide
-#   NSS database in `/etc/pki/nssdb`. The `certutil` binary is required for
-#   this. The value of the parameter `cert` is used as the nickname for the
-#   certificate. Do not try to add the same certificate a second time with a
-#   different nickname to the database. This will fail silently and Puppet
-#   will try to add the certificate on every subsequent run.
-#
-#   This parameter is deprecated and will be removed. Trusted certificates
-#   should be managed with the `openssl::cacert` defined type.
-#
 # @param mode
 #   The file mode used for the resource.
 #
@@ -84,7 +64,6 @@ define openssl::cert (
   Array[String]                  $cert_chain       = [],
   String                         $extension        = 'crt',
   String                         $source_extension = 'crt',
-  Boolean                        $manage_trust     = false,
   Stdlib::Filemode               $mode             = '0444',
   String                         $owner            = 'root',
   Optional[String]               $group            = undef,
@@ -129,59 +108,8 @@ define openssl::cert (
       }
     }
 
-    if $manage_trust {
-      case $facts['os']['family'] {
-        'Debian',
-        'FreeBSD': {
-          # Create a hash for the installed certificate. The hash must be
-          # calculated on the client, since different openssl implementations
-          # use different hash algorithms.
-
-          openssl_hash { $_cert_file:
-            ensure  => $ensure,
-            require => Concat[$_cert_file],
-          }
-        }
-        'RedHat': {
-          # Add the installed certificate to the system-wide NSS database and
-          # mark it as trusted for SSL. This requires the certutil executable
-          # which is generally only available on RedHat-based distributions.
-
-          openssl_certutil { $cert:
-            ensure    => $ensure,
-            filename  => $_cert_file,
-            ssl_trust => 'C',
-            require   => Concat[$_cert_file],
-          }
-        }
-        default: {
-          warn("Unsupported operating system family: ${facts['os']['family']}")
-        }
-      }
-    }
   }
   else {
-    if $manage_trust {
-      case $facts['os']['family'] {
-        'Debian',
-        'FreeBSD': {
-          openssl_hash { $_cert_file:
-            ensure => $ensure,
-            before => File[$_cert_file],
-          }
-        }
-        'RedHat': {
-          openssl_certutil { $cert:
-            ensure => $ensure,
-            before => File[$_cert_file],
-          }
-        }
-        default: {
-          warn("Unsupported operating system family: ${facts['os']['family']}")
-        }
-      }
-    }
-
     file { $_cert_file:
       ensure => $ensure,
     }

@@ -306,31 +306,6 @@ The file extension used for files read on the server.
 
 Default value: `'crt'`
 
-##### `manage_trust`
-
-Data type: `Boolean`
-
-*Deprecated:* A boolean value that determines if the certificate
-should be marked as a trusted certificate. The mark is set if the
-parameter value is `true` and removed if the parameter value is
-`false`. This is mostly useful for CA certificates to establish
-a proper trust chain.
-
-On Debian based distributions this is done by creating a symbolic link
-pointing to the certificate file using the certificate hash as name.
-
-On RedHat based distributions the certificate is added to the system-wide
-NSS database in `/etc/pki/nssdb`. The `certutil` binary is required for
-this. The value of the parameter `cert` is used as the nickname for the
-certificate. Do not try to add the same certificate a second time with a
-different nickname to the database. This will fail silently and Puppet
-will try to add the certificate on every subsequent run.
-
-This parameter is deprecated and will be removed. Trusted certificates
-should be managed with the `openssl::cacert` defined type.
-
-Default value: ``false``
-
 ##### `mode`
 
 Data type: `Stdlib::Filemode`
