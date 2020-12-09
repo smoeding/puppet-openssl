@@ -1,3 +1,16 @@
+## 2020-12-09 - Release 3.0.0
+
+### Breaking changes
+
+- Removed Support for Debian-8, Ubuntu-14.04, CentOS-6, RedHat-6 and FreeBSD-10
+- The parameter `manage_trust` for the defined type `openssl::cert` has been removed. CA certificates should be managed using the `openssl::cacert` defined type.
+- The class parameter `openssl::ca_certs` internally uses the `openssl::cacert` defined type.
+
+### Features
+
+- Add Support for FreeBSD-12
+- On RedHat based distributions the defined type `openssl::cacert` will keep all CA certificates in `/etc/pki/ca-trust/source/anchors` and also call the `update-ca-trust` script.
+
 ## 2020-10-14 - Release 2.2.0
 
 ### Features
