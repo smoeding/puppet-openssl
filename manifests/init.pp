@@ -81,8 +81,6 @@ class openssl (
   }
 
   unless empty($ca_certs) {
-    openssl::cert { $ca_certs:
-      manage_trust => true,
-    }
+    openssl::cacert { $ca_certs: }
   }
 }

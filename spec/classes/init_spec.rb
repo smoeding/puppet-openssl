@@ -62,7 +62,7 @@ describe 'openssl' do
         let(:params) { default_params.merge(ca_certs: ['cert']) }
 
         it {
-          is_expected.to contain_openssl__cert('cert').with_manage_trust('true')
+          is_expected.to contain_openssl__cacert('cert')
         }
       end
 
@@ -70,8 +70,8 @@ describe 'openssl' do
         let(:params) { default_params.merge(ca_certs: ['cert', 'ca']) }
 
         it {
-          is_expected.to contain_openssl__cert('cert').with_manage_trust('true')
-          is_expected.to contain_openssl__cert('ca').with_manage_trust('true')
+          is_expected.to contain_openssl__cacert('cert')
+          is_expected.to contain_openssl__cacert('ca')
         }
       end
     end
