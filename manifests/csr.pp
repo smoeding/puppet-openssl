@@ -35,7 +35,7 @@
 #   may be rejected by modern web browsers.
 #
 # @param subject_alternate_names_ip
-#   An array of IP addresses that wull be added as subject alternate names
+#   An array of IP addresses that will be added as subject alternate names
 #   using the `IP` prefix. The certificate can be used for all IP addresses
 #   given in this list.
 #

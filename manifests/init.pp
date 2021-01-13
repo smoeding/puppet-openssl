@@ -32,7 +32,7 @@
 #   RedHat this is `/etc/pki/tls/certs`.
 #
 # @param package_name
-#   The name of the openssl package to install.
+#   The name of the OpenSSL package to install.
 #
 # @param package_ensure
 #   The desired package state.

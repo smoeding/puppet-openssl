@@ -64,8 +64,8 @@ define openssl::cacert (
 
   $_cert_dir =  pick($cert_dir, $::openssl::default_cert_dir)
 
-  # Debian requires the certificate file to be stored in a fixed
-  # directory using a fixed extenstion.
+  # Debian/RedHat require the certificate file to be stored in a fixed
+  # directory using a fixed extension.
   $_cert_file = $facts['os']['family'] ? {
     'Debian' => "/usr/local/share/ca-certificates/${cert}.crt",
     'RedHat' => "/etc/pki/ca-trust/source/anchors/${cert}.crt",
@@ -96,7 +96,7 @@ define openssl::cacert (
         }
 
         # Create a hash for the installed certificate. The hash must be
-        # calculated on the client, since different openssl implementations
+        # calculated on the client, since different OpenSSL implementations
         # use different hash algorithms.
 
         openssl_hash { $_cert_file:

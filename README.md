@@ -46,7 +46,7 @@ class { 'openssl':
 }
 ```
 
-The parameter `cert_source_directory` is mandatory and has no default value. This is a directory on the Puppet server where you keep your certificates and keys. This directory does not need to be inside a Puppet environment directory. It can be located anywhere on the Puppet server. But the content must by readable by the user running the Puppetserver application (normally `puppet`). So make sure the filesystem permissions are set correctly.
+The parameter `cert_source_directory` is mandatory and has no default value. This is a directory on the Puppet server where you keep your certificates and keys. This directory does not need to be inside a Puppet environment directory. It can be located anywhere on the Puppet server. But the content must by readable by the user running the Puppetserver application (normally `puppet`). So make sure the file permissions are set correctly.
 
 The module expects to find certificate and key files in this directory on the Puppet server. As an example the directory used above might look like this listing:
 

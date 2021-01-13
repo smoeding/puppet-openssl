@@ -29,7 +29,7 @@
 #   The number of bits to generate.
 #
 # @param generator
-#   The generator to use. Check the openssl documentation for details about
+#   The generator to use. Check the OpenSSL documentation for details about
 #   this parameter.
 #
 # @param mode

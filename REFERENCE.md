@@ -91,7 +91,7 @@ RedHat this is `/etc/pki/tls/certs`.
 
 Data type: `String`
 
-The name of the openssl package to install.
+The name of the OpenSSL package to install.
 
 ##### `package_ensure`
 
@@ -409,7 +409,7 @@ Default value: `[]`
 
 Data type: `Array[Stdlib::IP::Address]`
 
-An array of IP addresses that wull be added as subject alternate names
+An array of IP addresses that will be added as subject alternate names
 using the `IP` prefix. The certificate can be used for all IP addresses
 given in this list.
 
@@ -585,7 +585,7 @@ Default value: `'2048'`
 
 Data type: `Enum['2','5']`
 
-The generator to use. Check the openssl documentation for details about
+The generator to use. Check the OpenSSL documentation for details about
 this parameter.
 
 Default value: `'2'`
