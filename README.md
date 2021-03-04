@@ -1,6 +1,6 @@
-# openssl
+# OpenSSL
 
-[![Build Status](https://travis-ci.org/smoeding/puppet-openssl.svg?branch=master)](https://travis-ci.org/smoeding/puppet-openssl)
+[![Build Status](https://travis-ci.com/smoeding/puppet-openssl.svg?branch=master)](https://travis-ci.com/smoeding/puppet-openssl)
 [![Puppet Forge](http://img.shields.io/puppetforge/v/stm/openssl.svg)](https://forge.puppetlabs.com/stm/openssl)
 [![License](https://img.shields.io/github/license/smoeding/puppet-openssl.svg)](https://raw.githubusercontent.com/smoeding/puppet-openssl/master/LICENSE)
 
@@ -28,15 +28,15 @@ In contrast to some other modules, this module does not generate the certificate
 
 ## Setup
 
-### What openssl affects
+### What OpenSSL affects
 
-The modules installs the openssl package and provides defined types to manage certificates, keys and Diffie-Hellman parameter files on the nodes.
+The modules installs the OpenSSL package and provides defined types to manage certificates, keys and Diffie-Hellman parameter files on the nodes.
 
 ### Setup Requirements
 
 The module requires the Puppetlabs modules `stdlib` and `concat`. The `openssl` executable must be installed on the node. On RedHat based distributions the `certutil` executable is also needed.
 
-### Beginning with openssl
+### Beginning with OpenSSL
 
 The module must be initialized before you can manage certificates and keys:
 
