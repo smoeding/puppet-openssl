@@ -94,7 +94,7 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl) do
     File.rename(tfile, resource[:file])
   ensure
     File.unlink(tfile) if File.exist?(tfile)
-    ptemp.unlink unless ptemp.nil?
+    ptemp&.unlink
     @trigger_refresh = false
   end
 

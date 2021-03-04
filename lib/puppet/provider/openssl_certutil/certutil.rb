@@ -40,7 +40,7 @@ Puppet::Type.type(:openssl_certutil).provide(:certutil) do
   def self.prefetch(resources)
     certificates = instances
 
-    resources.keys.each do |name|
+    resources.each_key do |name|
       provider = certificates.find { |crt| crt.name == name }
       resources[name].provider = provider if provider
     end
