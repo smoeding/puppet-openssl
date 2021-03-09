@@ -1,3 +1,10 @@
+## 2021-03-09 - Release 3.1.0
+
+### Features
+
+- Add support for Puppet 7.
+- Add support for Stdlib 7.x.
+
 ## 2020-12-09 - Release 3.0.0
 
 ### Breaking changes
