@@ -1,6 +1,6 @@
 # OpenSSL
 
-[![Build Status](https://travis-ci.com/smoeding/puppet-openssl.svg?branch=master)](https://travis-ci.com/smoeding/puppet-openssl)
+[![Build Status](https://github.com/smoeding/puppet-openssl/actions/workflows/CI.yaml/badge.svg)](https://github.com/smoeding/puppet-openssl/actions/workflows/CI.yaml)
 [![Puppet Forge](http://img.shields.io/puppetforge/v/stm/openssl.svg)](https://forge.puppetlabs.com/stm/openssl)
 [![License](https://img.shields.io/github/license/smoeding/puppet-openssl.svg)](https://raw.githubusercontent.com/smoeding/puppet-openssl/master/LICENSE)
 
