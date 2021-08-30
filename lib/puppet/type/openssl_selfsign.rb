@@ -21,7 +21,7 @@ Puppet::Type.newtype(:openssl_selfsign) do
 
     @example Create a self-signed certificate with extensions valid for one year
 
-      openssl_signcert { '/tmp/cert.crt':
+      openssl_signcsr { '/tmp/cert.crt':
         csr        => '/tmp/cert.csr',
         signkey    => '/tmp/cert.key',
         extfile    => '/tmp/cert.cnf',

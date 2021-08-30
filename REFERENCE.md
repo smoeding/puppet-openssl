@@ -1209,7 +1209,7 @@ certificate if the resource is notified from another resource.
 
 ```puppet
 
-openssl_signcert { '/tmp/cert.crt':
+openssl_signcsr { '/tmp/cert.crt':
   csr        => '/tmp/cert.csr',
   signkey    => '/tmp/cert.key',
   extfile    => '/tmp/cert.cnf',
@@ -1304,7 +1304,7 @@ certificate if the resource is notified from another resource.
 
 ```puppet
 
-openssl_signcert { '/tmp/cert.crt':
+openssl_signcsr { '/tmp/cert.crt':
   csr       => '/tmp/cert.csr',
   ca_name   => 'My-Root-CA',
   ca_config => '/etc/ssl/CA.cnf',
@@ -1316,7 +1316,7 @@ openssl_signcert { '/tmp/cert.crt':
 
 ```puppet
 
-openssl_signcert { '/tmp/cert.crt':
+openssl_signcsr { '/tmp/cert.crt':
   csr       => '/tmp/cert.csr',
   ca_name   => 'My-Root-CA',
   ca_config => '/etc/ssl/CA.cnf',

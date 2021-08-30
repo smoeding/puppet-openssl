@@ -20,7 +20,7 @@ Puppet::Type.newtype(:openssl_signcsr) do
 
     @example Use a CA to sign a CSR
 
-      openssl_signcert { '/tmp/cert.crt':
+      openssl_signcsr { '/tmp/cert.crt':
         csr       => '/tmp/cert.csr',
         ca_name   => 'My-Root-CA',
         ca_config => '/etc/ssl/CA.cnf',
@@ -29,7 +29,7 @@ Puppet::Type.newtype(:openssl_signcsr) do
 
     @example Regenerate a certificate if the CSR changes
 
-      openssl_signcert { '/tmp/cert.crt':
+      openssl_signcsr { '/tmp/cert.crt':
         csr       => '/tmp/cert.csr',
         ca_name   => 'My-Root-CA',
         ca_config => '/etc/ssl/CA.cnf',
