@@ -26,7 +26,7 @@ Puppet::Type.type(:openssl_signcsr).provide(:openssl) do
 
       unless process_status.value.success?
         out.each { |line| Puppet.notice("openssl_signcsr: #{line}") }
-        raise Puppet::ExecutionFailure, "openssl_signcsr: exists? failed"
+        raise Puppet::ExecutionFailure, 'openssl_signcsr: exists? failed'
       end
     end
 
@@ -61,7 +61,7 @@ Puppet::Type.type(:openssl_signcsr).provide(:openssl) do
 
       unless process_status.value.success?
         out.each { |line| Puppet.notice("openssl_signcsr: #{line}") }
-        raise Puppet::ExecutionFailure, "openssl_signcsr: create failed"
+        raise Puppet::ExecutionFailure, 'openssl_signcsr: create failed'
       end
     end
     @trigger_refresh = false

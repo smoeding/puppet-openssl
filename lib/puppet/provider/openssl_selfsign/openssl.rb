@@ -26,7 +26,7 @@ Puppet::Type.type(:openssl_selfsign).provide(:openssl) do
 
       unless process_status.value.success?
         out.each { |line| Puppet.notice("openssl_selfsign: #{line}") }
-        raise Puppet::ExecutionFailure, "openssl_selfsign: exists? failed"
+        raise Puppet::ExecutionFailure, 'openssl_selfsign: exists? failed'
       end
     end
 
@@ -59,7 +59,7 @@ Puppet::Type.type(:openssl_selfsign).provide(:openssl) do
 
       unless process_status.value.success?
         out.each { |line| Puppet.notice("openssl_selfsign: #{line}") }
-        raise Puppet::ExecutionFailure, "openssl_selfsign: create failed"
+        raise Puppet::ExecutionFailure, 'openssl_selfsign: create failed'
       end
     end
     @trigger_refresh = false

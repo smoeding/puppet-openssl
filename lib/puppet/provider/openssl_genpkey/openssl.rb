@@ -37,7 +37,7 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl) do
 
       unless process_status.value.success?
         out.each { |line| Puppet.notice("openssl_genpkey: #{line}") }
-        raise Puppet::ExecutionFailure, "openssl_genpkey: exists? failed"
+        raise Puppet::ExecutionFailure, 'openssl_genpkey: exists? failed'
       end
     end
 
@@ -95,7 +95,7 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl) do
 
       unless process_status.value.success?
         out.each { |line| Puppet.notice("openssl_genpkey: #{line}") }
-        raise Puppet::ExecutionFailure, "openssl_genpkey: create failed"
+        raise Puppet::ExecutionFailure, 'openssl_genpkey: create failed'
       end
     end
 

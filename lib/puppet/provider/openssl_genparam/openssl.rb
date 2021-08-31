@@ -28,7 +28,7 @@ Puppet::Type.type(:openssl_genparam).provide(:openssl) do
 
       unless process_status.value.success?
         out.each { |line| Puppet.notice("openssl_genparam: #{line}") }
-        raise Puppet::ExecutionFailure, "openssl_genparam: exists? failed"
+        raise Puppet::ExecutionFailure, 'openssl_genparam: exists? failed'
       end
     end
 
