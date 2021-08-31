@@ -21,16 +21,19 @@ Puppet::Type.type(:openssl_signcsr).provide(:openssl) do
     Open3.popen2e(*cmd) do |_stdin, stdout, process_status|
       Puppet.debug("openssl_signcsr: exists? #{resource[:file]}")
 
-      stdout.each_line { |_| }
+      out = []
+      stdout.each_line { |line| out << line.chomp }
 
-      return false unless process_status.value.success?
+      unless process_status.value.success?
+        out.each { |line| Puppet.notice("openssl_signcsr: #{line}") }
+        raise Puppet::ExecutionFailure, "openssl_signcsr: exists? failed"
+      end
     end
 
     true
   end
 
   def create
-    out = []
     cmd = ['openssl', 'ca']
 
     cmd << '-batch' << '-create_serial'
@@ -53,11 +56,12 @@ Puppet::Type.type(:openssl_signcsr).provide(:openssl) do
 
       stdin.puts(resource[:password]) unless resource[:password].nil?
 
-      stdout.each_line { |line| out << line }
+      out = []
+      stdout.each_line { |line| out << line.chomp }
 
       unless process_status.value.success?
         out.each { |line| Puppet.notice("openssl_signcsr: #{line}") }
-        return false
+        raise Puppet::ExecutionFailure, "openssl_signcsr: create failed"
       end
     end
     @trigger_refresh = false

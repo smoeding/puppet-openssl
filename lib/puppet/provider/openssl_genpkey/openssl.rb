@@ -32,9 +32,13 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl) do
     Open3.popen2e(*param) do |stdin, stdout, process_status|
       stdin.puts(resource[:password]) unless resource[:password].nil?
 
-      stdout.each_line { |_| }
+      out = []
+      stdout.each_line { |line| out << line.chomp }
 
-      return false unless process_status.value.success?
+      unless process_status.value.success?
+        out.each { |line| Puppet.notice("openssl_genpkey: #{line}") }
+        raise Puppet::ExecutionFailure, "openssl_genpkey: exists? failed"
+      end
     end
 
     true
@@ -86,9 +90,13 @@ Puppet::Type.type(:openssl_genpkey).provide(:openssl) do
 
       stdin.puts(resource[:password]) unless resource[:password].nil?
 
-      stdout.each_line { |_| }
+      out = []
+      stdout.each_line { |line| out << line.chomp }
 
-      return false unless process_status.value.success?
+      unless process_status.value.success?
+        out.each { |line| Puppet.notice("openssl_genpkey: #{line}") }
+        raise Puppet::ExecutionFailure, "openssl_genpkey: create failed"
+      end
     end
 
     File.rename(tfile, resource[:file])
