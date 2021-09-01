@@ -1,3 +1,15 @@
+## 2021-09-01 - Release 3.2.0
+
+### Features
+
+- Add support for Stdlib 8.x.
+- Add support for FreeBSD 13
+- Add support for Debian 11
+
+### Bug Fixes
+
+- Fix error propagation in custom types.  A custom type now fails as it should if an error condition occurs while creating the resource.
+
 ## 2021-03-09 - Release 3.1.0
 
 ### Features
