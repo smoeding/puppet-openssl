@@ -23,13 +23,12 @@ Puppet::Type.type(:openssl_genparam).provide(:openssl) do
     Open3.popen2(*param) do |_stdin, stdout, process_status|
       Puppet.debug("openssl_genparam: #{resource[:file]} opened")
 
-      out = []
-      stdout.each_line { |line| out << line.chomp }
+      stdout.each_line { |_| }
 
-      unless process_status.value.success?
-        out.each { |line| Puppet.notice("openssl_genparam: #{line}") }
-        raise Puppet::ExecutionFailure, 'openssl_genparam: exists? failed'
-      end
+      # A process failure indicates that the target file does not have the
+      # correct content, so we (re)create the resource.  The process failure
+      # is not propagated to Puppet.
+      return false unless process_status.value.success?
     end
 
     # check age of file if refresh_interval is set

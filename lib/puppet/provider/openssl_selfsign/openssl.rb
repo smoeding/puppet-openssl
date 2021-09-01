@@ -21,13 +21,12 @@ Puppet::Type.type(:openssl_selfsign).provide(:openssl) do
     Open3.popen2e(*cmd) do |_stdin, stdout, process_status|
       Puppet.debug("openssl_selfsign: exists? #{resource[:file]}")
 
-      out = []
-      stdout.each_line { |line| out << line.chomp }
+      stdout.each_line { |_| }
 
-      unless process_status.value.success?
-        out.each { |line| Puppet.notice("openssl_selfsign: #{line}") }
-        raise Puppet::ExecutionFailure, 'openssl_selfsign: exists? failed'
-      end
+      # A process failure indicates that the target file does not have the
+      # correct content, so we (re)create the resource.  The process failure
+      # is not propagated to Puppet.
+      return false unless process_status.value.success?
     end
 
     true
