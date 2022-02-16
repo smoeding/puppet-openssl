@@ -43,13 +43,13 @@
 #
 #
 define openssl::dhparam (
-  Enum['present','absent']   $ensure    = 'present',
-  Stdlib::Absolutepath       $file      = $name,
-  Enum['2048','4096','8192'] $bits      = '2048',
-  Enum['2','5']              $generator = '2',
-  Stdlib::Filemode           $mode      = '0644',
-  String                     $owner     = 'root',
-  Optional[String]           $group     = undef,
+  Enum['present','absent']                               $ensure    = 'present',
+  Stdlib::Absolutepath                                   $file      = $name,
+  Enum['2048','3072','4096','5120','6144','7168','8192'] $bits      = '2048',
+  Enum['2','5']                                          $generator = '2',
+  Stdlib::Filemode                                       $mode      = '0644',
+  String                                                 $owner     = 'root',
+  Optional[String]                                       $group     = undef,
 ) {
 
   # The base class must be included first

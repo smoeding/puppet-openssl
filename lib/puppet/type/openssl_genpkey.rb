@@ -71,7 +71,7 @@ Puppet::Type.newtype(:openssl_genpkey) do
     desc 'The number of bits for the RSA key. This parameter is mandatory for
       RSA keys.'
 
-    newvalues '2048', '4096', '8192'
+    newvalues '2048', '3072', '4096', '5120', '6144', '7168', '8192'
     munge { |value| value.to_s }
   end
 

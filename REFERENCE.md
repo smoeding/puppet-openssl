@@ -632,7 +632,7 @@ Default value: `$name`
 
 ##### <a name="bits"></a>`bits`
 
-Data type: `Enum['2048','4096','8192']`
+Data type: `Enum['2048','3072','4096','5120','6144','7168','8192']`
 
 The number of bits to generate.
 
@@ -1091,7 +1091,7 @@ name must be given
 
 ##### <a name="bits"></a>`bits`
 
-Valid values: `2048`, `4096`, `8192`
+Valid values: `2048`, `3072`, `4096`, `5120`, `6144`, `7168`, `8192`
 
 The number of bits for the RSA key. This parameter is mandatory for
 RSA keys.
