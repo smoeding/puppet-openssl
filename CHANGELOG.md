@@ -1,3 +1,9 @@
+## 2022-02-16 - Release 3.3.0
+
+### Features
+
+- Support additional choices for the number of bits in RSA keys
+
 ## 2021-09-01 - Release 3.2.0
 
 ### Features
