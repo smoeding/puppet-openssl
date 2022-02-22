@@ -1,21 +1,14 @@
-# @summary Create OpenSSL certificate signing request (CSR)
+# @summary Create OpenSSL config for a CSR
 #
 # @example Creating a CSR with subject alternate names
 #
-#   openssl::csr { '/etc/ssl/www.example.com.csr':
+#   openssl::config { '/etc/ssl/www.example.com.cnf':
 #     common_name                 => 'www.example.com',
 #     subject_alternate_names_dns => [ 'www.example.com', 'example.com', ],
-#     config                      => '/etc/ssl/www.example.com.cnf',
-#     key_file                    => '/etc/ssl/www.example.com.key',
 #   }
 #
 # @param common_name
 #   The value of the X.509 `CN` attribute. This attribute is mandatory.
-#
-# @param csr_file
-#   The full path name of the signing request file that will be created. It
-#   contains the attributes that will be included in the certificate and also
-#   the public part of the key. Default is the name of the resource.
 #
 # @param config
 #   The full path name of the OpenSSL configuration file that will be
@@ -23,10 +16,6 @@
 #   needed to process the CSR. It can also be used when the CSR is used to
 #   create a self-signed certificate. Updates to the config file will not
 #   trigger the generation of a new certificate.
-#
-# @param key_file
-#   The full path of the private key file. This file including the key must
-#   already be present to generate the CSR.
 #
 # @param subject_alternate_names_dns
 #   An array of DNS names that will be added as subject alternate names using
@@ -47,9 +36,6 @@
 #
 # @param basic_constraints_ca
 #   Whether the subject of the certificate is a CA.
-#
-# @param mode
-#   The file mode used for the resource.
 #
 # @param owner
 #   The file owner used for the resource.
@@ -79,17 +65,14 @@
 #   The value of the X.509 `OU` attribute.
 #
 #
-define openssl::csr (
+define openssl::config (
   String                           $common_name,
-  Stdlib::Absolutepath             $config,
-  Stdlib::Absolutepath             $key_file,
-  Stdlib::Absolutepath             $csr_file                    = $name,
+  Stdlib::Absolutepath             $config                      = $name,
   Array[Stdlib::Fqdn]              $subject_alternate_names_dns = [],
   Array[Stdlib::IP::Address]       $subject_alternate_names_ip  = [],
   Array[Openssl::Keyusage]         $key_usage                   = [ 'keyEncipherment', 'dataEncipherment' ],
   Array[Openssl::Extendedkeyusage] $extended_key_usage          = [ 'serverAuth' ],
   Boolean                          $basic_constraints_ca        = false,
-  Stdlib::Filemode                 $mode                        = '0444',
   String                           $owner                       = 'root',
   Optional[String]                 $group                       = undef,
   Optional[String]                 $country_name                = undef,
@@ -106,35 +89,35 @@ define openssl::csr (
     fail('You must include the openssl base class before using any openssl defined resources')
   }
 
-  openssl::config { $config:
-    common_name                 => $common_name,
-    subject_alternate_names_dns => $subject_alternate_names_dns,
-    subject_alternate_names_ip  => $subject_alternate_names_ip,
-    key_usage                   => $key_usage,
-    extended_key_usage          => $extended_key_usage,
-    basic_constraints_ca        => $basic_constraints_ca,
-    owner                       => $owner,
-    group                       => $group,
-    country_name                => $country_name,
-    state_or_province_name      => $state_or_province_name,
-    locality_name               => $locality_name,
-    postal_code                 => $postal_code,
-    street_address              => $street_address,
-    organization_name           => $organization_name,
-    organization_unit_name      => $organization_unit_name,
+  $use_subject_alternate_names = !empty($subject_alternate_names_dns) or
+    !empty($subject_alternate_names_ip)
+
+  $basic_constraints = bool2str($basic_constraints_ca, 'CA:true', 'CA:false')
+
+  $params = {
+    'default_bits'                => '2048',
+    'default_md'                  => 'sha512',
+    'common_name'                 => $common_name,
+    'country_name'                => $country_name,
+    'state_or_province_name'      => $state_or_province_name,
+    'locality_name'               => $locality_name,
+    'postal_code'                 => $postal_code,
+    'street_address'              => $street_address,
+    'organization_name'           => $organization_name,
+    'organization_unit_name'      => $organization_unit_name,
+    'key_usage'                   => $key_usage,
+    'extended_key_usage'          => $extended_key_usage,
+    'basic_constraints'           => $basic_constraints,
+    'subject_alternate_names_dns' => $subject_alternate_names_dns,
+    'subject_alternate_names_ip'  => $subject_alternate_names_ip,
+    'use_subject_alternate_names' => $use_subject_alternate_names,
   }
 
-  exec { "openssl req -new -config ${config} -key ${key_file} -out ${csr_file}":
-    creates => $csr_file,
-    path    => [ '/bin', '/usr/bin', '/usr/local/bin', ],
-    require => File[$config],
-    before  => File[$csr_file],
-  }
-
-  file { $csr_file:
-    ensure => file,
-    owner  => $owner,
-    group  => pick($group, $::openssl::root_group),
-    mode   => $mode,
+  file { $config:
+    ensure  => file,
+    owner   => $owner,
+    group   => pick($group, $::openssl::root_group),
+    mode    => '0600',
+    content => epp("${module_name}/csr.conf.epp", $params),
   }
 }

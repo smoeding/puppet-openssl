@@ -26,11 +26,8 @@ describe 'openssl::csr' do
 
       context 'with default parameters' do
         it {
-          is_expected.to contain_file('/tmp/example.com.cnf')
-            .with_ensure('file')
-            .with_owner('root')
-            .with_group('wheel')
-            .with_mode('0600')
+          is_expected.to contain_openssl__config('/tmp/example.com.cnf')
+            .with_common_name('example.com')
 
           is_expected.to contain_exec('openssl req -new -config /tmp/example.com.cnf -key /tmp/example.com.key -out /tmp/example.com.csr')
             .with_creates('/tmp/example.com.csr')
