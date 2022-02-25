@@ -1,3 +1,10 @@
+## 2022-02-25 - Release 3.4.0
+
+### Features
+
+- The OpenSSL config file to generate a CSR can now be generated on it's own using the new defined type `openssl::config`.
+- Add new data type `Openssl::Extendedkeyusage`.
+
 ## 2022-02-16 - Release 3.3.0
 
 ### Features
