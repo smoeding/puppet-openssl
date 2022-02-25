@@ -1,10 +1,10 @@
 # @summary Create OpenSSL config for a CSR
 #
-# @example Creating a CSR with subject alternate names
+# @example Creating a config file for a CSR
 #
 #   openssl::config { '/etc/ssl/www.example.com.cnf':
-#     common_name                 => 'www.example.com',
-#     subject_alternate_names_dns => [ 'www.example.com', 'example.com', ],
+#     common_name        => 'www.example.com',
+#     extended_key_usage => [ 'serverAuth', 'clientAuth' ],
 #   }
 #
 # @param common_name
@@ -13,9 +13,7 @@
 # @param config
 #   The full path name of the OpenSSL configuration file that will be
 #   created. It contains a minimal set of configuration options that are
-#   needed to process the CSR. It can also be used when the CSR is used to
-#   create a self-signed certificate. Updates to the config file will not
-#   trigger the generation of a new certificate.
+#   needed to process a CSR.
 #
 # @param subject_alternate_names_dns
 #   An array of DNS names that will be added as subject alternate names using

@@ -12,6 +12,7 @@
 
 * [`openssl::cacert`](#opensslcacert): Manage an X.509 CA certificate file in PEM format
 * [`openssl::cert`](#opensslcert): Manage an X.509 certificate file in PEM format
+* [`openssl::config`](#opensslconfig): Create OpenSSL config for a CSR
 * [`openssl::csr`](#opensslcsr): Create OpenSSL certificate signing request (CSR)
 * [`openssl::dhparam`](#openssldhparam): Manage Diffie-Hellman parameter files
 * [`openssl::key`](#opensslkey): Manage an X.509 key file in PEM format
@@ -27,6 +28,7 @@
 
 ### Data types
 
+* [`Openssl::Extendedkeyusage`](#opensslextendedkeyusage): Valid parameter values for the OpenSSL extendend key usage
 * [`Openssl::Keyusage`](#opensslkeyusage): Valid parameter values for the OpenSSL keyusage
 
 ## Classes
@@ -368,6 +370,176 @@ stored.
 
 Default value: ``undef``
 
+### <a name="opensslconfig"></a>`openssl::config`
+
+Create OpenSSL config for a CSR
+
+#### Examples
+
+##### Creating a config file for a CSR
+
+```puppet
+
+openssl::config { '/etc/ssl/www.example.com.cnf':
+  common_name        => 'www.example.com',
+  extended_key_usage => [ 'serverAuth', 'clientAuth' ],
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `openssl::config` defined type:
+
+* [`common_name`](#common_name)
+* [`config`](#config)
+* [`subject_alternate_names_dns`](#subject_alternate_names_dns)
+* [`subject_alternate_names_ip`](#subject_alternate_names_ip)
+* [`key_usage`](#key_usage)
+* [`extended_key_usage`](#extended_key_usage)
+* [`basic_constraints_ca`](#basic_constraints_ca)
+* [`owner`](#owner)
+* [`group`](#group)
+* [`country_name`](#country_name)
+* [`state_or_province_name`](#state_or_province_name)
+* [`locality_name`](#locality_name)
+* [`postal_code`](#postal_code)
+* [`street_address`](#street_address)
+* [`organization_name`](#organization_name)
+* [`organization_unit_name`](#organization_unit_name)
+
+##### <a name="common_name"></a>`common_name`
+
+Data type: `String`
+
+The value of the X.509 `CN` attribute. This attribute is mandatory.
+
+##### <a name="config"></a>`config`
+
+Data type: `Stdlib::Absolutepath`
+
+The full path name of the OpenSSL configuration file that will be
+created. It contains a minimal set of configuration options that are
+needed to process a CSR.
+
+Default value: `$name`
+
+##### <a name="subject_alternate_names_dns"></a>`subject_alternate_names_dns`
+
+Data type: `Array[Stdlib::Fqdn]`
+
+An array of DNS names that will be added as subject alternate names using
+the `DNS` prefix. The certificate can be used for all names given in this
+list. Normally the common name should be in this list or the certificate
+may be rejected by modern web browsers.
+
+Default value: `[]`
+
+##### <a name="subject_alternate_names_ip"></a>`subject_alternate_names_ip`
+
+Data type: `Array[Stdlib::IP::Address]`
+
+An array of IP addresses that will be added as subject alternate names
+using the `IP` prefix. The certificate can be used for all IP addresses
+given in this list.
+
+Default value: `[]`
+
+##### <a name="key_usage"></a>`key_usage`
+
+Data type: `Array[Openssl::Keyusage]`
+
+The intended purposes of the certificate.
+
+Default value: `[ 'keyEncipherment', 'dataEncipherment' ]`
+
+##### <a name="extended_key_usage"></a>`extended_key_usage`
+
+Data type: `Array[Openssl::Extendedkeyusage]`
+
+The extended key usage of the certificate.
+
+Default value: `[ 'serverAuth' ]`
+
+##### <a name="basic_constraints_ca"></a>`basic_constraints_ca`
+
+Data type: `Boolean`
+
+Whether the subject of the certificate is a CA.
+
+Default value: ``false``
+
+##### <a name="owner"></a>`owner`
+
+Data type: `String`
+
+The file owner used for the resource.
+
+Default value: `'root'`
+
+##### <a name="group"></a>`group`
+
+Data type: `Optional[String]`
+
+The file group used for the resource.
+
+Default value: ``undef``
+
+##### <a name="country_name"></a>`country_name`
+
+Data type: `Optional[String]`
+
+The value of the X.509 `C` attribute.
+
+Default value: ``undef``
+
+##### <a name="state_or_province_name"></a>`state_or_province_name`
+
+Data type: `Optional[String]`
+
+The value of the X.509 `ST` attribute.
+
+Default value: ``undef``
+
+##### <a name="locality_name"></a>`locality_name`
+
+Data type: `Optional[String]`
+
+The value of the X.509 `L` attribute.
+
+Default value: ``undef``
+
+##### <a name="postal_code"></a>`postal_code`
+
+Data type: `Optional[String]`
+
+The value of the X.509 `PC` attribute.
+
+Default value: ``undef``
+
+##### <a name="street_address"></a>`street_address`
+
+Data type: `Optional[String]`
+
+The value of the X.509 `STREET` attribute.
+
+Default value: ``undef``
+
+##### <a name="organization_name"></a>`organization_name`
+
+Data type: `Optional[String]`
+
+The value of the X.509 `O` attribute.
+
+Default value: ``undef``
+
+##### <a name="organization_unit_name"></a>`organization_unit_name`
+
+Data type: `Optional[String]`
+
+The value of the X.509 `OU` attribute.
+
+Default value: ``undef``
+
 ### <a name="opensslcsr"></a>`openssl::csr`
 
 Create OpenSSL certificate signing request (CSR)
@@ -474,7 +646,7 @@ Default value: `[ 'keyEncipherment', 'dataEncipherment' ]`
 
 ##### <a name="extended_key_usage"></a>`extended_key_usage`
 
-Data type: `Array[String]`
+Data type: `Array[Openssl::Extendedkeyusage]`
 
 The extended key usage of the certificate.
 
@@ -1394,6 +1566,16 @@ The specific backend to use for this `openssl_signcsr` resource. You will seldom
 usually discover the appropriate provider for your platform.
 
 ## Data types
+
+### <a name="opensslextendedkeyusage"></a>`Openssl::Extendedkeyusage`
+
+Valid parameter values for the OpenSSL extendend key usage
+
+Alias of
+
+```puppet
+Enum['serverAuth', 'clientAuth', 'codeSigning', 'emailProtection', 'timeStamping', 'OCSPSigning', 'ipsecIKE', 'msCodeInd', 'msCodeCom', 'msCTLSign', 'msEFS']
+```
 
 ### <a name="opensslkeyusage"></a>`Openssl::Keyusage`
 
