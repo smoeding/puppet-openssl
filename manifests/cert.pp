@@ -69,19 +69,18 @@ define openssl::cert (
   Optional[String]               $group            = undef,
   Optional[Stdlib::Absolutepath] $cert_dir         = undef,
 ) {
-
   # The base class must be included first
   unless defined(Class['openssl']) {
     fail('You must include the openssl base class before using any openssl defined resources')
   }
 
-  $_cert_dir  = pick($cert_dir, $::openssl::default_cert_dir)
+  $_cert_dir  = pick($cert_dir, $openssl::default_cert_dir)
   $_cert_file = "${_cert_dir}/${cert}.${extension}"
 
   if ($ensure == 'present') {
     concat { $_cert_file:
       owner          => $owner,
-      group          => pick($group, $::openssl::root_group),
+      group          => pick($group, $openssl::root_group),
       mode           => $mode,
       backup         => false,
       show_diff      => false,
@@ -90,7 +89,7 @@ define openssl::cert (
 
     concat::fragment { "${_cert_file}-cert":
       target  => $_cert_file,
-      content => file("${::openssl::cert_source_directory}/${source}.${source_extension}"),
+      content => file("${openssl::cert_source_directory}/${source}.${source_extension}"),
       order   => '10',
     }
 
@@ -103,11 +102,10 @@ define openssl::cert (
 
       concat::fragment { "${_cert_file}-${order}":
         target  => $_cert_file,
-        content => file("${::openssl::cert_source_directory}/${entry}.${source_extension}"),
+        content => file("${openssl::cert_source_directory}/${entry}.${source_extension}"),
         order   => $order,
       }
     }
-
   }
   else {
     file { $_cert_file:

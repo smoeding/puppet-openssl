@@ -56,13 +56,12 @@ define openssl::cacert (
   Optional[String]               $group            = undef,
   Optional[Stdlib::Absolutepath] $cert_dir         = undef,
 ) {
-
   # The base class must be included first
   unless defined(Class['openssl']) {
     fail('You must include the openssl base class before using any openssl defined resources')
   }
 
-  $_cert_dir =  pick($cert_dir, $::openssl::default_cert_dir)
+  $_cert_dir =  pick($cert_dir, $openssl::default_cert_dir)
 
   # Debian/RedHat require the certificate file to be stored in a fixed
   # directory using a fixed extension.
@@ -73,14 +72,14 @@ define openssl::cacert (
   }
 
   if ($ensure == 'present') {
-    $content = file("${::openssl::cert_source_directory}/${source}.${source_extension}")
+    $content = file("${openssl::cert_source_directory}/${source}.${source_extension}")
 
     case $facts['os']['family'] {
       'Debian': {
         file { $_cert_file:
           ensure  => file,
           owner   => $owner,
-          group   => pick($group, $::openssl::root_group),
+          group   => pick($group, $openssl::root_group),
           mode    => $mode,
           content => $content,
           notify  => Exec['openssl::update-ca-certificates'],
@@ -90,7 +89,7 @@ define openssl::cacert (
         file { $_cert_file:
           ensure  => file,
           owner   => $owner,
-          group   => pick($group, $::openssl::root_group),
+          group   => pick($group, $openssl::root_group),
           mode    => $mode,
           content => $content,
         }
@@ -108,7 +107,7 @@ define openssl::cacert (
         file { $_cert_file:
           ensure  => file,
           owner   => $owner,
-          group   => pick($group, $::openssl::root_group),
+          group   => pick($group, $openssl::root_group),
           mode    => $mode,
           content => $content,
           notify  => Exec['openssl::update-ca-trust'],

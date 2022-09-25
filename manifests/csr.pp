@@ -86,8 +86,8 @@ define openssl::csr (
   Stdlib::Absolutepath             $csr_file                    = $name,
   Array[Stdlib::Fqdn]              $subject_alternate_names_dns = [],
   Array[Stdlib::IP::Address]       $subject_alternate_names_ip  = [],
-  Array[Openssl::Keyusage]         $key_usage                   = [ 'keyEncipherment', 'dataEncipherment' ],
-  Array[Openssl::Extendedkeyusage] $extended_key_usage          = [ 'serverAuth' ],
+  Array[Openssl::Keyusage]         $key_usage                   = ['keyEncipherment', 'dataEncipherment'],
+  Array[Openssl::Extendedkeyusage] $extended_key_usage          = ['serverAuth'],
   Boolean                          $basic_constraints_ca        = false,
   Stdlib::Filemode                 $mode                        = '0444',
   String                           $owner                       = 'root',
@@ -100,7 +100,6 @@ define openssl::csr (
   Optional[String]                 $organization_name           = undef,
   Optional[String]                 $organization_unit_name      = undef,
 ) {
-
   # The base class must be included first
   unless defined(Class['openssl']) {
     fail('You must include the openssl base class before using any openssl defined resources')
@@ -126,7 +125,7 @@ define openssl::csr (
 
   exec { "openssl req -new -config ${config} -key ${key_file} -out ${csr_file}":
     creates => $csr_file,
-    path    => [ '/bin', '/usr/bin', '/usr/local/bin', ],
+    path    => ['/bin', '/usr/bin', '/usr/local/bin',],
     require => File[$config],
     before  => File[$csr_file],
   }
@@ -134,7 +133,7 @@ define openssl::csr (
   file { $csr_file:
     ensure => file,
     owner  => $owner,
-    group  => pick($group, $::openssl::root_group),
+    group  => pick($group, $openssl::root_group),
     mode   => $mode,
   }
 }

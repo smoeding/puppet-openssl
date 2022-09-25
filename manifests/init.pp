@@ -55,7 +55,6 @@ class openssl (
   String               $root_group,
   Array[String]        $ca_certs,
 ) {
-
   package { 'openssl':
     ensure => $package_ensure,
     name   => $package_name,
@@ -66,7 +65,7 @@ class openssl (
       command     => 'update-ca-certificates',
       user        => 'root',
       cwd         => '/',
-      path        => [ '/usr/bin', '/bin', '/usr/sbin', '/sbin', ],
+      path        => ['/usr/bin', '/bin', '/usr/sbin', '/sbin',],
       refreshonly => true,
     }
   }
@@ -75,7 +74,7 @@ class openssl (
       command     => 'update-ca-trust extract',
       user        => 'root',
       cwd         => '/',
-      path        => [ '/usr/bin', '/bin', '/usr/sbin', '/sbin', ],
+      path        => ['/usr/bin', '/bin', '/usr/sbin', '/sbin',],
       refreshonly => true,
     }
   }

@@ -51,7 +51,6 @@ define openssl::dhparam (
   String                                                 $owner     = 'root',
   Optional[String]                                       $group     = undef,
 ) {
-
   # The base class must be included first
   unless defined(Class['openssl']) {
     fail('You must include the openssl base class before using any openssl defined resources')
@@ -72,7 +71,7 @@ define openssl::dhparam (
   file { $file:
     ensure => $ensure,
     owner  => $owner,
-    group  => pick($group, $::openssl::root_group),
+    group  => pick($group, $openssl::root_group),
     mode   => $mode,
   }
 }

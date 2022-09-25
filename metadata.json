@@ -21,7 +21,6 @@
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "9",
         "10",
         "11"
       ]
@@ -29,23 +28,25 @@
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
-        "16.04",
         "18.04",
-        "20.04"
+        "20.04",
+        "22.04"
       ]
     },
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
         "7",
-        "8"
+        "8",
+        "9"
       ]
     },
     {
-      "operatingsystem": "CentOS",
+      "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
         "7",
-        "8"
+        "8",
+        "9"
       ]
     },
     {
@@ -69,7 +70,7 @@
     "x509",
     "certificate"
   ],
-  "pdk-version": "2.4.0",
-  "template-url": "pdk-default#2.4.0",
-  "template-ref": "tags/2.4.0-0-gfa6b6d2"
+  "pdk-version": "2.5.0",
+  "template-url": "pdk-default#2.5.0",
+  "template-ref": "tags/2.5.0-0-g369d483"
 }

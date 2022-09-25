@@ -59,17 +59,16 @@ define openssl::key (
   Optional[String]               $group            = undef,
   Optional[Stdlib::Absolutepath] $key_dir          = undef,
 ) {
-
   # The base class must be included first
   unless defined(Class['openssl']) {
     fail('You must include the openssl base class before using any openssl defined resources')
   }
 
-  $_key_dir  = pick($key_dir, $::openssl::default_key_dir)
+  $_key_dir  = pick($key_dir, $openssl::default_key_dir)
   $_key_file = "${_key_dir}/${key}.${extension}"
 
   $content = $ensure ? {
-    'present' => file("${::openssl::cert_source_directory}/${source}.${source_extension}"),
+    'present' => file("${openssl::cert_source_directory}/${source}.${source_extension}"),
     default   => undef,
   }
 
@@ -81,7 +80,7 @@ define openssl::key (
   file { $_key_file:
     ensure    => $_ensure,
     owner     => $owner,
-    group     => pick($group, $::openssl::root_group),
+    group     => pick($group, $openssl::root_group),
     mode      => $mode,
     content   => $content,
     backup    => false,

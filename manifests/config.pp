@@ -68,8 +68,8 @@ define openssl::config (
   Stdlib::Absolutepath             $config                      = $name,
   Array[Stdlib::Fqdn]              $subject_alternate_names_dns = [],
   Array[Stdlib::IP::Address]       $subject_alternate_names_ip  = [],
-  Array[Openssl::Keyusage]         $key_usage                   = [ 'keyEncipherment', 'dataEncipherment' ],
-  Array[Openssl::Extendedkeyusage] $extended_key_usage          = [ 'serverAuth' ],
+  Array[Openssl::Keyusage]         $key_usage                   = ['keyEncipherment', 'dataEncipherment'],
+  Array[Openssl::Extendedkeyusage] $extended_key_usage          = ['serverAuth'],
   Boolean                          $basic_constraints_ca        = false,
   String                           $owner                       = 'root',
   Optional[String]                 $group                       = undef,
@@ -81,14 +81,13 @@ define openssl::config (
   Optional[String]                 $organization_name           = undef,
   Optional[String]                 $organization_unit_name      = undef,
 ) {
-
   # The base class must be included first
   unless defined(Class['openssl']) {
     fail('You must include the openssl base class before using any openssl defined resources')
   }
 
-  $use_subject_alternate_names = !empty($subject_alternate_names_dns) or
-    !empty($subject_alternate_names_ip)
+  $use_subject_alternate_names =
+    !empty($subject_alternate_names_dns) or !empty($subject_alternate_names_ip)
 
   $basic_constraints = bool2str($basic_constraints_ca, 'CA:true', 'CA:false')
 
@@ -114,7 +113,7 @@ define openssl::config (
   file { $config:
     ensure  => file,
     owner   => $owner,
-    group   => pick($group, $::openssl::root_group),
+    group   => pick($group, $openssl::root_group),
     mode    => '0600',
     content => epp("${module_name}/csr.conf.epp", $params),
   }
