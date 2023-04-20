@@ -10,12 +10,12 @@
 
 ### Defined types
 
-* [`openssl::cacert`](#opensslcacert): Manage an X.509 CA certificate file in PEM format
-* [`openssl::cert`](#opensslcert): Manage an X.509 certificate file in PEM format
-* [`openssl::config`](#opensslconfig): Create OpenSSL config for a CSR
-* [`openssl::csr`](#opensslcsr): Create OpenSSL certificate signing request (CSR)
-* [`openssl::dhparam`](#openssldhparam): Manage Diffie-Hellman parameter files
-* [`openssl::key`](#opensslkey): Manage an X.509 key file in PEM format
+* [`openssl::cacert`](#openssl--cacert): Manage an X.509 CA certificate file in PEM format
+* [`openssl::cert`](#openssl--cert): Manage an X.509 certificate file in PEM format
+* [`openssl::config`](#openssl--config): Create OpenSSL config for a CSR
+* [`openssl::csr`](#openssl--csr): Create OpenSSL certificate signing request (CSR)
+* [`openssl::dhparam`](#openssl--dhparam): Manage Diffie-Hellman parameter files
+* [`openssl::key`](#openssl--key): Manage an X.509 key file in PEM format
 
 ### Resource types
 
@@ -28,8 +28,8 @@
 
 ### Data types
 
-* [`Openssl::Extendedkeyusage`](#opensslextendedkeyusage): Valid parameter values for the OpenSSL extendend key usage
-* [`Openssl::Keyusage`](#opensslkeyusage): Valid parameter values for the OpenSSL keyusage
+* [`Openssl::Extendedkeyusage`](#Openssl--Extendedkeyusage): Valid parameter values for the OpenSSL extendend key usage
+* [`Openssl::Keyusage`](#Openssl--Keyusage): Valid parameter values for the OpenSSL keyusage
 
 ## Classes
 
@@ -62,15 +62,15 @@ class { 'openssl':
 
 The following parameters are available in the `openssl` class:
 
-* [`cert_source_directory`](#cert_source_directory)
-* [`default_key_dir`](#default_key_dir)
-* [`default_cert_dir`](#default_cert_dir)
-* [`package_name`](#package_name)
-* [`package_ensure`](#package_ensure)
-* [`root_group`](#root_group)
-* [`ca_certs`](#ca_certs)
+* [`cert_source_directory`](#-openssl--cert_source_directory)
+* [`default_key_dir`](#-openssl--default_key_dir)
+* [`default_cert_dir`](#-openssl--default_cert_dir)
+* [`package_name`](#-openssl--package_name)
+* [`package_ensure`](#-openssl--package_ensure)
+* [`root_group`](#-openssl--root_group)
+* [`ca_certs`](#-openssl--ca_certs)
 
-##### <a name="cert_source_directory"></a>`cert_source_directory`
+##### <a name="-openssl--cert_source_directory"></a>`cert_source_directory`
 
 Data type: `Stdlib::Absolutepath`
 
@@ -81,7 +81,7 @@ function and therefore does not need to be part of the Puppet directory
 structure. But obviously the directory and the files must be readable by
 the Puppet user. This parameter is mandatory and has no default.
 
-##### <a name="default_key_dir"></a>`default_key_dir`
+##### <a name="-openssl--default_key_dir"></a>`default_key_dir`
 
 Data type: `Stdlib::Absolutepath`
 
@@ -89,7 +89,7 @@ The default directory where a key file is deployed. This is operating
 system specific. On Debian this is `/etc/ssl/private` and on RedHat this
 is `/etc/pki/tls/private`.
 
-##### <a name="default_cert_dir"></a>`default_cert_dir`
+##### <a name="-openssl--default_cert_dir"></a>`default_cert_dir`
 
 Data type: `Stdlib::Absolutepath`
 
@@ -97,26 +97,26 @@ The default directory where a certificate file is deployed. This is
 operating system specific. On Debian this is `/etc/ssl/certs` and on
 RedHat this is `/etc/pki/tls/certs`.
 
-##### <a name="package_name"></a>`package_name`
+##### <a name="-openssl--package_name"></a>`package_name`
 
 Data type: `String`
 
 The name of the OpenSSL package to install.
 
-##### <a name="package_ensure"></a>`package_ensure`
+##### <a name="-openssl--package_ensure"></a>`package_ensure`
 
 Data type: `String`
 
 The desired package state.
 
-##### <a name="root_group"></a>`root_group`
+##### <a name="-openssl--root_group"></a>`root_group`
 
 Data type: `String`
 
 The group used for deployed files. This is operating system specific. On
 Linux this is normally `root`. On FreeBSD this is `wheel`.
 
-##### <a name="ca_certs"></a>`ca_certs`
+##### <a name="-openssl--ca_certs"></a>`ca_certs`
 
 Data type: `Array[String]`
 
@@ -125,7 +125,7 @@ this uses the `openssl::cert` defined type.
 
 ## Defined types
 
-### <a name="opensslcacert"></a>`openssl::cacert`
+### <a name="openssl--cacert"></a>`openssl::cacert`
 
 Manage an X.509 CA certificate file in PEM format
 
@@ -142,17 +142,17 @@ openssl::cacert { 'my-root-ca': }
 
 The following parameters are available in the `openssl::cacert` defined type:
 
-* [`ensure`](#ensure)
-* [`cert`](#cert)
-* [`source`](#source)
-* [`extension`](#extension)
-* [`source_extension`](#source_extension)
-* [`mode`](#mode)
-* [`owner`](#owner)
-* [`group`](#group)
-* [`cert_dir`](#cert_dir)
+* [`ensure`](#-openssl--cacert--ensure)
+* [`cert`](#-openssl--cacert--cert)
+* [`source`](#-openssl--cacert--source)
+* [`extension`](#-openssl--cacert--extension)
+* [`source_extension`](#-openssl--cacert--source_extension)
+* [`mode`](#-openssl--cacert--mode)
+* [`owner`](#-openssl--cacert--owner)
+* [`group`](#-openssl--cacert--group)
+* [`cert_dir`](#-openssl--cacert--cert_dir)
 
-##### <a name="ensure"></a>`ensure`
+##### <a name="-openssl--cacert--ensure"></a>`ensure`
 
 Data type: `Enum['present','absent']`
 
@@ -160,7 +160,7 @@ The state of the resource.
 
 Default value: `'present'`
 
-##### <a name="cert"></a>`cert`
+##### <a name="-openssl--cacert--cert"></a>`cert`
 
 Data type: `String`
 
@@ -170,7 +170,7 @@ client. The full filename will be created using the three components
 
 Default value: `$name`
 
-##### <a name="source"></a>`source`
+##### <a name="-openssl--cacert--source"></a>`source`
 
 Data type: `String`
 
@@ -181,7 +181,7 @@ The full filename will be created using the three parameters
 
 Default value: `$name`
 
-##### <a name="extension"></a>`extension`
+##### <a name="-openssl--cacert--extension"></a>`extension`
 
 Data type: `String`
 
@@ -192,7 +192,7 @@ system specific tools require certificates to be installed using the
 
 Default value: `'crt'`
 
-##### <a name="source_extension"></a>`source_extension`
+##### <a name="-openssl--cacert--source_extension"></a>`source_extension`
 
 Data type: `String`
 
@@ -200,7 +200,7 @@ The file extension used for files read on the server.
 
 Default value: `'crt'`
 
-##### <a name="mode"></a>`mode`
+##### <a name="-openssl--cacert--mode"></a>`mode`
 
 Data type: `Stdlib::Filemode`
 
@@ -209,7 +209,7 @@ verification may fail if the file permissions are too restrictive.
 
 Default value: `'0444'`
 
-##### <a name="owner"></a>`owner`
+##### <a name="-openssl--cacert--owner"></a>`owner`
 
 Data type: `String`
 
@@ -217,15 +217,15 @@ The file owner used for the resource.
 
 Default value: `'root'`
 
-##### <a name="group"></a>`group`
+##### <a name="-openssl--cacert--group"></a>`group`
 
 Data type: `Optional[String]`
 
 The file group used for the resource.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="cert_dir"></a>`cert_dir`
+##### <a name="-openssl--cacert--cert_dir"></a>`cert_dir`
 
 Data type: `Optional[Stdlib::Absolutepath]`
 
@@ -235,9 +235,9 @@ distributions. Debian requires CA certificates to be stored in
 `/usr/local/share/ca-certificates` and RedHat requires CA certificates
 to be stored in `/etc/pki/ca-trust/source/anchors`.
 
-Default value: ``undef``
+Default value: `undef`
 
-### <a name="opensslcert"></a>`openssl::cert`
+### <a name="openssl--cert"></a>`openssl::cert`
 
 Manage an X.509 certificate file in PEM format
 
@@ -255,12 +255,12 @@ openssl::cert { 'imap': }
 ```puppet
 
 openssl::cert { 'postgresql':
-  cert     => $::hostname,
+  cert     => $facts['networking']['hostname'],
   owner    => 'root',
   group    => 'postgres',
   mode     => '0444',
   cert_dir => '/etc/postgresql',
-  source   => $::hostname,
+  source   => $facts['networking']['hostname'],
 }
 ```
 
@@ -268,18 +268,18 @@ openssl::cert { 'postgresql':
 
 The following parameters are available in the `openssl::cert` defined type:
 
-* [`ensure`](#ensure)
-* [`cert`](#cert)
-* [`source`](#source)
-* [`cert_chain`](#cert_chain)
-* [`extension`](#extension)
-* [`source_extension`](#source_extension)
-* [`mode`](#mode)
-* [`owner`](#owner)
-* [`group`](#group)
-* [`cert_dir`](#cert_dir)
+* [`ensure`](#-openssl--cert--ensure)
+* [`cert`](#-openssl--cert--cert)
+* [`source`](#-openssl--cert--source)
+* [`cert_chain`](#-openssl--cert--cert_chain)
+* [`extension`](#-openssl--cert--extension)
+* [`source_extension`](#-openssl--cert--source_extension)
+* [`mode`](#-openssl--cert--mode)
+* [`owner`](#-openssl--cert--owner)
+* [`group`](#-openssl--cert--group)
+* [`cert_dir`](#-openssl--cert--cert_dir)
 
-##### <a name="ensure"></a>`ensure`
+##### <a name="-openssl--cert--ensure"></a>`ensure`
 
 Data type: `Enum['present','absent']`
 
@@ -287,7 +287,7 @@ The state of the resource.
 
 Default value: `'present'`
 
-##### <a name="cert"></a>`cert`
+##### <a name="-openssl--cert--cert"></a>`cert`
 
 Data type: `String`
 
@@ -297,7 +297,7 @@ client. The full filename will be created using the three components
 
 Default value: `$name`
 
-##### <a name="source"></a>`source`
+##### <a name="-openssl--cert--source"></a>`source`
 
 Data type: `String`
 
@@ -308,7 +308,7 @@ The full filename will be created using the three parameters
 
 Default value: `$name`
 
-##### <a name="cert_chain"></a>`cert_chain`
+##### <a name="-openssl--cert--cert_chain"></a>`cert_chain`
 
 Data type: `Array[String]`
 
@@ -321,7 +321,7 @@ ordinary certificate.
 
 Default value: `[]`
 
-##### <a name="extension"></a>`extension`
+##### <a name="-openssl--cert--extension"></a>`extension`
 
 Data type: `String`
 
@@ -329,7 +329,7 @@ The file extension used for files created on the client.
 
 Default value: `'crt'`
 
-##### <a name="source_extension"></a>`source_extension`
+##### <a name="-openssl--cert--source_extension"></a>`source_extension`
 
 Data type: `String`
 
@@ -337,7 +337,7 @@ The file extension used for files read on the server.
 
 Default value: `'crt'`
 
-##### <a name="mode"></a>`mode`
+##### <a name="-openssl--cert--mode"></a>`mode`
 
 Data type: `Stdlib::Filemode`
 
@@ -345,7 +345,7 @@ The file mode used for the resource.
 
 Default value: `'0444'`
 
-##### <a name="owner"></a>`owner`
+##### <a name="-openssl--cert--owner"></a>`owner`
 
 Data type: `String`
 
@@ -353,24 +353,24 @@ The file owner used for the resource.
 
 Default value: `'root'`
 
-##### <a name="group"></a>`group`
+##### <a name="-openssl--cert--group"></a>`group`
 
 Data type: `Optional[String]`
 
 The file group used for the resource.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="cert_dir"></a>`cert_dir`
+##### <a name="-openssl--cert--cert_dir"></a>`cert_dir`
 
 Data type: `Optional[Stdlib::Absolutepath]`
 
 The destination directory on the client where the certificate will be
 stored.
 
-Default value: ``undef``
+Default value: `undef`
 
-### <a name="opensslconfig"></a>`openssl::config`
+### <a name="openssl--config"></a>`openssl::config`
 
 Create OpenSSL config for a CSR
 
@@ -390,30 +390,30 @@ openssl::config { '/etc/ssl/www.example.com.cnf':
 
 The following parameters are available in the `openssl::config` defined type:
 
-* [`common_name`](#common_name)
-* [`config`](#config)
-* [`subject_alternate_names_dns`](#subject_alternate_names_dns)
-* [`subject_alternate_names_ip`](#subject_alternate_names_ip)
-* [`key_usage`](#key_usage)
-* [`extended_key_usage`](#extended_key_usage)
-* [`basic_constraints_ca`](#basic_constraints_ca)
-* [`owner`](#owner)
-* [`group`](#group)
-* [`country_name`](#country_name)
-* [`state_or_province_name`](#state_or_province_name)
-* [`locality_name`](#locality_name)
-* [`postal_code`](#postal_code)
-* [`street_address`](#street_address)
-* [`organization_name`](#organization_name)
-* [`organization_unit_name`](#organization_unit_name)
+* [`common_name`](#-openssl--config--common_name)
+* [`config`](#-openssl--config--config)
+* [`subject_alternate_names_dns`](#-openssl--config--subject_alternate_names_dns)
+* [`subject_alternate_names_ip`](#-openssl--config--subject_alternate_names_ip)
+* [`key_usage`](#-openssl--config--key_usage)
+* [`extended_key_usage`](#-openssl--config--extended_key_usage)
+* [`basic_constraints_ca`](#-openssl--config--basic_constraints_ca)
+* [`owner`](#-openssl--config--owner)
+* [`group`](#-openssl--config--group)
+* [`country_name`](#-openssl--config--country_name)
+* [`state_or_province_name`](#-openssl--config--state_or_province_name)
+* [`locality_name`](#-openssl--config--locality_name)
+* [`postal_code`](#-openssl--config--postal_code)
+* [`street_address`](#-openssl--config--street_address)
+* [`organization_name`](#-openssl--config--organization_name)
+* [`organization_unit_name`](#-openssl--config--organization_unit_name)
 
-##### <a name="common_name"></a>`common_name`
+##### <a name="-openssl--config--common_name"></a>`common_name`
 
 Data type: `String`
 
 The value of the X.509 `CN` attribute. This attribute is mandatory.
 
-##### <a name="config"></a>`config`
+##### <a name="-openssl--config--config"></a>`config`
 
 Data type: `Stdlib::Absolutepath`
 
@@ -423,7 +423,7 @@ needed to process a CSR.
 
 Default value: `$name`
 
-##### <a name="subject_alternate_names_dns"></a>`subject_alternate_names_dns`
+##### <a name="-openssl--config--subject_alternate_names_dns"></a>`subject_alternate_names_dns`
 
 Data type: `Array[Stdlib::Fqdn]`
 
@@ -434,7 +434,7 @@ may be rejected by modern web browsers.
 
 Default value: `[]`
 
-##### <a name="subject_alternate_names_ip"></a>`subject_alternate_names_ip`
+##### <a name="-openssl--config--subject_alternate_names_ip"></a>`subject_alternate_names_ip`
 
 Data type: `Array[Stdlib::IP::Address]`
 
@@ -444,31 +444,31 @@ given in this list.
 
 Default value: `[]`
 
-##### <a name="key_usage"></a>`key_usage`
+##### <a name="-openssl--config--key_usage"></a>`key_usage`
 
 Data type: `Array[Openssl::Keyusage]`
 
 The intended purposes of the certificate.
 
-Default value: `[ 'keyEncipherment', 'dataEncipherment' ]`
+Default value: `['keyEncipherment', 'dataEncipherment']`
 
-##### <a name="extended_key_usage"></a>`extended_key_usage`
+##### <a name="-openssl--config--extended_key_usage"></a>`extended_key_usage`
 
 Data type: `Array[Openssl::Extendedkeyusage]`
 
 The extended key usage of the certificate.
 
-Default value: `[ 'serverAuth' ]`
+Default value: `['serverAuth']`
 
-##### <a name="basic_constraints_ca"></a>`basic_constraints_ca`
+##### <a name="-openssl--config--basic_constraints_ca"></a>`basic_constraints_ca`
 
 Data type: `Boolean`
 
 Whether the subject of the certificate is a CA.
 
-Default value: ``false``
+Default value: `false`
 
-##### <a name="owner"></a>`owner`
+##### <a name="-openssl--config--owner"></a>`owner`
 
 Data type: `String`
 
@@ -476,71 +476,71 @@ The file owner used for the resource.
 
 Default value: `'root'`
 
-##### <a name="group"></a>`group`
+##### <a name="-openssl--config--group"></a>`group`
 
 Data type: `Optional[String]`
 
 The file group used for the resource.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="country_name"></a>`country_name`
+##### <a name="-openssl--config--country_name"></a>`country_name`
 
 Data type: `Optional[String]`
 
 The value of the X.509 `C` attribute.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="state_or_province_name"></a>`state_or_province_name`
+##### <a name="-openssl--config--state_or_province_name"></a>`state_or_province_name`
 
 Data type: `Optional[String]`
 
 The value of the X.509 `ST` attribute.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="locality_name"></a>`locality_name`
+##### <a name="-openssl--config--locality_name"></a>`locality_name`
 
 Data type: `Optional[String]`
 
 The value of the X.509 `L` attribute.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="postal_code"></a>`postal_code`
+##### <a name="-openssl--config--postal_code"></a>`postal_code`
 
 Data type: `Optional[String]`
 
 The value of the X.509 `PC` attribute.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="street_address"></a>`street_address`
+##### <a name="-openssl--config--street_address"></a>`street_address`
 
 Data type: `Optional[String]`
 
 The value of the X.509 `STREET` attribute.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="organization_name"></a>`organization_name`
+##### <a name="-openssl--config--organization_name"></a>`organization_name`
 
 Data type: `Optional[String]`
 
 The value of the X.509 `O` attribute.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="organization_unit_name"></a>`organization_unit_name`
+##### <a name="-openssl--config--organization_unit_name"></a>`organization_unit_name`
 
 Data type: `Optional[String]`
 
 The value of the X.509 `OU` attribute.
 
-Default value: ``undef``
+Default value: `undef`
 
-### <a name="opensslcsr"></a>`openssl::csr`
+### <a name="openssl--csr"></a>`openssl::csr`
 
 Create OpenSSL certificate signing request (CSR)
 
@@ -562,33 +562,33 @@ openssl::csr { '/etc/ssl/www.example.com.csr':
 
 The following parameters are available in the `openssl::csr` defined type:
 
-* [`common_name`](#common_name)
-* [`csr_file`](#csr_file)
-* [`config`](#config)
-* [`key_file`](#key_file)
-* [`subject_alternate_names_dns`](#subject_alternate_names_dns)
-* [`subject_alternate_names_ip`](#subject_alternate_names_ip)
-* [`key_usage`](#key_usage)
-* [`extended_key_usage`](#extended_key_usage)
-* [`basic_constraints_ca`](#basic_constraints_ca)
-* [`mode`](#mode)
-* [`owner`](#owner)
-* [`group`](#group)
-* [`country_name`](#country_name)
-* [`state_or_province_name`](#state_or_province_name)
-* [`locality_name`](#locality_name)
-* [`postal_code`](#postal_code)
-* [`street_address`](#street_address)
-* [`organization_name`](#organization_name)
-* [`organization_unit_name`](#organization_unit_name)
+* [`common_name`](#-openssl--csr--common_name)
+* [`csr_file`](#-openssl--csr--csr_file)
+* [`config`](#-openssl--csr--config)
+* [`key_file`](#-openssl--csr--key_file)
+* [`subject_alternate_names_dns`](#-openssl--csr--subject_alternate_names_dns)
+* [`subject_alternate_names_ip`](#-openssl--csr--subject_alternate_names_ip)
+* [`key_usage`](#-openssl--csr--key_usage)
+* [`extended_key_usage`](#-openssl--csr--extended_key_usage)
+* [`basic_constraints_ca`](#-openssl--csr--basic_constraints_ca)
+* [`mode`](#-openssl--csr--mode)
+* [`owner`](#-openssl--csr--owner)
+* [`group`](#-openssl--csr--group)
+* [`country_name`](#-openssl--csr--country_name)
+* [`state_or_province_name`](#-openssl--csr--state_or_province_name)
+* [`locality_name`](#-openssl--csr--locality_name)
+* [`postal_code`](#-openssl--csr--postal_code)
+* [`street_address`](#-openssl--csr--street_address)
+* [`organization_name`](#-openssl--csr--organization_name)
+* [`organization_unit_name`](#-openssl--csr--organization_unit_name)
 
-##### <a name="common_name"></a>`common_name`
+##### <a name="-openssl--csr--common_name"></a>`common_name`
 
 Data type: `String`
 
 The value of the X.509 `CN` attribute. This attribute is mandatory.
 
-##### <a name="csr_file"></a>`csr_file`
+##### <a name="-openssl--csr--csr_file"></a>`csr_file`
 
 Data type: `Stdlib::Absolutepath`
 
@@ -598,7 +598,7 @@ the public part of the key. Default is the name of the resource.
 
 Default value: `$name`
 
-##### <a name="config"></a>`config`
+##### <a name="-openssl--csr--config"></a>`config`
 
 Data type: `Stdlib::Absolutepath`
 
@@ -608,14 +608,14 @@ needed to process the CSR. It can also be used when the CSR is used to
 create a self-signed certificate. Updates to the config file will not
 trigger the generation of a new certificate.
 
-##### <a name="key_file"></a>`key_file`
+##### <a name="-openssl--csr--key_file"></a>`key_file`
 
 Data type: `Stdlib::Absolutepath`
 
 The full path of the private key file. This file including the key must
 already be present to generate the CSR.
 
-##### <a name="subject_alternate_names_dns"></a>`subject_alternate_names_dns`
+##### <a name="-openssl--csr--subject_alternate_names_dns"></a>`subject_alternate_names_dns`
 
 Data type: `Array[Stdlib::Fqdn]`
 
@@ -626,7 +626,7 @@ may be rejected by modern web browsers.
 
 Default value: `[]`
 
-##### <a name="subject_alternate_names_ip"></a>`subject_alternate_names_ip`
+##### <a name="-openssl--csr--subject_alternate_names_ip"></a>`subject_alternate_names_ip`
 
 Data type: `Array[Stdlib::IP::Address]`
 
@@ -636,31 +636,31 @@ given in this list.
 
 Default value: `[]`
 
-##### <a name="key_usage"></a>`key_usage`
+##### <a name="-openssl--csr--key_usage"></a>`key_usage`
 
 Data type: `Array[Openssl::Keyusage]`
 
 The intended purposes of the certificate.
 
-Default value: `[ 'keyEncipherment', 'dataEncipherment' ]`
+Default value: `['keyEncipherment', 'dataEncipherment']`
 
-##### <a name="extended_key_usage"></a>`extended_key_usage`
+##### <a name="-openssl--csr--extended_key_usage"></a>`extended_key_usage`
 
 Data type: `Array[Openssl::Extendedkeyusage]`
 
 The extended key usage of the certificate.
 
-Default value: `[ 'serverAuth' ]`
+Default value: `['serverAuth']`
 
-##### <a name="basic_constraints_ca"></a>`basic_constraints_ca`
+##### <a name="-openssl--csr--basic_constraints_ca"></a>`basic_constraints_ca`
 
 Data type: `Boolean`
 
 Whether the subject of the certificate is a CA.
 
-Default value: ``false``
+Default value: `false`
 
-##### <a name="mode"></a>`mode`
+##### <a name="-openssl--csr--mode"></a>`mode`
 
 Data type: `Stdlib::Filemode`
 
@@ -668,7 +668,7 @@ The file mode used for the resource.
 
 Default value: `'0444'`
 
-##### <a name="owner"></a>`owner`
+##### <a name="-openssl--csr--owner"></a>`owner`
 
 Data type: `String`
 
@@ -676,71 +676,71 @@ The file owner used for the resource.
 
 Default value: `'root'`
 
-##### <a name="group"></a>`group`
+##### <a name="-openssl--csr--group"></a>`group`
 
 Data type: `Optional[String]`
 
 The file group used for the resource.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="country_name"></a>`country_name`
+##### <a name="-openssl--csr--country_name"></a>`country_name`
 
 Data type: `Optional[String]`
 
 The value of the X.509 `C` attribute.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="state_or_province_name"></a>`state_or_province_name`
+##### <a name="-openssl--csr--state_or_province_name"></a>`state_or_province_name`
 
 Data type: `Optional[String]`
 
 The value of the X.509 `ST` attribute.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="locality_name"></a>`locality_name`
+##### <a name="-openssl--csr--locality_name"></a>`locality_name`
 
 Data type: `Optional[String]`
 
 The value of the X.509 `L` attribute.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="postal_code"></a>`postal_code`
+##### <a name="-openssl--csr--postal_code"></a>`postal_code`
 
 Data type: `Optional[String]`
 
 The value of the X.509 `PC` attribute.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="street_address"></a>`street_address`
+##### <a name="-openssl--csr--street_address"></a>`street_address`
 
 Data type: `Optional[String]`
 
 The value of the X.509 `STREET` attribute.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="organization_name"></a>`organization_name`
+##### <a name="-openssl--csr--organization_name"></a>`organization_name`
 
 Data type: `Optional[String]`
 
 The value of the X.509 `O` attribute.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="organization_unit_name"></a>`organization_unit_name`
+##### <a name="-openssl--csr--organization_unit_name"></a>`organization_unit_name`
 
 Data type: `Optional[String]`
 
 The value of the X.509 `OU` attribute.
 
-Default value: ``undef``
+Default value: `undef`
 
-### <a name="openssldhparam"></a>`openssl::dhparam`
+### <a name="openssl--dhparam"></a>`openssl::dhparam`
 
 Manage Diffie-Hellman parameter files
 
@@ -777,15 +777,15 @@ openssl::dhparam { '/etc/ssl/dhparam.pem':
 
 The following parameters are available in the `openssl::dhparam` defined type:
 
-* [`ensure`](#ensure)
-* [`file`](#file)
-* [`bits`](#bits)
-* [`generator`](#generator)
-* [`mode`](#mode)
-* [`owner`](#owner)
-* [`group`](#group)
+* [`ensure`](#-openssl--dhparam--ensure)
+* [`file`](#-openssl--dhparam--file)
+* [`bits`](#-openssl--dhparam--bits)
+* [`generator`](#-openssl--dhparam--generator)
+* [`mode`](#-openssl--dhparam--mode)
+* [`owner`](#-openssl--dhparam--owner)
+* [`group`](#-openssl--dhparam--group)
 
-##### <a name="ensure"></a>`ensure`
+##### <a name="-openssl--dhparam--ensure"></a>`ensure`
 
 Data type: `Enum['present','absent']`
 
@@ -793,7 +793,7 @@ The state of the resource.
 
 Default value: `'present'`
 
-##### <a name="file"></a>`file`
+##### <a name="-openssl--dhparam--file"></a>`file`
 
 Data type: `Stdlib::Absolutepath`
 
@@ -802,7 +802,7 @@ absolute path.
 
 Default value: `$name`
 
-##### <a name="bits"></a>`bits`
+##### <a name="-openssl--dhparam--bits"></a>`bits`
 
 Data type: `Enum['2048','3072','4096','5120','6144','7168','8192']`
 
@@ -810,7 +810,7 @@ The number of bits to generate.
 
 Default value: `'2048'`
 
-##### <a name="generator"></a>`generator`
+##### <a name="-openssl--dhparam--generator"></a>`generator`
 
 Data type: `Enum['2','5']`
 
@@ -819,7 +819,7 @@ this parameter.
 
 Default value: `'2'`
 
-##### <a name="mode"></a>`mode`
+##### <a name="-openssl--dhparam--mode"></a>`mode`
 
 Data type: `Stdlib::Filemode`
 
@@ -827,7 +827,7 @@ The file mode used for the resource.
 
 Default value: `'0644'`
 
-##### <a name="owner"></a>`owner`
+##### <a name="-openssl--dhparam--owner"></a>`owner`
 
 Data type: `String`
 
@@ -835,15 +835,15 @@ The file owner used for the resource.
 
 Default value: `'root'`
 
-##### <a name="group"></a>`group`
+##### <a name="-openssl--dhparam--group"></a>`group`
 
 Data type: `Optional[String]`
 
 The file group used for the resource.
 
-Default value: ``undef``
+Default value: `undef`
 
-### <a name="opensslkey"></a>`openssl::key`
+### <a name="openssl--key"></a>`openssl::key`
 
 Manage an X.509 key file in PEM format
 
@@ -861,12 +861,12 @@ openssl::key { 'imap': }
 ```puppet
 
 openssl::key { 'postgresql':
-  key     => $::hostname,
+  key     => $facts['networking']['hostname'],
   owner   => 'root',
   group   => 'postgres',
   mode    => '0440',
   key_dir => '/etc/postgresql',
-  source  => $::hostname,
+  source  => $facts['networking']['hostname'],
 }
 ```
 
@@ -874,17 +874,17 @@ openssl::key { 'postgresql':
 
 The following parameters are available in the `openssl::key` defined type:
 
-* [`ensure`](#ensure)
-* [`key`](#key)
-* [`source`](#source)
-* [`extension`](#extension)
-* [`source_extension`](#source_extension)
-* [`mode`](#mode)
-* [`owner`](#owner)
-* [`group`](#group)
-* [`key_dir`](#key_dir)
+* [`ensure`](#-openssl--key--ensure)
+* [`key`](#-openssl--key--key)
+* [`source`](#-openssl--key--source)
+* [`extension`](#-openssl--key--extension)
+* [`source_extension`](#-openssl--key--source_extension)
+* [`mode`](#-openssl--key--mode)
+* [`owner`](#-openssl--key--owner)
+* [`group`](#-openssl--key--group)
+* [`key_dir`](#-openssl--key--key_dir)
 
-##### <a name="ensure"></a>`ensure`
+##### <a name="-openssl--key--ensure"></a>`ensure`
 
 Data type: `Enum['present','absent']`
 
@@ -892,7 +892,7 @@ The state of the resource.
 
 Default value: `'present'`
 
-##### <a name="key"></a>`key`
+##### <a name="-openssl--key--key"></a>`key`
 
 Data type: `String`
 
@@ -902,7 +902,7 @@ and `extension`.
 
 Default value: `$name`
 
-##### <a name="source"></a>`source`
+##### <a name="-openssl--key--source"></a>`source`
 
 Data type: `String`
 
@@ -913,7 +913,7 @@ filename will be created using the three parameters
 
 Default value: `$name`
 
-##### <a name="extension"></a>`extension`
+##### <a name="-openssl--key--extension"></a>`extension`
 
 Data type: `String`
 
@@ -921,7 +921,7 @@ The file extension used for files created on the client.
 
 Default value: `'key'`
 
-##### <a name="source_extension"></a>`source_extension`
+##### <a name="-openssl--key--source_extension"></a>`source_extension`
 
 Data type: `String`
 
@@ -929,7 +929,7 @@ The file extension used for files read on the server.
 
 Default value: `'key'`
 
-##### <a name="mode"></a>`mode`
+##### <a name="-openssl--key--mode"></a>`mode`
 
 Data type: `Stdlib::Filemode`
 
@@ -937,7 +937,7 @@ The file mode used for the resource.
 
 Default value: `'0400'`
 
-##### <a name="owner"></a>`owner`
+##### <a name="-openssl--key--owner"></a>`owner`
 
 Data type: `String`
 
@@ -945,21 +945,21 @@ The file owner used for the resource.
 
 Default value: `'root'`
 
-##### <a name="group"></a>`group`
+##### <a name="-openssl--key--group"></a>`group`
 
 Data type: `Optional[String]`
 
 The file group used for the resource.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="key_dir"></a>`key_dir`
+##### <a name="-openssl--key--key_dir"></a>`key_dir`
 
 Data type: `Optional[Stdlib::Absolutepath]`
 
 The destination directory on the client where the key will be stored.
 
-Default value: ``undef``
+Default value: `undef`
 
 ## Resource types
 
@@ -1039,21 +1039,21 @@ SSL trust attributes for the certificate.
 
 The following parameters are available in the `openssl_certutil` type.
 
-* [`filename`](#filename)
-* [`name`](#name)
-* [`provider`](#provider)
+* [`filename`](#-openssl_certutil--filename)
+* [`name`](#-openssl_certutil--name)
+* [`provider`](#-openssl_certutil--provider)
 
-##### <a name="filename"></a>`filename`
+##### <a name="-openssl_certutil--filename"></a>`filename`
 
 The filename of the certificate.
 
-##### <a name="name"></a>`name`
+##### <a name="-openssl_certutil--name"></a>`name`
 
 namevar
 
 The nickname of the certificate in the certificate database.
 
-##### <a name="provider"></a>`provider`
+##### <a name="-openssl_certutil--provider"></a>`provider`
 
 The specific backend to use for this `openssl_certutil` resource. You will seldom need to specify this --- Puppet will
 usually discover the appropriate provider for your platform.
@@ -1125,48 +1125,48 @@ Default value: `present`
 
 The following parameters are available in the `openssl_genparam` type.
 
-* [`algorithm`](#algorithm)
-* [`bits`](#bits)
-* [`curve`](#curve)
-* [`file`](#file)
-* [`generator`](#generator)
-* [`provider`](#provider)
-* [`refresh_interval`](#refresh_interval)
+* [`algorithm`](#-openssl_genparam--algorithm)
+* [`bits`](#-openssl_genparam--bits)
+* [`curve`](#-openssl_genparam--curve)
+* [`file`](#-openssl_genparam--file)
+* [`generator`](#-openssl_genparam--generator)
+* [`provider`](#-openssl_genparam--provider)
+* [`refresh_interval`](#-openssl_genparam--refresh_interval)
 
-##### <a name="algorithm"></a>`algorithm`
+##### <a name="-openssl_genparam--algorithm"></a>`algorithm`
 
 Valid values: `DH`, `EC`
 
 The algorithm to generate the parameters for.
 
-##### <a name="bits"></a>`bits`
+##### <a name="-openssl_genparam--bits"></a>`bits`
 
 Valid values: `2048`, `4096`, `8192`
 
 The number of bits to use for Diffie-Hellman parameters.
 
-##### <a name="curve"></a>`curve`
+##### <a name="-openssl_genparam--curve"></a>`curve`
 
 Valid values: `%r{^[a-zA-Z][a-zA-Z0-9-]+[0-9]$}`
 
 The name of the curve to use for Elliptic Curve parameters.
 
-##### <a name="file"></a>`file`
+##### <a name="-openssl_genparam--file"></a>`file`
 
 The name of the parameter file to manage.
 
-##### <a name="generator"></a>`generator`
+##### <a name="-openssl_genparam--generator"></a>`generator`
 
 Valid values: `2`, `5`
 
 The generator to use for Diffie-Hellman parameters.
 
-##### <a name="provider"></a>`provider`
+##### <a name="-openssl_genparam--provider"></a>`provider`
 
 The specific backend to use for this `openssl_genparam` resource. You will seldom need to specify this --- Puppet will
 usually discover the appropriate provider for your platform.
 
-##### <a name="refresh_interval"></a>`refresh_interval`
+##### <a name="-openssl_genparam--refresh_interval"></a>`refresh_interval`
 
 Valid values: `%r{^[0-9]+(y|mo|w|d|h|mi|s)?$}`
 
@@ -1245,15 +1245,15 @@ Default value: `present`
 
 The following parameters are available in the `openssl_genpkey` type.
 
-* [`algorithm`](#algorithm)
-* [`bits`](#bits)
-* [`cipher`](#cipher)
-* [`curve`](#curve)
-* [`file`](#file)
-* [`password`](#password)
-* [`provider`](#provider)
+* [`algorithm`](#-openssl_genpkey--algorithm)
+* [`bits`](#-openssl_genpkey--bits)
+* [`cipher`](#-openssl_genpkey--cipher)
+* [`curve`](#-openssl_genpkey--curve)
+* [`file`](#-openssl_genpkey--file)
+* [`password`](#-openssl_genpkey--password)
+* [`provider`](#-openssl_genpkey--provider)
 
-##### <a name="algorithm"></a>`algorithm`
+##### <a name="-openssl_genpkey--algorithm"></a>`algorithm`
 
 Valid values: `RSA`, `EC`
 
@@ -1261,34 +1261,34 @@ The algorithm to generate a private key for. The number of bits
 must be supplied if an RSA key is generated. For an EC key the curve
 name must be given
 
-##### <a name="bits"></a>`bits`
+##### <a name="-openssl_genpkey--bits"></a>`bits`
 
 Valid values: `2048`, `3072`, `4096`, `5120`, `6144`, `7168`, `8192`
 
 The number of bits for the RSA key. This parameter is mandatory for
 RSA keys.
 
-##### <a name="cipher"></a>`cipher`
+##### <a name="-openssl_genpkey--cipher"></a>`cipher`
 
 Encrypt the key with the supplied cipher. A password must be given
 in this case.
 
-##### <a name="curve"></a>`curve`
+##### <a name="-openssl_genpkey--curve"></a>`curve`
 
 Valid values: `%r{^[a-zA-Z][a-zA-Z0-9-]+[0-9]$}`
 
 The curve to use for elliptic curve key. This parameter is
 mandatory for EC keys.
 
-##### <a name="file"></a>`file`
+##### <a name="-openssl_genpkey--file"></a>`file`
 
 The name of the private key file to manage.
 
-##### <a name="password"></a>`password`
+##### <a name="-openssl_genpkey--password"></a>`password`
 
 Use the supplied password when encrypting the key.
 
-##### <a name="provider"></a>`provider`
+##### <a name="-openssl_genpkey--provider"></a>`provider`
 
 The specific backend to use for this `openssl_genpkey` resource. You will seldom need to specify this --- Puppet will
 usually discover the appropriate provider for your platform.
@@ -1344,16 +1344,16 @@ Default value: `present`
 
 The following parameters are available in the `openssl_hash` type.
 
-* [`name`](#name)
-* [`provider`](#provider)
+* [`name`](#-openssl_hash--name)
+* [`provider`](#-openssl_hash--provider)
 
-##### <a name="name"></a>`name`
+##### <a name="-openssl_hash--name"></a>`name`
 
 namevar
 
 The name of the certificate file to manage.
 
-##### <a name="provider"></a>`provider`
+##### <a name="-openssl_hash--provider"></a>`provider`
 
 The specific backend to use for this `openssl_hash` resource. You will seldom need to specify this --- Puppet will
 usually discover the appropriate provider for your platform.
@@ -1406,20 +1406,20 @@ Default value: `present`
 
 The following parameters are available in the `openssl_selfsign` type.
 
-* [`csr`](#csr)
-* [`days`](#days)
-* [`extensions`](#extensions)
-* [`extfile`](#extfile)
-* [`file`](#file)
-* [`password`](#password)
-* [`provider`](#provider)
-* [`signkey`](#signkey)
+* [`csr`](#-openssl_selfsign--csr)
+* [`days`](#-openssl_selfsign--days)
+* [`extensions`](#-openssl_selfsign--extensions)
+* [`extfile`](#-openssl_selfsign--extfile)
+* [`file`](#-openssl_selfsign--file)
+* [`password`](#-openssl_selfsign--password)
+* [`provider`](#-openssl_selfsign--provider)
+* [`signkey`](#-openssl_selfsign--signkey)
 
-##### <a name="csr"></a>`csr`
+##### <a name="-openssl_selfsign--csr"></a>`csr`
 
 Required. The file containing the certificate signing request.
 
-##### <a name="days"></a>`days`
+##### <a name="-openssl_selfsign--days"></a>`days`
 
 Valid values: `%r{^[0-9]+$}`
 
@@ -1427,30 +1427,30 @@ The number of days the certificate should be valid.
 
 Default value: `370`
 
-##### <a name="extensions"></a>`extensions`
+##### <a name="-openssl_selfsign--extensions"></a>`extensions`
 
 The section name of the extensions. The OpenSSL defaults will be used
 if the parameter is `undef`.
 
-##### <a name="extfile"></a>`extfile`
+##### <a name="-openssl_selfsign--extfile"></a>`extfile`
 
 The file with the certificate extensions.
 
-##### <a name="file"></a>`file`
+##### <a name="-openssl_selfsign--file"></a>`file`
 
 The signed certificate file to manage.
 
-##### <a name="password"></a>`password`
+##### <a name="-openssl_selfsign--password"></a>`password`
 
 The password to decrypt the key.
 Leave the parameter undefined if the key is not encrypted.
 
-##### <a name="provider"></a>`provider`
+##### <a name="-openssl_selfsign--provider"></a>`provider`
 
 The specific backend to use for this `openssl_selfsign` resource. You will seldom need to specify this --- Puppet will
 usually discover the appropriate provider for your platform.
 
-##### <a name="signkey"></a>`signkey`
+##### <a name="-openssl_selfsign--signkey"></a>`signkey`
 
 Required. The file with the OpenSSL key to use for the self-signed certificate.
 
@@ -1512,29 +1512,29 @@ Default value: `present`
 
 The following parameters are available in the `openssl_signcsr` type.
 
-* [`ca_config`](#ca_config)
-* [`ca_name`](#ca_name)
-* [`csr`](#csr)
-* [`days`](#days)
-* [`extensions`](#extensions)
-* [`extfile`](#extfile)
-* [`file`](#file)
-* [`password`](#password)
-* [`provider`](#provider)
+* [`ca_config`](#-openssl_signcsr--ca_config)
+* [`ca_name`](#-openssl_signcsr--ca_name)
+* [`csr`](#-openssl_signcsr--csr)
+* [`days`](#-openssl_signcsr--days)
+* [`extensions`](#-openssl_signcsr--extensions)
+* [`extfile`](#-openssl_signcsr--extfile)
+* [`file`](#-openssl_signcsr--file)
+* [`password`](#-openssl_signcsr--password)
+* [`provider`](#-openssl_signcsr--provider)
 
-##### <a name="ca_config"></a>`ca_config`
+##### <a name="-openssl_signcsr--ca_config"></a>`ca_config`
 
 Required. The configuration file of the CA that is used to sign the CSR.
 
-##### <a name="ca_name"></a>`ca_name`
+##### <a name="-openssl_signcsr--ca_name"></a>`ca_name`
 
 Required. The name of the CA that is used to sign the CSR.
 
-##### <a name="csr"></a>`csr`
+##### <a name="-openssl_signcsr--csr"></a>`csr`
 
 Required. The file containing the certificate signing request.
 
-##### <a name="days"></a>`days`
+##### <a name="-openssl_signcsr--days"></a>`days`
 
 Valid values: `%r{^[0-9]+$}`
 
@@ -1542,48 +1542,40 @@ The number of days the certificate should be valid.
 
 Default value: `370`
 
-##### <a name="extensions"></a>`extensions`
+##### <a name="-openssl_signcsr--extensions"></a>`extensions`
 
 The section name of the extensions. The OpenSSL defaults will be used
 if the parameter is `undef`.
 
-##### <a name="extfile"></a>`extfile`
+##### <a name="-openssl_signcsr--extfile"></a>`extfile`
 
 The file with the certificate extensions.
 
-##### <a name="file"></a>`file`
+##### <a name="-openssl_signcsr--file"></a>`file`
 
 The signed certificate file to manage.
 
-##### <a name="password"></a>`password`
+##### <a name="-openssl_signcsr--password"></a>`password`
 
 The password to decrypt the CA key.
 Leave the parameter undefined if the key is not encrypted.
 
-##### <a name="provider"></a>`provider`
+##### <a name="-openssl_signcsr--provider"></a>`provider`
 
 The specific backend to use for this `openssl_signcsr` resource. You will seldom need to specify this --- Puppet will
 usually discover the appropriate provider for your platform.
 
 ## Data types
 
-### <a name="opensslextendedkeyusage"></a>`Openssl::Extendedkeyusage`
+### <a name="Openssl--Extendedkeyusage"></a>`Openssl::Extendedkeyusage`
 
 Valid parameter values for the OpenSSL extendend key usage
 
-Alias of
+Alias of `Enum['serverAuth', 'clientAuth', 'codeSigning', 'emailProtection', 'timeStamping', 'OCSPSigning', 'ipsecIKE', 'msCodeInd', 'msCodeCom', 'msCTLSign', 'msEFS']`
 
-```puppet
-Enum['serverAuth', 'clientAuth', 'codeSigning', 'emailProtection', 'timeStamping', 'OCSPSigning', 'ipsecIKE', 'msCodeInd', 'msCodeCom', 'msCTLSign', 'msEFS']
-```
-
-### <a name="opensslkeyusage"></a>`Openssl::Keyusage`
+### <a name="Openssl--Keyusage"></a>`Openssl::Keyusage`
 
 Valid parameter values for the OpenSSL keyusage
 
-Alias of
-
-```puppet
-Enum['digitalSignature', 'nonRepudiation', 'keyEncipherment', 'dataEncipherment', 'keyAgreement', 'keyCertSign', 'cRLSign', 'encipherOnly', 'decipherOnly']
-```
+Alias of `Enum['digitalSignature', 'nonRepudiation', 'keyEncipherment', 'dataEncipherment', 'keyAgreement', 'keyCertSign', 'cRLSign', 'encipherOnly', 'decipherOnly']`
 

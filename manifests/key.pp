@@ -7,12 +7,12 @@
 # @example Install the 'postgresql' key using application specific defaults
 #
 #   openssl::key { 'postgresql':
-#     key     => $::hostname,
+#     key     => $facts['networking']['hostname'],
 #     owner   => 'root',
 #     group   => 'postgres',
 #     mode    => '0440',
 #     key_dir => '/etc/postgresql',
-#     source  => $::hostname,
+#     source  => $facts['networking']['hostname'],
 #   }
 #
 # @param ensure

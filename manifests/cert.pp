@@ -7,12 +7,12 @@
 # @example Install the 'postgresql' cert using application specific defaults
 #
 #   openssl::cert { 'postgresql':
-#     cert     => $::hostname,
+#     cert     => $facts['networking']['hostname'],
 #     owner    => 'root',
 #     group    => 'postgres',
 #     mode     => '0444',
 #     cert_dir => '/etc/postgresql',
-#     source   => $::hostname,
+#     source   => $facts['networking']['hostname'],
 #   }
 #
 # @param ensure
