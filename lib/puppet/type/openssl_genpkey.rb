@@ -41,12 +41,7 @@ Puppet::Type.newtype(:openssl_genpkey) do
       }
   DOC
 
-  ensurable do
-    desc 'Specifies whether the resource should exist.'
-
-    defaultvalues
-    defaultto :present
-  end
+  ensurable
 
   newparam(:file, namevar: true) do
     desc 'The name of the private key file to manage.'

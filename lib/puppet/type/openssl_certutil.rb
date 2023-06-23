@@ -37,12 +37,7 @@ Puppet::Type.newtype(:openssl_certutil) do
       }
   DOC
 
-  ensurable do
-    desc 'Specifies whether the resource should exist.'
-
-    defaultvalues
-    defaultto :present
-  end
+  ensurable
 
   newparam(:name) do
     desc 'The nickname of the certificate in the certificate database.'

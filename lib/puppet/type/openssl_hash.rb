@@ -30,12 +30,7 @@ Puppet::Type.newtype(:openssl_hash) do
       }
   DOC
 
-  ensurable do
-    desc 'Specifies whether the resource should exist.'
-
-    defaultvalues
-    defaultto :present
-  end
+  ensurable
 
   newparam(:name) do
     desc 'The name of the certificate file to manage.'

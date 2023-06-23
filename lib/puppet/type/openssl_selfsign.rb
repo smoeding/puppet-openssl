@@ -30,12 +30,7 @@ Puppet::Type.newtype(:openssl_selfsign) do
       }
   DOC
 
-  ensurable do
-    desc 'Specifies whether the resource should exist.'
-
-    defaultvalues
-    defaultto :present
-  end
+  ensurable
 
   newparam(:file, namevar: true) do
     desc 'The signed certificate file to manage.'
