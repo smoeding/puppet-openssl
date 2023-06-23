@@ -58,7 +58,7 @@ Puppet::Type.newtype(:openssl_cert) do
 
   ensurable
 
-  newparam(:path, :namevar => true) do
+  newparam(:path, namevar: true) do
     desc <<-DOC
       Specifies the destination file. Valid options: a string containing an
       absolute path. Default value: the title of your declared resource.
@@ -234,7 +234,7 @@ Puppet::Type.newtype(:openssl_cert) do
     newvalues %r{^[0-9]+$}
   end
 
-  newparam(:key_usage, :array_matching => :all) do
+  newparam(:key_usage, array_matching: :all) do
     desc <<-DOC
       The X509v3 Key Usage extension. Valid options: `digitalSignature`,
       `nonRepudiation`, `keyEncipherment`, `dataEncipherment`,
@@ -247,8 +247,9 @@ Puppet::Type.newtype(:openssl_cert) do
 
     validate do |value|
       value.all? do |item|
-        %i(digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment,
-           keyAgreement, keyCertSign, cRLSign, encipherOnly, decipherOnly).include? item
+        [:digitalSignature, :nonRepudiation, :keyEncipherment,
+         :dataEncipherment, :keyAgreement, :keyCertSign, :cRLSign,
+         :encipherOnly, :decipherOnly].include? item
       end
     end
   end
@@ -261,7 +262,7 @@ Puppet::Type.newtype(:openssl_cert) do
     newvalues :true, :false
   end
 
-  newparam(:extended_key_usage, :array_matching => :all) do
+  newparam(:extended_key_usage, array_matching: :all) do
     desc <<-DOC
       The X509v3 Extended Key Usage extension. Valid options: `serverAuth`,
       `clientAuth`, `codeSigning`, `emailProtection`, `timeStamping`,
@@ -274,8 +275,9 @@ Puppet::Type.newtype(:openssl_cert) do
 
     validate do |value|
       value.all? do |item|
-        %i(serverAuth, clientAuth, codeSigning, emailProtection, timeStamping,
-           OCSPSigning, ipsecIKE, msCodeInd, msCodeCom, msCTLSign, msEFS).include? item
+        [:serverAuth, :clientAuth, :codeSigning, :emailProtection,
+         :timeStamping, :OCSPSigning, :ipsecIKE, :msCodeInd, :msCodeCom,
+         :msCTLSign, :msEFS].include? item
       end
     end
   end
@@ -322,14 +324,14 @@ Puppet::Type.newtype(:openssl_cert) do
     newvalues :true, :false
   end
 
-  newparam(:authority_key_identifier, :array_matching => :all) do
+  newparam(:authority_key_identifier, array_matching: :all) do
     desc <<-DOC
       The Authority Key Identifier extension.
     DOC
 
     validate do |value|
       value.all? do |item|
-        %i(keyid, issuer, keyid:always, issuer:always).include? item
+        ['keyid', 'issuer', 'keyid:always', 'issuer:always'].include? item
       end
     end
   end
@@ -345,7 +347,7 @@ Puppet::Type.newtype(:openssl_cert) do
     newvalues :md2, :md4, :md5, :sha, :sha1, :sha224, :sha256, :sha384, :sha512
   end
 
-  newparam(:copy_request_extensions, :array_matching => :all) do
+  newparam(:copy_request_extensions, array_matching: :all) do
     desc <<-DOC
       List of extensions to copy from the certificate request. If this
       parameter is set, then only these extensions are copied from the
@@ -368,7 +370,7 @@ Puppet::Type.newtype(:openssl_cert) do
     defaultto []
   end
 
-  newparam(:omit_request_extensions, :array_matching => :all) do
+  newparam(:omit_request_extensions, array_matching: :all) do
     desc <<-DOC
       List of extensions to omit from the certificate request. If this
       parameter is set, then the named extensions are never copied from the
@@ -408,22 +410,22 @@ Puppet::Type.newtype(:openssl_cert) do
   end
 
   def validate
-    raise ArgumentError, "Parameter 'request' is mandatory" if self[:request].nil?
-    raise ArgumentError, "Parameter 'issuer_key' is mandatory" if self[:issuer_key].nil?
-
     if self[:authority_key_identifier]
       if self[:subject_key_identifier].nil?
         raise ArgumentError, "Parameter 'subject_key_identifier' must be set if 'authority_key_identifier' is used"
       end
 
-      if self[:authority_key_identifier].select{|x| x.match(%r{^keyid}) }.length > 1
+      if self[:authority_key_identifier].count { |x| x.match(%r{^keyid}) } > 1
         raise ArgumentError, "Parameter 'authority_key_identifier' has multiple keyid values"
       end
 
-      if self[:authority_key_identifier].select{|x| x.match(%r{^issuer}) }.length > 1
+      if self[:authority_key_identifier].count { |x| x.match(%r{^issuer}) } > 1
         raise ArgumentError, "Parameter 'authority_key_identifier' has multiple issuer values"
       end
     end
+
+    raise ArgumentError, "Parameter 'request' is mandatory" if self[:request].nil?
+    raise ArgumentError, "Parameter 'issuer_key' is mandatory" if self[:issuer_key].nil?
   end
 
   def exists?
@@ -471,34 +473,34 @@ Puppet::Type.newtype(:openssl_cert) do
       if selfsigned
         issuer = crt
         crt.issuer = req.subject
-        Puppet.notice("#{self} issuing self-signed certificate for #{crt.issuer.to_s}")
+        Puppet.notice("#{self} issuing self-signed certificate for #{crt.issuer}")
       else
         issuer = OpenSSL::X509::Certificate.new File.open(self[:issuer_cert])
         crt.issuer = issuer.subject
-        Puppet.notice("#{self} issuing certificate from #{crt.issuer.to_s}")
+        Puppet.notice("#{self} issuing certificate from #{crt.issuer}")
       end
 
       # Generate 128 bit serial number
       bit128 = OpenSSL::Random.random_bytes 16
-      qwords = bit128.unpack("Q>*")
+      qwords = bit128.unpack('Q>*')
 
       # If a colon-separated representation is needed in the future
-      #serial = bit128.unpack('C*').map { |x| '%02x' % x}.join(':')
+      # serial = bit128.unpack('C*').map { |x| '%02x' % x}.join(':')
 
       crt.serial = (OpenSSL::BN.new(qwords[0]) << 64) + OpenSSL::BN.new(qwords[1])
 
       # Validity
       crt.not_before = Time.now
-      crt.not_after = Time.now + (86400 * self[:days])
+      crt.not_after = Time.now + (86_400 * self[:days])
 
       # Limit validity to the expiration time of the issuing certificate
-      if issuer.not_after and (issuer.not_after < crt.not_after)
-        Puppet.notice("#{self} expiration time of certificate is limited to #{issuer.not_after.to_s} by issuing certificate")
+      if issuer.not_after && (issuer.not_after < crt.not_after)
         crt.not_after = issuer.not_after
+        Puppet.notice("#{self} expiration time of certificate is limited to #{crt.not_after} by issuing certificate")
       end
 
       # Extensions
-      extensions = Hash.new
+      extensions = {}
 
       extfactory = OpenSSL::X509::ExtensionFactory.new
       extfactory.subject_certificate = crt
@@ -506,7 +508,7 @@ Puppet::Type.newtype(:openssl_cert) do
 
       # Parse request extensions
       req.attributes.each do |attr|
-        next unless attr.oid = 'extReq' and attr.value.is_a? OpenSSL::ASN1::Set
+        next unless (attr.oid == 'extReq') && (attr.value.is_a? OpenSSL::ASN1::Set)
 
         attr.value.each do |seq|
           next unless seq.is_a? OpenSSL::ASN1::Sequence
@@ -520,8 +522,8 @@ Puppet::Type.newtype(:openssl_cert) do
       end
 
       # Filter extensions
-      extensions.delete_if do |key,val|
-        if not self[:copy_request_extensions].include? key
+      extensions.delete_if do |key, _|
+        if !self[:copy_request_extensions].include? key
           # Remove the extension if we have an array of permitted extensions
           # and the extension is not included in that array.
           true
@@ -542,14 +544,14 @@ Puppet::Type.newtype(:openssl_cert) do
         extensions[ext.oid] = ext
       end
 
-      unless self[:key_usage].nil? or self[:key_usage].empty?
+      unless self[:key_usage].nil? || self[:key_usage].empty?
         ext = extfactory.create_ext('keyUsage',
                                     self[:key_usage].join(','),
                                     critical(:key_usage_critical))
         extensions[ext.oid] = ext
       end
 
-      unless self[:extended_key_usage].nil? or self[:extended_key_usage].empty?
+      unless self[:extended_key_usage].nil? || self[:extended_key_usage].empty?
         ext = extfactory.create_ext('extendedKeyUsage',
                                     self[:extended_key_usage].join(','),
                                     critical(:extended_key_usage_critical))
@@ -557,7 +559,7 @@ Puppet::Type.newtype(:openssl_cert) do
       end
 
       # Add all defined extensions to the certificate
-      extensions.each_value { |ext| crt.add_extension ext }
+      extensions.each_value { |x| crt.add_extension x }
 
       # Subject Key Identifier
       unless self[:subject_key_identifier].nil?
@@ -566,7 +568,7 @@ Puppet::Type.newtype(:openssl_cert) do
       end
 
       # Authority Key Identifier (must come after the Subject Key Identifier)
-      unless self[:authority_key_identifier].nil? or self[:authority_key_identifier].empty?
+      unless self[:authority_key_identifier].nil? || self[:authority_key_identifier].empty?
         crt.add_extension extfactory.create_extension('authorityKeyIdentifier',
                                                       self[:authority_key_identifier].join(','))
       end
@@ -611,10 +613,8 @@ Puppet::Type.newtype(:openssl_cert) do
   def eval_generate
     generate = if File.file?(self[:path])
                  # Check file content
-                 regex = Regexp.new("^-+BEGIN CERTIFICATE-+$").freeze
-                 match = File.open(self[:path]).each_line.detect { |x| x.match?(regex) }
-
-                 not match
+                 regex = Regexp.new(`^-+BEGIN CERTIFICATE-+$`).freeze
+                 File.open(self[:path]).each_line.none? { |x| x.match?(regex) }
                else
                  true
                end

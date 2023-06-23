@@ -192,10 +192,11 @@ Puppet::Type.newtype(:openssl_dhparam) do
 
   def content
     unless @generated_content
-      begin
+      loop do
         Puppet.debug("#{self}: generating Diffie-Hellman parameters with #{self[:bits]} bits")
         dh = OpenSSL::PKey::DH.new(self[:bits], self[:generator])
-      end until dh.params_ok?
+        break if dh.params_ok?
+      end
 
       @generated_content = dh.to_pem
     end
@@ -234,10 +235,10 @@ Puppet::Type.newtype(:openssl_dhparam) do
   def eval_generate
     generate = if File.file?(self[:path])
                  # Check file content
-                 regex = Regexp.new("^-+BEGIN DH PARAMETERS-+$").freeze
+                 regex = Regexp.new('^-+BEGIN DH PARAMETERS-+$').freeze
                  line1 = File.open(self[:path], &:readline)
 
-                 not regex.match? line1
+                 !regex.match?(line1)
                else
                  true
                end

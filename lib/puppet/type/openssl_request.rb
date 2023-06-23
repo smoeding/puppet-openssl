@@ -178,11 +178,12 @@ Puppet::Type.newtype(:openssl_request) do
     DOC
   end
 
-  newparam(:domain_component, :array_matching => :all) do
+  newparam(:domain_component, array_matching: :all) do
     desc <<-DOC
       The value of the X.509 domain component (DC) attributes. The value
-      should be an array. The items are used in the same order, so
-      `['example','com']` should be used to create `DC=example, DC=com`.
+      should be an array. The items are used in the same order, so for
+      example the value `['example', 'com']` should be used to create
+      the attribute `DC=example, DC=com` in the request.
     DOC
 
     munge { |value| Array(value) }
@@ -224,15 +225,16 @@ Puppet::Type.newtype(:openssl_request) do
     DOC
   end
 
-  newparam(:key_usage, :array_matching => :all) do
+  newparam(:key_usage, array_matching: :all) do
     desc <<-DOC
       The X509v3 Key Usage extension.
     DOC
 
     validate do |value|
       value.all? do |item|
-        %i(digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment,
-           keyAgreement, keyCertSign, cRLSign, encipherOnly, decipherOnly).include? item
+        [:digitalSignature, :nonRepudiation, :keyEncipherment,
+         :dataEncipherment, :keyAgreement, :keyCertSign, :cRLSign,
+         :encipherOnly, :decipherOnly].include? item
       end
     end
   end
@@ -245,15 +247,16 @@ Puppet::Type.newtype(:openssl_request) do
     newvalues true, false
   end
 
-  newparam(:extended_key_usage, :array_matching => :all) do
+  newparam(:extended_key_usage, array_matching: :all) do
     desc <<-DOC
       The X509v3 Extended Key Usage extension.
     DOC
 
     validate do |value|
       value.all? do |item|
-        %i(serverAuth, clientAuth, codeSigning, emailProtection, timeStamping,
-           OCSPSigning, ipsecIKE, msCodeInd, msCodeCom, msCTLSign, msEFS).include? item
+        [:serverAuth, :clientAuth, :codeSigning, :emailProtection,
+         :timeStamping, :OCSPSigning, :ipsecIKE, :msCodeInd, :msCodeCom,
+         :msCTLSign, :msEFS].include? item
       end
     end
   end
@@ -282,7 +285,7 @@ Puppet::Type.newtype(:openssl_request) do
     newvalues true, false
   end
 
-  newparam(:subject_alternate_names_dns, :array_matching => :all) do
+  newparam(:subject_alternate_names_dns, array_matching: :all) do
     desc <<-DOC
       An array of DNS names that will be added as subject alternate names.
     DOC
@@ -290,7 +293,7 @@ Puppet::Type.newtype(:openssl_request) do
     munge { |value| Array(value) }
   end
 
-  newparam(:subject_alternate_names_ip, :array_matching => :all) do
+  newparam(:subject_alternate_names_ip, array_matching: :all) do
     desc <<-DOC
       An array of IP addresses that will be added as subject alternate names.
     DOC
@@ -372,10 +375,8 @@ Puppet::Type.newtype(:openssl_request) do
       # Add X.509 subject
       subject = [['CN', self[:common_name].to_s, OpenSSL::ASN1::UTF8STRING]]
 
-      if self[:domain_component]
-        self[:domain_component].each do |dc|
-          subject << ['DC', dc.to_s, OpenSSL::ASN1::IA5STRING]
-        end
+      self[:domain_component]&.each do |dc|
+        subject << ['DC', dc.to_s, OpenSSL::ASN1::IA5STRING]
       end
 
       if self[:organization_unit_name]
@@ -486,10 +487,8 @@ Puppet::Type.newtype(:openssl_request) do
   def eval_generate
     generate = if File.file?(self[:path])
                  # Check file content
-                 regex = Regexp.new("^-+BEGIN CERTIFICATE REQUEST-+$").freeze
-                 match = File.open(self[:path]).each_line.detect { |x| x.match?(regex) }
-
-                 not match
+                 regex = Regexp.new('^-+BEGIN CERTIFICATE REQUEST-+$').freeze
+                 File.open(self[:path]).each_line.none? { |x| x.match?(regex) }
                else
                  true
                end

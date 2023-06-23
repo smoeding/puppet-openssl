@@ -255,7 +255,7 @@ Puppet::Type.newtype(:openssl_key) do
               OpenSSL::PKey::EC.generate self[:curve].to_s
             end
 
-      pem = if self[:cipher] and self[:password]
+      pem = if self[:cipher] && self[:password]
               cipher = OpenSSL::Cipher::Cipher.new self[:cipher].to_s
               key.to_pem cipher, self[:password].to_s
             else
@@ -299,10 +299,10 @@ Puppet::Type.newtype(:openssl_key) do
   def eval_generate
     generate = if File.file?(self[:path])
                  # Check file content
-                 regex = Regexp.new("^-+BEGIN.+PRIVATE KEY-+$").freeze
+                 regex = Regexp.new('^-+BEGIN.+PRIVATE KEY-+$').freeze
                  line1 = File.open(self[:path], &:readline)
 
-                 not regex.match? line1
+                 !regex.match?(line1)
                else
                  true
                end
@@ -315,21 +315,5 @@ Puppet::Type.newtype(:openssl_key) do
 
   def refresh
     catalog.resource("File[#{self[:path]}]")[:content] = content if self[:ensure] == :present
-  end
-
-  def sensitive?
-    # Check if there is a sensitive parameter
-    (self[:password] && self[:password].sensitive) ? true : false
-  end
-
-  private
-
-  def set_sensitive_parameters(sensitive_parameters)
-    if sensitive_parameters.include?(:password)
-      sensitive_parameters.delete(:password)
-      parameter(:password).sensitive = true
-    end
-
-    super(sensitive_parameters)
   end
 end
