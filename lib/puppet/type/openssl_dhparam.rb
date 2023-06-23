@@ -9,8 +9,8 @@ Puppet::Type.newtype(:openssl_dhparam) do
   @doc = <<-DOC
     @summary Generate a file with Diffie-Hellman parameters
 
-    The type has parameters to specify the number of bits and the generator
-    number to use.
+    Generate Diffie-Hellman parameters for an TLS enabled application by
+    specifying the number of bits and the generator number to use.
 
     The type expects to find the "-----BEGIN DH PARAMETERS-----" token in the
     first line of the file or it will overwrite the file content with new
@@ -193,7 +193,7 @@ Puppet::Type.newtype(:openssl_dhparam) do
   def content
     unless @generated_content
       loop do
-        Puppet.debug("#{self}: generating Diffie-Hellman parameters with #{self[:bits]} bits")
+        Puppet.notice("#{self}: generating DH parameters with #{self[:bits]} bits")
         dh = OpenSSL::PKey::DH.new(self[:bits], self[:generator])
         break if dh.params_ok?
       end

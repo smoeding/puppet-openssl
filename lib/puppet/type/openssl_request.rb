@@ -7,14 +7,19 @@ require 'puppet/type/file/mode'
 
 Puppet::Type.newtype(:openssl_request) do
   desc <<-DOC
-    @summary Create and maintain an OpenSSL Certificate Signing Request (CSR)
+    @summary Create and maintain an OpenSSL Certificate Signing Request
+
+    The type creates a X.509 Certificate Signing Request (CSR) which can
+    either be submitted to a Certificate Authority (CA) for signing or used
+    to create a self-signed certificate. Both operations can also be
+    performed using the `openssl_cert` type.
 
     The X.509 subject of the request can be defined by using the
     `common_name`, `domain_component`, `organization_unit_name`,
     `organization_name`, `locality_name`, `state_or_province_name`,
     `country_name` and `email_address` parameters. Setting a Common Name is
     mandatory and the host fully-qualified domain name (FQDN) is commonly
-    used.
+    used for node or service certificates.
 
     The request can also include the following extensions by setting the
     appropriate type parameters: `basicConstraints`, `keyUsage`,
@@ -30,17 +35,15 @@ Puppet::Type.newtype(:openssl_request) do
     This type uses the Ruby OpenSSL library and does not run the `openssl`
     binary provided by the operating system.
 
-     **Autorequires:** If Puppet is managing the OpenSSL key that is used to
-     create the CSR, the `openssl_request` resource will autorequire that
-     key.
+    **Autorequires:** If Puppet is managing the OpenSSL key that is used to
+    create the CSR, the `openssl_request` resource will autorequire that key.
 
-    @example Generate CSR to be used for a Certificate Authority
+    @example Generate CSR to be used for a new private Certificate Authority
 
       openssl_request { '/etc/ssl/ca.csr':
-        key               => '/etc/ssl/ca.key',
-        common_name       => 'ACME Root CA',
-        organization_name => 'ACME',
-        country_name      => 'US',
+        key              => '/etc/ssl/ca.key',
+        common_name      => 'ACME Root CA',
+        domain_component => [ 'ACME', 'US' ],
       }
 
     @example Generate CSR for a web application
@@ -227,7 +230,7 @@ Puppet::Type.newtype(:openssl_request) do
 
   newparam(:key_usage, array_matching: :all) do
     desc <<-DOC
-      The X509v3 Key Usage extension.
+      The X.509v3 Key Usage extension.
     DOC
 
     validate do |value|
@@ -249,7 +252,7 @@ Puppet::Type.newtype(:openssl_request) do
 
   newparam(:extended_key_usage, array_matching: :all) do
     desc <<-DOC
-      The X509v3 Extended Key Usage extension.
+      The X.509v3 Extended Key Usage extension.
     DOC
 
     validate do |value|
@@ -318,6 +321,7 @@ Puppet::Type.newtype(:openssl_request) do
       The password to use when loading a protected key.
     DOC
 
+    # The empty string disables the interactive password prompt
     defaultto ''
   end
 

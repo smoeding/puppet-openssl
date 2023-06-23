@@ -9,13 +9,23 @@ Puppet::Type.newtype(:openssl_cert) do
   desc <<-DOC
     @summary Create an OpenSSL certificate from a Certificate Signing Request
 
-    To create a selfsigned certificate, the `issuer_key` should be the same
-    key that was used to create the request. Otherwise `issuer_cert` and
-    `issuer_key` should point to your CA certificate and key
+    The type takes a Certificate Signing Request (create by `openssl_request`
+    for example) and an issuer certificate and key as input to generate
+    a signed certificate.
+
+    To create a selfsigned certificate, set `issuer_key` to the same key that
+    was used to create the request. Otherwise `issuer_cert` and `issuer_key`
+    should point to your CA certificate and key.
+
+    The type uses a random 128 bit number as serial number.
+
+    The certificate validity starts the moment the certificate is signed and
+    terminates as defined by the parameter `days`. In addition the expiration
+    time of the cerificate is limited by the validity of your CA certificate.
 
     The parameters `copy_request_extensions` and `omit_request_extensions`
     can be used to specifically allow or deny some extensions from the
-    request.
+    request. You can also use parameters to set extensions to a fixed value.
 
     The type expects to find the "-----BEGIN CERTIFICATE-----" token in the
     file or it will overwrite the file content with a new certificate.
@@ -236,7 +246,7 @@ Puppet::Type.newtype(:openssl_cert) do
 
   newparam(:key_usage, array_matching: :all) do
     desc <<-DOC
-      The X509v3 Key Usage extension. Valid options: `digitalSignature`,
+      The X.509v3 Key Usage extension. Valid options: `digitalSignature`,
       `nonRepudiation`, `keyEncipherment`, `dataEncipherment`,
       `keyAgreement`, `keyCertSign`, `cRLSign`, `encipherOnly`,
       `decipherOnly`.
@@ -264,7 +274,7 @@ Puppet::Type.newtype(:openssl_cert) do
 
   newparam(:extended_key_usage, array_matching: :all) do
     desc <<-DOC
-      The X509v3 Extended Key Usage extension. Valid options: `serverAuth`,
+      The X.509v3 Extended Key Usage extension. Valid options: `serverAuth`,
       `clientAuth`, `codeSigning`, `emailProtection`, `timeStamping`,
       `OCSPSigning`, `ipsecIKE`, `msCodeInd`, `msCodeCom`, `msCTLSign`,
       `msEFS`.
