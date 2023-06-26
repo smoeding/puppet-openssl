@@ -623,7 +623,7 @@ Puppet::Type.newtype(:openssl_cert) do
   def eval_generate
     generate = if File.file?(self[:path])
                  # Check file content
-                 regex = Regexp.new(`^-+BEGIN CERTIFICATE-+$`).freeze
+                 regex = Regexp.new('^-+BEGIN CERTIFICATE-+$').freeze
                  File.open(self[:path]).each_line.none? { |x| x.match?(regex) }
                else
                  true
