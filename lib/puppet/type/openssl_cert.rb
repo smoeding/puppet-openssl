@@ -9,19 +9,22 @@ Puppet::Type.newtype(:openssl_cert) do
   desc <<-DOC
     @summary Create an OpenSSL certificate from a Certificate Signing Request
 
+    **This type is still beta!**
+
     The type takes a Certificate Signing Request (create by `openssl_request`
     for example) and an issuer certificate and key as input to generate
     a signed certificate.
 
-    To create a selfsigned certificate, set `issuer_key` to the same key that
-    was used to create the request. Otherwise `issuer_cert` and `issuer_key`
-    should point to your CA certificate and key.
+    To create a self-signed certificate, set `issuer_key` to the same key
+    that was used to create the request. Otherwise `issuer_cert` and
+    `issuer_key` should point to your CA certificate and key.
 
     The type uses a random 128 bit number as serial number.
 
     The certificate validity starts the moment the certificate is signed and
-    terminates as defined by the parameter `days`. In addition the expiration
-    time of the cerificate is limited by the validity of your CA certificate.
+    terminates as defined by the parameter `days`. The expiration time of the
+    cerificate is additionally limited by the validity of your CA certificate
+    unless you create a self-signed.
 
     The parameters `copy_request_extensions` and `omit_request_extensions`
     can be used to specifically allow or deny some extensions from the
@@ -494,7 +497,7 @@ Puppet::Type.newtype(:openssl_cert) do
       bit128 = OpenSSL::Random.random_bytes 16
       qwords = bit128.unpack('Q>*')
 
-      # If a colon-separated representation is needed in the future
+      # In case a colon-separated representation is needed in the future
       # serial = bit128.unpack('C*').map { |x| '%02x' % x}.join(':')
 
       crt.serial = (OpenSSL::BN.new(qwords[0]) << 64) + OpenSSL::BN.new(qwords[1])

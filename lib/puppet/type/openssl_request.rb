@@ -9,6 +9,8 @@ Puppet::Type.newtype(:openssl_request) do
   desc <<-DOC
     @summary Create and maintain an OpenSSL Certificate Signing Request
 
+    **This type is still beta!**
+
     The type creates a X.509 Certificate Signing Request (CSR) which can
     either be submitted to a Certificate Authority (CA) for signing or used
     to create a self-signed certificate. Both operations can also be

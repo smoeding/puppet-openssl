@@ -4,7 +4,7 @@ Puppet::Type.newtype(:openssl_genpkey) do
   @doc = <<-DOC
     @summary Generate OpenSSL private key files
 
-    **This type is still beta!**
+    **This type is deprecated!**
 
     Generate an OpenSSL private key file. The type creates RSA or Elliptic
     Curve keys depending on the parameter `algorithm`.

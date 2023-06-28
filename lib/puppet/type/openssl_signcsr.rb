@@ -4,7 +4,7 @@ Puppet::Type.newtype(:openssl_signcsr) do
   @doc = <<-DOC
     @summary Sign OpenSSL certificate signing request using a CA
 
-    **This type is still beta!**
+    **This type is deprecated!**
 
     The name and configuration file of a CA is required.
 

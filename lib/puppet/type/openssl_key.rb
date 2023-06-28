@@ -9,6 +9,8 @@ Puppet::Type.newtype(:openssl_key) do
   desc <<-DOC
     @summary Create an OpenSSL private key
 
+    **This type is still beta!**
+
     This type creates RSA or Elliptic Curve keys depending on the parameter
     `algorithm`.
 
@@ -180,7 +182,8 @@ Puppet::Type.newtype(:openssl_key) do
   newparam(:bits) do
     desc <<-DOC
       The number of bits for the RSA key. This parameter is mandatory for RSA
-      keys.
+      keys. Keys with 1024 bits should only be used for specific applications
+      like DKIM.
     DOC
 
     munge { |value| value.to_i }
@@ -214,14 +217,15 @@ Puppet::Type.newtype(:openssl_key) do
 
     validate do |value|
       unless OpenSSL::Cipher.ciphers.include? value.to_s
-        raise ArgumentError, "Cipher '#{value} is not supported by OpenSSL"
+        raise ArgumentError, "Cipher '#{value}' is not supported by OpenSSL"
       end
     end
   end
 
   newparam(:password) do
     desc <<-DOC
-      Use the supplied password to encrypt the key.
+      Use the supplied password to encrypt the key. Setting only a password
+      without a cipher creates an unprotected key.
     DOC
   end
 

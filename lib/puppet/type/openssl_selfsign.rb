@@ -4,7 +4,7 @@ Puppet::Type.newtype(:openssl_selfsign) do
   @doc = <<-DOC
     @summary Create an OpenSSL self-signed certificate
 
-    **This type is still beta!**
+    **This type is deprecated!**
 
     The type takes a certificate signing request (CSR) and a key file to
     generate a self-signed certificate.

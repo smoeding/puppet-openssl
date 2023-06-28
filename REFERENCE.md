@@ -969,19 +969,22 @@ Default value: `undef`
 
 ### <a name="openssl_cert"></a>`openssl_cert`
 
+**This type is still beta!**
+
 The type takes a Certificate Signing Request (create by `openssl_request`
 for example) and an issuer certificate and key as input to generate
 a signed certificate.
 
-To create a selfsigned certificate, set `issuer_key` to the same key that
-was used to create the request. Otherwise `issuer_cert` and `issuer_key`
-should point to your CA certificate and key.
+To create a self-signed certificate, set `issuer_key` to the same key
+that was used to create the request. Otherwise `issuer_cert` and
+`issuer_key` should point to your CA certificate and key.
 
 The type uses a random 128 bit number as serial number.
 
 The certificate validity starts the moment the certificate is signed and
-terminates as defined by the parameter `days`. In addition the expiration
-time of the cerificate is limited by the validity of your CA certificate.
+terminates as defined by the parameter `days`. The expiration time of the
+cerificate is additionally limited by the validity of your CA certificate
+unless you create a self-signed.
 
 The parameters `copy_request_extensions` and `omit_request_extensions`
 can be used to specifically allow or deny some extensions from the
@@ -1393,6 +1396,8 @@ usually discover the appropriate provider for your platform.
 
 ### <a name="openssl_dhparam"></a>`openssl_dhparam`
 
+**This type is still beta!**
+
 Generate Diffie-Hellman parameters for an TLS enabled application by
 specifying the number of bits and the generator number to use.
 
@@ -1554,7 +1559,7 @@ resource.
 
 ### <a name="openssl_genparam"></a>`openssl_genparam`
 
-The type is refreshable. The `openssl_genaram` type will regenerate the
+The type is refreshable. The `openssl_genparam` type will regenerate the
 parameters if the resource is notified from another resource.
 
 #### Examples
@@ -1676,7 +1681,7 @@ seconds.
 
 ### <a name="openssl_genpkey"></a>`openssl_genpkey`
 
-**This type is still beta!**
+**This type is deprecated!**
 
 Generate an OpenSSL private key file. The type creates RSA or Elliptic
 Curve keys depending on the parameter `algorithm`.
@@ -1854,6 +1859,8 @@ usually discover the appropriate provider for your platform.
 
 ### <a name="openssl_key"></a>`openssl_key`
 
+**This type is still beta!**
+
 This type creates RSA or Elliptic Curve keys depending on the parameter
 `algorithm`.
 
@@ -1961,7 +1968,8 @@ beginning with ".".
 Valid values: `1024`, `2048`, `3072`, `4096`, `5120`, `6144`, `7168`, `8192`
 
 The number of bits for the RSA key. This parameter is mandatory for RSA
-keys.
+keys. Keys with 1024 bits should only be used for specific applications
+like DKIM.
 
 Default value: `2048`
 
@@ -2005,7 +2013,8 @@ containing a username or integer containing a uid.
 
 ##### <a name="-openssl_key--password"></a>`password`
 
-Use the supplied password to encrypt the key.
+Use the supplied password to encrypt the key. Setting only a password
+without a cipher creates an unprotected key.
 
 ##### <a name="-openssl_key--path"></a>`path`
 
@@ -2047,6 +2056,8 @@ Specifies whether to set the show_diff parameter for the file
 resource.
 
 ### <a name="openssl_request"></a>`openssl_request`
+
+**This type is still beta!**
 
 The type creates a X.509 Certificate Signing Request (CSR) which can
 either be submitted to a Certificate Authority (CA) for signing or used
@@ -2320,7 +2331,7 @@ An array of IP addresses that will be added as subject alternate names.
 
 ### <a name="openssl_selfsign"></a>`openssl_selfsign`
 
-**This type is still beta!**
+**This type is deprecated!**
 
 The type takes a certificate signing request (CSR) and a key file to
 generate a self-signed certificate.
@@ -2416,7 +2427,7 @@ Required. The file with the OpenSSL key to use for the self-signed certificate.
 
 ### <a name="openssl_signcsr"></a>`openssl_signcsr`
 
-**This type is still beta!**
+**This type is deprecated!**
 
 The name and configuration file of a CA is required.
 

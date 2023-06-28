@@ -9,6 +9,8 @@ Puppet::Type.newtype(:openssl_dhparam) do
   @doc = <<-DOC
     @summary Generate a file with Diffie-Hellman parameters
 
+    **This type is still beta!**
+
     Generate Diffie-Hellman parameters for an TLS enabled application by
     specifying the number of bits and the generator number to use.
 
