@@ -1,3 +1,15 @@
+## 2023-07-06 - Release 4.0.0
+
+### Breaking changes
+
+- Drop Support for Puppet 6
+
+### Features
+
+- Add support for Puppet 8
+- Add support for Concat 9.x and Stdlib 9.x
+- New types to create OpenSSL keys, CSRs, certificates and DHparams have been added. They should be considered beta for now.
+
 ## 2023-04-20 - Release 3.4.1
 
 ### Features
