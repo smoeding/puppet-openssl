@@ -18,7 +18,7 @@
 
 ## Overview
 
-Manage X.509 certificates, keys and Diffie-Hellman parameter files.
+Create and manage X.509 keys, requests, certificates and Diffie-Hellman parameter files.
 
 ## Module Description
 
@@ -37,6 +37,13 @@ The modules installs the OpenSSL package and provides defined types to manage ce
 The module requires the Puppetlabs modules `stdlib` and `concat`. The `openssl` executable must be installed on the node. On RedHat based distributions the `certutil` executable is also needed.
 
 ### Beginning with OpenSSL
+
+
+
+
+
+
+
 
 The module must be initialized before you can manage certificates and keys:
 
@@ -63,6 +70,128 @@ total 236
 ```
 
 ## Usage
+
+The module has two distinct use cases....
+
+openssl_dhparam { '/home/moedings/src/openssl/dhparam.pem':
+  bits => 1024,
+}
+
+openssl_key { '/home/moedings/src/openssl/rsa-2048.key':
+  algorithm => 'RSA',
+}
+
+openssl_key { '/home/moedings/src/openssl/ec-secp384r1.key':
+  algorithm => 'EC',
+  cipher    => 'aes128',
+  password  => 'rosebud',
+}
+
+#
+# CA
+#
+
+openssl_key { '/home/moedings/src/openssl/ca.key':
+  algorithm => 'EC',
+  cipher    => 'aes128',
+  password  => 'rosebud',
+  notify    => Openssl_request['/home/moedings/src/openssl/ca.csr'],
+}
+
+openssl_request { '/home/moedings/src/openssl/ca.csr':
+  key              => '/home/moedings/src/openssl/ca.key',
+  key_password     => 'rosebud',
+  common_name      => 'ITENOS Demo CA',
+  domain_component => ['itenos', 'de'],
+  notify           => Openssl_cert['/home/moedings/src/openssl/ca.crt'],
+}
+
+openssl_cert { '/home/moedings/src/openssl/ca.crt':
+  request                       => '/home/moedings/src/openssl/ca.csr',
+  issuer_key                    => '/home/moedings/src/openssl/ca.key',
+  issuer_key_password           => 'rosebud',
+  key_usage                     => ['keyCertSign', 'cRLSign'],
+  key_usage_critical            => true,
+  basic_constraints_ca          => true,
+  basic_constraints_ca_critical => true,
+  subject_key_identifier        => 'hash',
+  authority_key_identifier      => ['issuer', 'keyid:always'],
+  days                          => 2922,
+}
+
+#
+#
+#
+
+openssl_key { '/home/moedings/src/openssl/subca.key':
+  algorithm => 'EC',
+  notify    => Openssl_request['/home/moedings/src/openssl/subca.csr'],
+}
+
+openssl_request { '/home/moedings/src/openssl/subca.csr':
+  key                    => '/home/moedings/src/openssl/subca.key',
+  common_name            => 'ITENOS Demo SubCA',
+  organization_unit_name => 'ITP',
+  organization_name      => 'ITENOS',
+  country_name           => 'DE',
+  notify => Openssl_cert['/home/moedings/src/openssl/subca.crt'],
+}
+
+openssl_cert { '/home/moedings/src/openssl/subca.crt':
+  request                       => '/home/moedings/src/openssl/subca.csr',
+  issuer_cert                   => '/home/moedings/src/openssl/ca.crt',
+  issuer_key                    => '/home/moedings/src/openssl/ca.key',
+  #issuer_key_password           => 'rosebud',
+  key_usage                     => ['keyCertSign', 'cRLSign'],
+  key_usage_critical            => true,
+  basic_constraints_ca          => true,
+  basic_constraints_ca_critical => true,
+  subject_key_identifier        => 'hash',
+  authority_key_identifier      => ['issuer', 'keyid:always'],
+  days                          => 1825,
+}
+
+#
+#
+#
+
+$f = $facts['networking']['fqdn']
+
+openssl_key { '/home/moedings/src/openssl/ec-prime256v1.key':
+  algorithm => 'EC',
+  curve     => 'prime256v1',
+  notify    => Openssl_request["/home/moedings/src/openssl/${f}.csr"],
+}
+
+openssl_request { "/home/moedings/src/openssl/${f}.csr":
+  key                         => '/home/moedings/src/openssl/ec-prime256v1.key',
+  common_name                 => $f,
+  key_usage                   => ['keyEncipherment', 'digitalSignature'],
+  extended_key_usage          => ['serverAuth', 'clientAuth'],
+  subject_alternate_names_dns => [$f],
+  notify => Openssl_cert["/home/moedings/src/openssl/${f}.crt"],
+}
+
+openssl_cert { "/home/moedings/src/openssl/${f}.crt":
+  request                  => "/home/moedings/src/openssl/${f}.csr",
+  issuer_key               => '/home/moedings/src/openssl/subca.key',
+  issuer_cert              => '/home/moedings/src/openssl/subca.crt',
+  days                     => 2000,
+  # key_usage                => ['keyEncipherment', 'digitalSignature'],
+  # extended_key_usage       => ['serverAuth', 'clientAuth'],
+  subject_key_identifier   => 'hash',
+  authority_key_identifier => ['keyid', 'issuer'],
+  copy_request_extensions  => ['subjectAltName', 'keyUsage'],
+  #omit_request_extensions  => ['subjectAltName'],
+}
+
+
+
+
+
+
+
+
 
 ### Install Root CA certificates by default
 
