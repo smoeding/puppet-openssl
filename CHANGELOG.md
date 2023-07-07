@@ -1,3 +1,10 @@
+## 2023-07-07 - Release 4.0.1
+
+### Bugfixes
+
+- Fix variable scope issue in Ruby code of `openssl_dhparam` type.
+- Prevent failing types if file to be generated exists but is empty.
+
 ## 2023-07-06 - Release 4.0.0
 
 ### Breaking changes
