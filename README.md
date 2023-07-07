@@ -24,7 +24,7 @@ Create and manage X.509 keys, requests, certificates and Diffie-Hellman paramete
 
 The `openssl` module manages files containing X.509 certificates and keys.
 
-In contrast to some other modules, this module does not generate the certificates and keys itself. Instead it uses a directory on the Puppet server where the certificates and keys can be fetched from. So you can run your own CA or take certificates received from a public CA and have them managed by Puppet.
+In contrast to some other modules, this module does not only generate the certificates and keys but also it uses a directory on the Puppet server where the certificates and keys can be fetched from. So you can run your own CA or take certificates received from a public CA and have them managed by Puppet.
 
 ## Setup
 
