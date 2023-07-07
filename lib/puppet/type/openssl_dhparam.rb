@@ -194,10 +194,10 @@ Puppet::Type.newtype(:openssl_dhparam) do
 
   def content
     unless @generated_content
-      loop do
+      dh = loop do
         Puppet.notice("#{self}: generating DH parameters with #{self[:bits]} bits")
         dh = OpenSSL::PKey::DH.new(self[:bits], self[:generator])
-        break if dh.params_ok?
+        break dh if dh.params_ok?
       end
 
       @generated_content = dh.to_pem
