@@ -304,9 +304,7 @@ Puppet::Type.newtype(:openssl_key) do
     generate = if File.file?(self[:path])
                  # Check file content
                  regex = Regexp.new('^-+BEGIN.+PRIVATE KEY-+$').freeze
-                 line1 = File.open(self[:path], &:readline)
-
-                 !regex.match?(line1)
+                 File.open(self[:path]).each_line.none? { |x| x.match?(regex) }
                else
                  true
                end
