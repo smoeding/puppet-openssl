@@ -1,3 +1,9 @@
+## 2023-07-08 - Release 4.0.2
+
+### Bugfixes
+
+- Fix a regression where a resource would not be generated unless the ensure attribute would be given.
+
 ## 2023-07-07 - Release 4.0.1
 
 ### Bugfixes
