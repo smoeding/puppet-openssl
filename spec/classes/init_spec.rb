@@ -64,6 +64,21 @@ describe 'openssl' do
         it {
           is_expected.to contain_openssl__cacert('cert')
         }
+
+        case facts[:os]['family']
+        when 'Debian'
+          it {
+            is_expected.to contain_file('/usr/local/share/ca-certificates/cert.crt')
+          }
+        when 'RedHat'
+          it {
+            is_expected.to contain_file('/etc/pki/ca-trust/source/anchors/cert.crt')
+          }
+        when 'FreeBSD'
+          it {
+            is_expected.to contain_file('/usr/local/etc/ssl/cert.crt')
+          }
+        end
       end
 
       context 'with two elements for ca_cert' do
@@ -73,6 +88,30 @@ describe 'openssl' do
           is_expected.to contain_openssl__cacert('cert')
           is_expected.to contain_openssl__cacert('ca')
         }
+
+        case facts[:os]['family']
+        when 'Debian'
+          it {
+            is_expected.to contain_file('/usr/local/share/ca-certificates/cert.crt')
+            is_expected.to contain_file('/usr/local/share/ca-certificates/ca.crt')
+          }
+        when 'RedHat'
+          it {
+            is_expected.to contain_file('/etc/pki/ca-trust/source/anchors/cert.crt')
+            is_expected.to contain_file('/etc/pki/ca-trust/source/anchors/ca.crt')
+
+            is_expected.to contain_openssl_certutil('cert')
+            is_expected.to contain_openssl_certutil('ca')
+          }
+        when 'FreeBSD'
+          it {
+            is_expected.to contain_file('/usr/local/etc/ssl/cert.crt')
+            is_expected.to contain_file('/usr/local/etc/ssl/ca.crt')
+
+            is_expected.to contain_openssl_hash('/usr/local/etc/ssl/cert.crt')
+            is_expected.to contain_openssl_hash('/usr/local/etc/ssl/ca.crt')
+          }
+        end
       end
     end
   end
