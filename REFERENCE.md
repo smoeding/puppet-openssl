@@ -2157,6 +2157,7 @@ The following parameters are available in the `openssl_request` type.
 * [`selrole`](#selrole)
 * [`seltype`](#seltype)
 * [`seluser`](#seluser)
+* [`serial`](#serial)
 * [`show_diff`](#show_diff)
 * [`signature_algorithm`](#signature_algorithm)
 * [`state_or_province_name`](#state_or_province_name)
@@ -2299,6 +2300,16 @@ https://docs.puppetlabs.com/references/latest/type.html#file-attribute-seltype
 
 See the file type's seluser documentation:
 https://docs.puppetlabs.com/references/latest/type.html#file-attribute-seluser
+
+##### <a name="serial"></a>`serial`
+
+Valid values: `%r{^[0-9]+$}`
+
+An otherwise unused serial number attribute that will be added to the
+request. This can be useful to ensure that requests using the same key
+and attributes (e.g. when regenerating the request after some time)
+will give a different binary representation of the request and actually
+trigger a refresh.
 
 ##### <a name="show_diff"></a>`show_diff`
 

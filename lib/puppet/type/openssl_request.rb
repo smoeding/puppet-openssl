@@ -237,6 +237,18 @@ Puppet::Type.newtype(:openssl_request) do
     DOC
   end
 
+  newparam(:serial) do
+    desc <<-DOC
+      An otherwise unused serial number attribute that will be added to the
+      request. This can be useful to ensure that requests using the same key
+      and attributes (e.g. when regenerating the request after some time)
+      will give a different binary representation of the request and actually
+      trigger a refresh.
+    DOC
+
+    newvalues %r{^[0-9]+$}
+  end
+
   newparam(:key_usage, array_matching: :all) do
     desc <<-DOC
       The X.509v3 Key Usage extension.
@@ -458,6 +470,12 @@ Puppet::Type.newtype(:openssl_request) do
       unless extensions.empty?
         attr = OpenSSL::ASN1::Set.new([OpenSSL::ASN1::Sequence.new(extensions)])
         req.add_attribute OpenSSL::X509::Attribute.new('extReq', attr)
+      end
+
+      # Optionally add serial number attribute
+      unless self[:serial].nil?
+        attr = OpenSSL::ASN1::Set.new([OpenSSL::ASN1::NumericString.new(self[:serial].to_s)])
+        req.add_attribute OpenSSL::X509::Attribute.new('serialNumber', attr)
       end
 
       # Add digest
