@@ -15,7 +15,6 @@ describe 'openssl_cert' do
       is_expected.to be_valid_type.with_parameters('group')
       is_expected.to be_valid_type.with_parameters('mode')
       is_expected.to be_valid_type.with_parameters('backup')
-      is_expected.to be_valid_type.with_parameters('force')
       is_expected.to be_valid_type.with_parameters('selinux_ignore_defaults')
       is_expected.to be_valid_type.with_parameters('selrange')
       is_expected.to be_valid_type.with_parameters('selrole')

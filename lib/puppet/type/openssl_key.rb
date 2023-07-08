@@ -108,15 +108,6 @@ Puppet::Type.newtype(:openssl_key) do
     end
   end
 
-  newparam(:force, boolean: true, parent: Puppet::Parameter::Boolean) do
-    desc <<-DOC
-      Specifies whether to merge data structures, keeping the values with
-      higher order.
-    DOC
-
-    defaultto false
-  end
-
   newparam(:selinux_ignore_defaults, boolean: true, parent: Puppet::Parameter::Boolean) do
     desc <<-DOC
       See the file type's selinux_ignore_defaults documentention:

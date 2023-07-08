@@ -1060,7 +1060,6 @@ The following parameters are available in the `openssl_cert` type.
 * [`days`](#days)
 * [`extended_key_usage`](#extended_key_usage)
 * [`extended_key_usage_critical`](#extended_key_usage_critical)
-* [`force`](#force)
 * [`group`](#group)
 * [`issuer_cert`](#issuer_cert)
 * [`issuer_key`](#issuer_key)
@@ -1157,15 +1156,6 @@ extension from the request.
 Valid values: ``true``, ``false``
 
 Whether the Extenden Key Usage extension should be critical.
-
-##### <a name="force"></a>`force`
-
-Valid values: ``true``, ``false``, `yes`, `no`
-
-Specifies whether to merge data structures, keeping the values with
-higher order.
-
-Default value: ``false``
 
 ##### <a name="group"></a>`group`
 
@@ -1457,7 +1447,6 @@ The following parameters are available in the `openssl_dhparam` type.
 
 * [`backup`](#backup)
 * [`bits`](#bits)
-* [`force`](#force)
 * [`generator`](#generator)
 * [`group`](#group)
 * [`mode`](#mode)
@@ -1485,15 +1474,6 @@ Valid values: `1024`, `2048`, `3072`, `4096`, `5120`, `6144`, `7168`, `8192`
 The number of bits for the Diffie-Hellman parameters.
 
 Default value: `2048`
-
-##### <a name="force"></a>`force`
-
-Valid values: ``true``, ``false``, `yes`, `no`
-
-Specifies whether to merge data structures, keeping the values with
-higher order.
-
-Default value: ``false``
 
 ##### <a name="generator"></a>`generator`
 
@@ -1932,7 +1912,6 @@ The following parameters are available in the `openssl_key` type.
 * [`bits`](#bits)
 * [`cipher`](#cipher)
 * [`curve`](#curve)
-* [`force`](#force)
 * [`group`](#group)
 * [`mode`](#mode)
 * [`owner`](#owner)
@@ -1986,15 +1965,6 @@ are supported on your system. The following curves should be available
 for TLS 1.3 and earlier: `secp256r1`, `secp384r1`, `secp521r1`.
 
 Default value: `secp384r1`
-
-##### <a name="force"></a>`force`
-
-Valid values: ``true``, ``false``, `yes`, `no`
-
-Specifies whether to merge data structures, keeping the values with
-higher order.
-
-Default value: ``false``
 
 ##### <a name="group"></a>`group`
 
@@ -2140,7 +2110,6 @@ The following parameters are available in the `openssl_request` type.
 * [`email_address`](#email_address)
 * [`extended_key_usage`](#extended_key_usage)
 * [`extended_key_usage_critical`](#extended_key_usage_critical)
-* [`force`](#force)
 * [`group`](#group)
 * [`key`](#key)
 * [`key_password`](#key_password)
@@ -2212,15 +2181,6 @@ The X.509v3 Extended Key Usage extension.
 Valid values: ``true``, ``false``, `yes`, `no`
 
 Whether the Extenden Key Usage extension should be critical.
-
-##### <a name="force"></a>`force`
-
-Valid values: ``true``, ``false``, `yes`, `no`
-
-Specifies whether to merge data structures, keeping the values with
-higher order.
-
-Default value: ``false``
 
 ##### <a name="group"></a>`group`
 
