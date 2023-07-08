@@ -109,6 +109,10 @@ describe 'openssl::cacert' do
               .with_group('wheel')
               .with_mode('0444')
               .with_content("# /foo/cert.crt\n")
+
+            is_expected.to contain_openssl_hash('/crt/ca.crt')
+              .with_ensure('present')
+              .that_requires('File[/crt/ca.crt]')
           end
         }
       end
@@ -143,6 +147,10 @@ describe 'openssl::cacert' do
               .with_group('wheel')
               .with_mode('0444')
               .with_content("# /foo/ca.crt\n")
+
+            is_expected.to contain_openssl_hash('/crt/cert.crt')
+              .with_ensure('present')
+              .that_requires('File[/crt/cert.crt]')
           end
         }
       end
@@ -177,6 +185,10 @@ describe 'openssl::cacert' do
               .with_group('wheel')
               .with_mode('0444')
               .with_content("# /foo/cert.crt\n")
+
+            is_expected.to contain_openssl_hash('/crt/cert.pem')
+              .with_ensure('present')
+              .that_requires('File[/crt/cert.pem]')
           end
         }
       end
@@ -211,6 +223,10 @@ describe 'openssl::cacert' do
               .with_group('wheel')
               .with_mode('0444')
               .with_content("# /foo/cert.baz\n")
+
+            is_expected.to contain_openssl_hash('/crt/cert.crt')
+              .with_ensure('present')
+              .that_requires('File[/crt/cert.crt]')
           end
         }
       end
@@ -245,6 +261,10 @@ describe 'openssl::cacert' do
               .with_group('wheel')
               .with_mode('0642')
               .with_content("# /foo/cert.crt\n")
+
+            is_expected.to contain_openssl_hash('/crt/cert.crt')
+              .with_ensure('present')
+              .that_requires('File[/crt/cert.crt]')
           end
         }
       end
@@ -279,6 +299,10 @@ describe 'openssl::cacert' do
               .with_group('wheel')
               .with_mode('0444')
               .with_content("# /foo/cert.crt\n")
+
+            is_expected.to contain_openssl_hash('/crt/cert.crt')
+              .with_ensure('present')
+              .that_requires('File[/crt/cert.crt]')
           end
         }
       end
@@ -313,6 +337,10 @@ describe 'openssl::cacert' do
               .with_group('mysql')
               .with_mode('0444')
               .with_content("# /foo/cert.crt\n")
+
+            is_expected.to contain_openssl_hash('/crt/cert.crt')
+              .with_ensure('present')
+              .that_requires('File[/crt/cert.crt]')
           end
         }
       end
@@ -347,6 +375,10 @@ describe 'openssl::cacert' do
               .with_group('wheel')
               .with_mode('0444')
               .with_content("# /foo/cert.crt\n")
+
+            is_expected.to contain_openssl_hash('/baz/cert.crt')
+              .with_ensure('present')
+              .that_requires('File[/baz/cert.crt]')
           end
         }
       end
