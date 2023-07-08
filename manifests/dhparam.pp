@@ -1,4 +1,7 @@
-# @summary Manage Diffie-Hellman parameter files
+# @summary *DEPRECATED* Manage Diffie-Hellman parameter files
+#
+# *DEPRECATED* This defined type will be removed in the next major
+# release. Use the custom type [`openssl_dhparam`](#openssl_dhparam) instead.
 #
 # @example Create a parameter file using default parameters
 #

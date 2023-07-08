@@ -14,7 +14,7 @@
 * [`openssl::cert`](#opensslcert): Manage an X.509 certificate file in PEM format
 * [`openssl::config`](#opensslconfig): Create OpenSSL config for a CSR
 * [`openssl::csr`](#opensslcsr): Create OpenSSL certificate signing request (CSR)
-* [`openssl::dhparam`](#openssldhparam): Manage Diffie-Hellman parameter files
+* [`openssl::dhparam`](#openssldhparam): *DEPRECATED* Manage Diffie-Hellman parameter files
 * [`openssl::key`](#opensslkey): Manage an X.509 key file in PEM format
 
 ### Resource types
@@ -746,7 +746,8 @@ Default value: ``undef``
 
 ### <a name="openssldhparam"></a>`openssl::dhparam`
 
-Manage Diffie-Hellman parameter files
+*DEPRECATED* This defined type will be removed in the next major
+release. Use the custom type [`openssl_dhparam`](#openssl_dhparam) instead.
 
 #### Examples
 
@@ -1386,14 +1387,11 @@ usually discover the appropriate provider for your platform.
 
 ### <a name="openssl_dhparam"></a>`openssl_dhparam`
 
-**This type is still beta!**
-
 Generate Diffie-Hellman parameters for an TLS enabled application by
 specifying the number of bits and the generator number to use.
 
 The type expects to find the "-----BEGIN DH PARAMETERS-----" token in the
-first line of the file or it will overwrite the file content with new
-parameters.
+file or it will overwrite the file content with new parameters.
 
 The type is refreshable and will generate new parameters if the resource
 is notified from another resource.
@@ -1412,9 +1410,9 @@ minutes). This might look as if the Puppet Agent is hanging.
 ```puppet
 
 openssl_dhparam { '/etc/postfix/dh2048.pem':
-  owner   => 'root',      # Optional. Default to undef
-  group   => 'root',      # Optional. Default to undef
-  mode    => '0644'       # Optional. Default to undef
+  owner   => 'root',
+  group   => 'root',
+  mode    => '0644'
   require => Package['postfix'],
   notify  => Service['postfix'],
 }

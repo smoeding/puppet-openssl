@@ -9,14 +9,11 @@ Puppet::Type.newtype(:openssl_dhparam) do
   @doc = <<-DOC
     @summary Generate a file with Diffie-Hellman parameters
 
-    **This type is still beta!**
-
     Generate Diffie-Hellman parameters for an TLS enabled application by
     specifying the number of bits and the generator number to use.
 
     The type expects to find the "-----BEGIN DH PARAMETERS-----" token in the
-    first line of the file or it will overwrite the file content with new
-    parameters.
+    file or it will overwrite the file content with new parameters.
 
     The type is refreshable and will generate new parameters if the resource
     is notified from another resource.
@@ -31,9 +28,9 @@ Puppet::Type.newtype(:openssl_dhparam) do
     @example Generate Diffie-Hellman parameter file
 
       openssl_dhparam { '/etc/postfix/dh2048.pem':
-        owner   => 'root',      # Optional. Default to undef
-        group   => 'root',      # Optional. Default to undef
-        mode    => '0644'       # Optional. Default to undef
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644'
         require => Package['postfix'],
         notify  => Service['postfix'],
       }
