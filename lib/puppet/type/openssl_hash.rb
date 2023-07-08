@@ -30,7 +30,14 @@ Puppet::Type.newtype(:openssl_hash) do
       }
   DOC
 
-  ensurable
+  ensurable do
+    desc <<-DOC
+    The basic property that the resource should be in.
+  DOC
+
+    defaultvalues
+    defaultto :present
+  end
 
   newparam(:name) do
     desc 'The name of the certificate file to manage.'

@@ -64,7 +64,14 @@ Puppet::Type.newtype(:openssl_genparam) do
     end
   end
 
-  ensurable
+  ensurable do
+    desc <<-DOC
+    The basic property that the resource should be in.
+  DOC
+
+    defaultvalues
+    defaultto :present
+  end
 
   newparam(:file, namevar: true) do
     desc 'The name of the parameter file to manage.'

@@ -41,7 +41,14 @@ Puppet::Type.newtype(:openssl_genpkey) do
       }
   DOC
 
-  ensurable
+  ensurable do
+    desc <<-DOC
+    The basic property that the resource should be in.
+  DOC
+
+    defaultvalues
+    defaultto :present
+  end
 
   newparam(:file, namevar: true) do
     desc 'The name of the private key file to manage.'
