@@ -32,8 +32,8 @@ Puppet::Type.newtype(:openssl_hash) do
 
   ensurable do
     desc <<-DOC
-    The basic property that the resource should be in.
-  DOC
+      The basic property that the resource should be in.
+    DOC
 
     defaultvalues
     defaultto :present
