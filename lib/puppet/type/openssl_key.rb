@@ -14,17 +14,16 @@ Puppet::Type.newtype(:openssl_key) do
     This type creates RSA or Elliptic Curve keys depending on the parameter
     `algorithm`.
 
-    The type expects to find the "-----BEGIN PRIVATE KEY-----" token in the
-    first line of the file or it will overwrite the file content with a new
-    key.
-
     The key can optionally be encrypted using a supplied password.
 
-    This type uses the Ruby OpenSSL library and does not run the `openssl`
-    binary provided by the operating system.
+    The type expects to find the "-----BEGIN PRIVATE KEY-----" token in the
+    file or it will overwrite the file content with a new key.
 
     The type is refreshable and will generate a new key if the resource is
     notified from another resource.
+
+    This type uses the Ruby OpenSSL library and does not need the `openssl`
+    binary provided by the operating system.
 
     @example Generate a 2048 bit RSA key
 

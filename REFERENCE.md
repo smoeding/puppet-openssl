@@ -985,11 +985,12 @@ The type uses a random 128 bit number as serial number.
 The certificate validity starts the moment the certificate is signed and
 terminates as defined by the parameter `days`. The expiration time of the
 cerificate is additionally limited by the validity of your CA certificate
-unless you create a self-signed.
+unless you create a self-signed certificate.
 
 The parameters `copy_request_extensions` and `omit_request_extensions`
 can be used to specifically allow or deny some extensions from the
-request. You can also use parameters to set extensions to a fixed value.
+request. You can also use type parameters to set some extensions to
+a fixed value.
 
 The type expects to find the "-----BEGIN CERTIFICATE-----" token in the
 file or it will overwrite the file content with a new certificate.
@@ -997,7 +998,7 @@ file or it will overwrite the file content with a new certificate.
 The type is refreshable and will generate a new certificate if the
 resource is notified from another resource.
 
-This type uses the Ruby OpenSSL library and does not run the `openssl`
+This type uses the Ruby OpenSSL library and does not need the `openssl`
 binary provided by the operating system.
 
 **Autorequires:** If Puppet is managing the OpenSSL issuer key, issuer
@@ -1396,7 +1397,7 @@ file or it will overwrite the file content with new parameters.
 The type is refreshable and will generate new parameters if the resource
 is notified from another resource.
 
-This type uses the Ruby OpenSSL library and does not run the `openssl`
+This type uses the Ruby OpenSSL library and does not need the `openssl`
 binary provided by the operating system.
 
 *Note*: The creation of Diffie-Hellman parameters with a larger number of
@@ -1842,17 +1843,16 @@ usually discover the appropriate provider for your platform.
 This type creates RSA or Elliptic Curve keys depending on the parameter
 `algorithm`.
 
-The type expects to find the "-----BEGIN PRIVATE KEY-----" token in the
-first line of the file or it will overwrite the file content with a new
-key.
-
 The key can optionally be encrypted using a supplied password.
 
-This type uses the Ruby OpenSSL library and does not run the `openssl`
-binary provided by the operating system.
+The type expects to find the "-----BEGIN PRIVATE KEY-----" token in the
+file or it will overwrite the file content with a new key.
 
 The type is refreshable and will generate a new key if the resource is
 notified from another resource.
+
+This type uses the Ruby OpenSSL library and does not need the `openssl`
+binary provided by the operating system.
 
 #### Examples
 
@@ -2044,13 +2044,12 @@ appropriate type parameters: `basicConstraints`, `keyUsage`,
 `extendedKeyUsage` and `subjectAltName`.
 
 The type expects to find the "-----BEGIN CERTIFICATE REQUEST-----" token
-in the first line of the file or it will overwrite the file content with
-new parameters.
+in the file or it will overwrite the file content with a new request.
 
 The type is refreshable and will generate a new request if the resource
 is notified from another resource.
 
-This type uses the Ruby OpenSSL library and does not run the `openssl`
+This type uses the Ruby OpenSSL library and does not need the `openssl`
 binary provided by the operating system.
 
 **Autorequires:** If Puppet is managing the OpenSSL key that is used to
@@ -2058,7 +2057,7 @@ create the CSR, the `openssl_request` resource will autorequire that key.
 
 #### Examples
 
-##### Generate CSR to be used for a new private Certificate Authority
+##### Generate CSR to be used for a private Certificate Authority
 
 ```puppet
 

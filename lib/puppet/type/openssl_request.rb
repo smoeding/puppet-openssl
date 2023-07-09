@@ -28,19 +28,18 @@ Puppet::Type.newtype(:openssl_request) do
     `extendedKeyUsage` and `subjectAltName`.
 
     The type expects to find the "-----BEGIN CERTIFICATE REQUEST-----" token
-    in the first line of the file or it will overwrite the file content with
-    new parameters.
+    in the file or it will overwrite the file content with a new request.
 
     The type is refreshable and will generate a new request if the resource
     is notified from another resource.
 
-    This type uses the Ruby OpenSSL library and does not run the `openssl`
+    This type uses the Ruby OpenSSL library and does not need the `openssl`
     binary provided by the operating system.
 
     **Autorequires:** If Puppet is managing the OpenSSL key that is used to
     create the CSR, the `openssl_request` resource will autorequire that key.
 
-    @example Generate CSR to be used for a new private Certificate Authority
+    @example Generate CSR to be used for a private Certificate Authority
 
       openssl_request { '/etc/ssl/ca.csr':
         key              => '/etc/ssl/ca.key',

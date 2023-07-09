@@ -18,7 +18,7 @@ Puppet::Type.newtype(:openssl_dhparam) do
     The type is refreshable and will generate new parameters if the resource
     is notified from another resource.
 
-    This type uses the Ruby OpenSSL library and does not run the `openssl`
+    This type uses the Ruby OpenSSL library and does not need the `openssl`
     binary provided by the operating system.
 
     *Note*: The creation of Diffie-Hellman parameters with a larger number of

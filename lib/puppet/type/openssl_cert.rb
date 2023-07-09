@@ -24,11 +24,12 @@ Puppet::Type.newtype(:openssl_cert) do
     The certificate validity starts the moment the certificate is signed and
     terminates as defined by the parameter `days`. The expiration time of the
     cerificate is additionally limited by the validity of your CA certificate
-    unless you create a self-signed.
+    unless you create a self-signed certificate.
 
     The parameters `copy_request_extensions` and `omit_request_extensions`
     can be used to specifically allow or deny some extensions from the
-    request. You can also use parameters to set extensions to a fixed value.
+    request. You can also use type parameters to set some extensions to
+    a fixed value.
 
     The type expects to find the "-----BEGIN CERTIFICATE-----" token in the
     file or it will overwrite the file content with a new certificate.
@@ -36,7 +37,7 @@ Puppet::Type.newtype(:openssl_cert) do
     The type is refreshable and will generate a new certificate if the
     resource is notified from another resource.
 
-    This type uses the Ruby OpenSSL library and does not run the `openssl`
+    This type uses the Ruby OpenSSL library and does not need the `openssl`
     binary provided by the operating system.
 
     **Autorequires:** If Puppet is managing the OpenSSL issuer key, issuer
