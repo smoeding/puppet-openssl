@@ -1,3 +1,15 @@
+## 2023-07-10 - Release 4.1.0
+
+### Features
+
+- A request can have an optional serial number attribute to ensure that multiple requests using the same key really have a distinct binary representation.
+- The defined type `openssl::dhparam` has been deprecated. Use the custom type `openssl_dhparam` instead.
+
+### Bugfixes
+
+- The type parameter `force` was never used and has been removed.
+- The processing of empty array parameters has been fixed.
+
 ## 2023-07-08 - Release 4.0.2
 
 ### Bugfixes
