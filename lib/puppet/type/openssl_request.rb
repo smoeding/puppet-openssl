@@ -430,13 +430,13 @@ Puppet::Type.newtype(:openssl_request) do
                                             critical(:basic_constraints_ca_critical))
       end
 
-      unless self[:key_usage].nil?
+      unless self[:key_usage].nil? || self[:key_usage].empty?
         extensions << extfactory.create_ext('keyUsage',
                                             self[:key_usage].join(','),
                                             critical(:key_usage_critical))
       end
 
-      unless self[:extended_key_usage].nil?
+      unless self[:extended_key_usage].nil? || self[:extended_key_usage].empty?
         extensions << extfactory.create_ext('extendedKeyUsage',
                                             self[:extended_key_usage].join(','),
                                             critical(:extended_key_usage_critical))
@@ -444,11 +444,11 @@ Puppet::Type.newtype(:openssl_request) do
 
       san = []
 
-      unless self[:subject_alternate_names_dns].nil?
+      unless self[:subject_alternate_names_dns].nil? || self[:subject_alternate_names_dns].empty?
         san << self[:subject_alternate_names_dns].uniq.map { |x| "DNS:#{x}" }
       end
 
-      unless self[:subject_alternate_names_ip].nil?
+      unless self[:subject_alternate_names_ip].nil? || self[:subject_alternate_names_ip].empty?
         san << self[:subject_alternate_names_ip].uniq.map { |x| "IP:#{x}" }
       end
 
