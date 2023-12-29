@@ -30,6 +30,8 @@ describe 'openssl_request' do
       is_expected.to be_valid_type.with_parameters('country_name')
       is_expected.to be_valid_type.with_parameters('email_address')
       is_expected.to be_valid_type.with_parameters('serial')
+      is_expected.to be_valid_type.with_parameters('registration_token_control')
+      is_expected.to be_valid_type.with_parameters('authenticator_control')
       is_expected.to be_valid_type.with_parameters('key_usage')
       is_expected.to be_valid_type.with_parameters('key_usage_critical')
       is_expected.to be_valid_type.with_parameters('extended_key_usage')

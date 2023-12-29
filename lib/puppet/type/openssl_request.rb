@@ -239,6 +239,24 @@ Puppet::Type.newtype(:openssl_request) do
     newvalues %r{^[0-9]+$}
   end
 
+  newparam(:registration_token_control) do
+    desc <<-DOC
+      The registration token control contains one-time information that can
+      be used by the CA to verify the identity of the subject. Consult the
+      documentation of your CA if this is necessary and what value you need
+      to set.
+    DOC
+  end
+
+  newparam(:authenticator_control) do
+    desc <<-DOC
+      An authenticator control contains information used to establish
+      a non-cryptographic check of identity by the CA. Consult the
+      documentation of your CA if this is necessary and what value you need
+      to set.
+    DOC
+  end
+
   newparam(:key_usage, array_matching: :all) do
     desc <<-DOC
       The X.509v3 Key Usage extension.
@@ -466,6 +484,16 @@ Puppet::Type.newtype(:openssl_request) do
       unless self[:serial].nil?
         attr = OpenSSL::ASN1::Set.new([OpenSSL::ASN1::NumericString.new(self[:serial].to_s)])
         req.add_attribute OpenSSL::X509::Attribute.new('serialNumber', attr)
+      end
+
+      unless self[:registration_token_control].nil?
+        attr = OpenSSL::ASN1::UTF8String.new(self[:registration_token_control])
+        req.add_attribute OpenSSL::X509::Attribute.new('id-regCtrl-regToken', attr)
+      end
+
+      unless self[:authenticator_control].nil?
+        attr = OpenSSL::ASN1::UTF8String.new(self[:authenticator_control])
+        req.add_attribute OpenSSL::X509::Attribute.new('id-regCtrl-authenticator', attr)
       end
 
       # Add digest
