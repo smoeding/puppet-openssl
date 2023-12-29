@@ -486,13 +486,15 @@ Puppet::Type.newtype(:openssl_request) do
         req.add_attribute OpenSSL::X509::Attribute.new('serialNumber', attr)
       end
 
+      # Optionally add id-regCtrl-regToken
       unless self[:registration_token_control].nil?
-        attr = OpenSSL::ASN1::UTF8String.new(self[:registration_token_control])
+        attr = OpenSSL::ASN1::Set.new([OpenSSL::ASN1::UTF8String.new(self[:registration_token_control])])
         req.add_attribute OpenSSL::X509::Attribute.new('id-regCtrl-regToken', attr)
       end
 
+      # Optionally add id-regCtrl-authenticator
       unless self[:authenticator_control].nil?
-        attr = OpenSSL::ASN1::UTF8String.new(self[:authenticator_control])
+        attr = OpenSSL::ASN1::Set.new([OpenSSL::ASN1::UTF8String.new(self[:authenticator_control])])
         req.add_attribute OpenSSL::X509::Attribute.new('id-regCtrl-authenticator', attr)
       end
 
