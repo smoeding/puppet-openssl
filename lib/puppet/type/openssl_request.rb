@@ -244,7 +244,7 @@ Puppet::Type.newtype(:openssl_request) do
       The registration token control contains one-time information that can
       be used by the CA to verify the identity of the subject. Consult the
       documentation of your CA if this is necessary and what value you need
-      to set.
+      to set. Also see RFC RFC 4211 for more details.
     DOC
   end
 
@@ -253,7 +253,7 @@ Puppet::Type.newtype(:openssl_request) do
       An authenticator control contains information used to establish
       a non-cryptographic check of identity by the CA. Consult the
       documentation of your CA if this is necessary and what value you need
-      to set.
+      to set. Also see RFC RFC 4211 for more details.
     DOC
   end
 

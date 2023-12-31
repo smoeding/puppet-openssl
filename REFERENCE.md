@@ -2098,6 +2098,7 @@ Default value: `present`
 
 The following parameters are available in the `openssl_request` type.
 
+* [`authenticator_control`](#-openssl_request--authenticator_control)
 * [`backup`](#-openssl_request--backup)
 * [`basic_constraints_ca`](#-openssl_request--basic_constraints_ca)
 * [`basic_constraints_ca_critical`](#-openssl_request--basic_constraints_ca_critical)
@@ -2118,6 +2119,7 @@ The following parameters are available in the `openssl_request` type.
 * [`organization_unit_name`](#-openssl_request--organization_unit_name)
 * [`owner`](#-openssl_request--owner)
 * [`path`](#-openssl_request--path)
+* [`registration_token_control`](#-openssl_request--registration_token_control)
 * [`selinux_ignore_defaults`](#-openssl_request--selinux_ignore_defaults)
 * [`selrange`](#-openssl_request--selrange)
 * [`selrole`](#-openssl_request--selrole)
@@ -2129,6 +2131,13 @@ The following parameters are available in the `openssl_request` type.
 * [`state_or_province_name`](#-openssl_request--state_or_province_name)
 * [`subject_alternate_names_dns`](#-openssl_request--subject_alternate_names_dns)
 * [`subject_alternate_names_ip`](#-openssl_request--subject_alternate_names_ip)
+
+##### <a name="-openssl_request--authenticator_control"></a>`authenticator_control`
+
+An authenticator control contains information used to establish
+a non-cryptographic check of identity by the CA. Consult the
+documentation of your CA if this is necessary and what value you need
+to set. Also see RFC RFC 4211 for more details.
 
 ##### <a name="-openssl_request--backup"></a>`backup`
 
@@ -2230,6 +2239,13 @@ containing a username or integer containing a uid.
 
 Specifies the destination file. Valid options: a string containing an
 absolute path. Default value: the title of your declared resource.
+
+##### <a name="-openssl_request--registration_token_control"></a>`registration_token_control`
+
+The registration token control contains one-time information that can
+be used by the CA to verify the identity of the subject. Consult the
+documentation of your CA if this is necessary and what value you need
+to set. Also see RFC RFC 4211 for more details.
 
 ##### <a name="-openssl_request--selinux_ignore_defaults"></a>`selinux_ignore_defaults`
 
