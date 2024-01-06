@@ -1,3 +1,9 @@
+## 2024-01-06 - Release 4.2.0
+
+### Features
+
+- The custom type `openssl_request` has new two new parameters `registration_token_control` and `authenticator_control`. They can be used to generate a CSR with the `id-regCtrl-regToken` or `id-regCtrl-authenticator` attributes. Some CAs may require that one of those attributes is defined when a certificate is issued.
+
 ## 2023-07-10 - Release 4.1.0
 
 ### Features
