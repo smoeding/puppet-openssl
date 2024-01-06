@@ -970,8 +970,6 @@ Default value: `undef`
 
 ### <a name="openssl_cert"></a>`openssl_cert`
 
-**This type is still beta!**
-
 The type takes a Certificate Signing Request (create by `openssl_request`
 for example) and an issuer certificate and key as input to generate
 a signed certificate.
@@ -1838,8 +1836,6 @@ usually discover the appropriate provider for your platform.
 
 ### <a name="openssl_key"></a>`openssl_key`
 
-**This type is still beta!**
-
 This type creates RSA or Elliptic Curve keys depending on the parameter
 `algorithm`.
 
@@ -2024,8 +2020,6 @@ Specifies whether to set the show_diff parameter for the file
 resource.
 
 ### <a name="openssl_request"></a>`openssl_request`
-
-**This type is still beta!**
 
 The type creates a X.509 Certificate Signing Request (CSR) which can
 either be submitted to a Certificate Authority (CA) for signing or used

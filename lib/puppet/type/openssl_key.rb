@@ -9,8 +9,6 @@ Puppet::Type.newtype(:openssl_key) do
   desc <<-DOC
     @summary Create an OpenSSL private key
 
-    **This type is still beta!**
-
     This type creates RSA or Elliptic Curve keys depending on the parameter
     `algorithm`.
 

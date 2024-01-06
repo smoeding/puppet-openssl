@@ -9,8 +9,6 @@ Puppet::Type.newtype(:openssl_cert) do
   desc <<-DOC
     @summary Create an OpenSSL certificate from a Certificate Signing Request
 
-    **This type is still beta!**
-
     The type takes a Certificate Signing Request (create by `openssl_request`
     for example) and an issuer certificate and key as input to generate
     a signed certificate.
