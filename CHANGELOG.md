@@ -1,3 +1,15 @@
+## 2024-01-15 - Release 4.3.0
+
+### Summary
+
+This release will be the last release before the following deprecated types will be removed:
+
+- `openssl_signcsr` & `openssl_selfsign`: use the custom type `openssl_cert` to sign a CSR and issue a certificate
+- `openssl_genpkey`: use the custom type `openssl_key` to generate private key pairs.
+- `openssl::config`: the custom type `openssl_request` will create a CSR without the need for a config file.
+- `openssl::csr`: use the custom type `openssl_request` instead.
+- `openssl::dhparam`: use the custom type `openssl_dhparam`.
+
 ## 2024-01-06 - Release 4.2.0
 
 ### Features
