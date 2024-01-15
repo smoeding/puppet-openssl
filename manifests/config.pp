@@ -1,4 +1,8 @@
-# @summary Create OpenSSL config for a CSR
+# @summary *DEPRECATED* Create OpenSSL config for a CSR
+#
+# *DEPRECATED* This defined type will be removed in the next major
+# release. The custom type [`openssl_request`](#openssl_request) can be used
+# to create a CSR without the need to have a config file.
 #
 # @example Creating a config file for a CSR
 #

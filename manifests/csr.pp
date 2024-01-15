@@ -1,4 +1,8 @@
-# @summary Create OpenSSL certificate signing request (CSR)
+# @summary *DEPRECATED* Create OpenSSL certificate signing request (CSR)
+#
+# *DEPRECATED* This defined type will be removed in the next major
+# release. Use the custom type [`openssl_request`](#openssl_request) to
+# create certificate requests instead.
 #
 # @example Creating a CSR with subject alternate names
 #

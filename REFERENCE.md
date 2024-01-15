@@ -12,8 +12,8 @@
 
 * [`openssl::cacert`](#openssl--cacert): Manage an X.509 CA certificate file in PEM format
 * [`openssl::cert`](#openssl--cert): Manage an X.509 certificate file in PEM format
-* [`openssl::config`](#openssl--config): Create OpenSSL config for a CSR
-* [`openssl::csr`](#openssl--csr): Create OpenSSL certificate signing request (CSR)
+* [`openssl::config`](#openssl--config): *DEPRECATED* Create OpenSSL config for a CSR
+* [`openssl::csr`](#openssl--csr): *DEPRECATED* Create OpenSSL certificate signing request (CSR)
 * [`openssl::dhparam`](#openssl--dhparam): *DEPRECATED* Manage Diffie-Hellman parameter files
 * [`openssl::key`](#openssl--key): Manage an X.509 key file in PEM format
 
@@ -376,7 +376,9 @@ Default value: `undef`
 
 ### <a name="openssl--config"></a>`openssl::config`
 
-Create OpenSSL config for a CSR
+*DEPRECATED* This defined type will be removed in the next major
+release. The custom type [`openssl_request`](#openssl_request) can be used
+to create a CSR without the need to have a config file.
 
 #### Examples
 
@@ -546,7 +548,9 @@ Default value: `undef`
 
 ### <a name="openssl--csr"></a>`openssl::csr`
 
-Create OpenSSL certificate signing request (CSR)
+*DEPRECATED* This defined type will be removed in the next major
+release. Use the custom type [`openssl_request`](#openssl_request) to
+create certificate requests instead.
 
 #### Examples
 
