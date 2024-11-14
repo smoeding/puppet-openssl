@@ -403,6 +403,21 @@ Puppet::Type.newtype(:openssl_cert) do
     defaultto []
   end
 
+  newparam(:ca_database_file) do
+    desc <<-DOC
+      Specifies an optional path to the CA database file. The certificate
+      will be added to the file if this is set. The database format is
+      documented at https://pki-tutorial.readthedocs.io/en/latest/cadb.html
+      Valid options: a string containing an absolute path.
+    DOC
+
+    validate do |value|
+      unless Puppet::Util.absolute_path?(value, :posix) || Puppet::Util.absolute_path?(value, :windows)
+        raise ArgumentError, _("File paths must be fully qualified, not '%{_value}'") % { _value: value }
+      end
+    end
+  end
+
   autorequire(:file) do
     [self[:path]]
   end
@@ -417,6 +432,10 @@ Puppet::Type.newtype(:openssl_cert) do
 
   autorequire(:openssl_cert) do
     [self[:issuer_cert]] unless self[:issuer_cert].nil?
+  end
+
+  autorequire(:file) do
+    [self[:ca_database_file]] unless self[:ca_database_file].nil?
   end
 
   def validate
@@ -494,8 +513,8 @@ Puppet::Type.newtype(:openssl_cert) do
       bit128 = OpenSSL::Random.random_bytes 16
       qwords = bit128.unpack('Q>*')
 
-      # In case a colon-separated representation is needed in the future
-      # serial = bit128.unpack('C*').map { |x| '%02x' % x}.join(':')
+      # The hex format is used for the CA database
+      serial = bit128.unpack('C*').map { |x| '%02x' % x }.join
 
       crt.serial = (OpenSSL::BN.new(qwords[0]) << 64) + OpenSSL::BN.new(qwords[1])
 
@@ -585,6 +604,39 @@ Puppet::Type.newtype(:openssl_cert) do
 
       # Sign the certificate using the CA key
       crt.sign issuer_key, OpenSSL::Digest.new(self[:signature_algorithm].to_s)
+
+      # Update CA database
+      unless self[:ensure] == :absent || self[:ca_database_file].nil?
+        Puppet.notice("#{self} updating CA database #{self[:ca_database_file]}")
+
+        waiting_for_lock = true
+
+        while waiting_for_lock
+          File.open(self[:ca_database_file], 'ab') do |file|
+            if file.flock(File::LOCK_EX | File::LOCK_NB)
+              waiting_for_lock = false
+
+              # The database uses the followin fields (TAB separated):
+              # 1) Certificate status flag (V=valid, R=revoked, E=expired).
+              file.print("V\t")
+              # 2) Certificate expiration date in [YY]YYMMDDHHMMSSZ format.
+              file.print(crt.not_after.strftime('%Y%m%d%H%M%SZ'), "\t")
+              # 3) Certificate revocation date in [YY]YYMMDDHHMMSSZ[,reason]
+              #    format. Empty if not revoked.
+              file.print("\t")
+              # 4) Certificate serial number in hex.
+              file.print(serial, "\t")
+              # 5) Certificate filename or literal string ‘unknown’.
+              file.print(self[:path], "\t")
+              # 6) Certificate subject DN.
+              file.print(crt.subject.to_s, "\n")
+            end
+          end
+
+          # Avoid spinlock
+          sleep(0.2) if waiting_for_lock
+        end
+      end
 
       @generated_content = crt.to_pem
     end
