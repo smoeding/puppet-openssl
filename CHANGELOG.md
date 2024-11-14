@@ -1,3 +1,14 @@
+## 2024-11-14 - Release 5.0.0
+
+### Features
+
+- Add support for Debian-12 Bookworm
+- The type `openssl_cert` has an optional parameter `ca_database_file` which takes an absolute path name. If this is set, the certificate attributes common name, serial number & expiration date will be added to the file for reference (e.g. when the certificate needs to be revoked).
+
+### Breaking changes
+
+The deprecated types `openssl_signcsr`, `openssl_selfsign` & `openssl_genpkey` and defined types `openssl::config`, `openssl::csr` & `openssl::dhparam` have been removed.
+
 ## 2024-01-15 - Release 4.3.0
 
 ### Summary

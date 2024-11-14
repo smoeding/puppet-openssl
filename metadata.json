@@ -1,6 +1,6 @@
 {
   "name": "stm-openssl",
-  "version": "4.3.0",
+  "version": "5.0.0",
   "author": "stm",
   "summary": "Create and deploy X.509 certificates, keys and Diffie-Hellman parameter files",
   "license": "BSD-2-Clause",
