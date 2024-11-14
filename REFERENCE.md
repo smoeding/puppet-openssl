@@ -576,6 +576,7 @@ The following parameters are available in the `openssl_cert` type.
 * [`backup`](#-openssl_cert--backup)
 * [`basic_constraints_ca`](#-openssl_cert--basic_constraints_ca)
 * [`basic_constraints_ca_critical`](#-openssl_cert--basic_constraints_ca_critical)
+* [`ca_database_file`](#-openssl_cert--ca_database_file)
 * [`copy_request_extensions`](#-openssl_cert--copy_request_extensions)
 * [`days`](#-openssl_cert--days)
 * [`extended_key_usage`](#-openssl_cert--extended_key_usage)
@@ -627,6 +628,13 @@ extension from the request.
 Valid values: `true`, `false`
 
 Whether the Basic Constraints CA extension should be critical.
+
+##### <a name="-openssl_cert--ca_database_file"></a>`ca_database_file`
+
+Specifies an optional path to the CA database file. The certificate
+will be added to the file if this is set. The database format is
+documented at https://pki-tutorial.readthedocs.io/en/latest/cadb.html
+Valid options: a string containing an absolute path.
 
 ##### <a name="-openssl_cert--copy_request_extensions"></a>`copy_request_extensions`
 
