@@ -14,15 +14,12 @@ jobs:
   check:
     name: Puppet ${{ matrix.puppet_version }}
     runs-on: ubuntu-latest
+    container: puppet/pdk:latest
 
     strategy:
       fail-fast: false
       matrix:
         puppet_version: [7, 8]
-
-    name: Check / Puppet ${{ matrix.puppet_version }}
-    runs-on: ubuntu-24.04
-    container: puppet/pdk:latest
 
     steps:
       - name: Install build-essential
