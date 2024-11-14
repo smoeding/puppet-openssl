@@ -614,8 +614,6 @@ Puppet::Type.newtype(:openssl_cert) do
         while waiting_for_lock
           File.open(self[:ca_database_file], 'ab') do |file|
             if file.flock(File::LOCK_EX | File::LOCK_NB)
-              waiting_for_lock = false
-
               # The database uses the followin fields (TAB separated):
               # 1) Certificate status flag (V=valid, R=revoked, E=expired).
               file.print("V\t")
@@ -630,6 +628,8 @@ Puppet::Type.newtype(:openssl_cert) do
               file.print(self[:path], "\t")
               # 6) Certificate subject DN.
               file.print(crt.subject.to_s, "\n")
+
+              waiting_for_lock = false
             end
           end
 
