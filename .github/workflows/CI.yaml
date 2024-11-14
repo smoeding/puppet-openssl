@@ -32,9 +32,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run pdk validate
-        run: pdk validate --format=text --puppet-version ${{ matrix.puppet_version }}
-
-      - name: Run pdk validate
         uses: puppets-epic-show-theatre/action-pdk-validate@v1
         with:
           puppet-version: ${{ matrix.puppet_version }}
