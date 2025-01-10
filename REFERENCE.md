@@ -23,6 +23,7 @@
 * [`openssl_hash`](#openssl_hash): Manage a symbolic link using the certificate hash
 * [`openssl_key`](#openssl_key): Create an OpenSSL private key
 * [`openssl_request`](#openssl_request): Create and maintain an OpenSSL Certificate Signing Request
+* [`openssl_revoke`](#openssl_revoke): Revoke an OpenSSL certificate
 
 ### Data types
 
@@ -1721,6 +1722,68 @@ An array of DNS names that will be added as subject alternate names.
 ##### <a name="-openssl_request--subject_alternate_names_ip"></a>`subject_alternate_names_ip`
 
 An array of IP addresses that will be added as subject alternate names.
+
+### <a name="openssl_revoke"></a>`openssl_revoke`
+
+The type revokes a certificate by creating a record of the revocation in
+the CA index. The database file can then be used to generate a certificate
+revokation list (CRL).
+
+The certificate to revoke is identified by the serial number.
+
+#### Examples
+
+##### Revoke a certificate
+
+```puppet
+
+openssl_revoke { '6A71033D32F4D4D3E5A4461BFAB3B907':
+  ca_database_file => '/etc/ssl/CA/index.txt',
+}
+```
+
+##### Remove a revoked certificate
+
+```puppet
+
+openssl_revoke { '6A71033D32F4D4D3E5A4461BFAB3B907':
+  ensure           => absent,
+  ca_database_file => '/etc/ssl/CA/index.txt',
+}
+```
+
+#### Properties
+
+The following properties are available in the `openssl_revoke` type.
+
+##### `ensure`
+
+Valid values: `present`, `absent`
+
+The basic property that the resource should be in.
+
+Default value: `present`
+
+#### Parameters
+
+The following parameters are available in the `openssl_revoke` type.
+
+* [`ca_database_file`](#-openssl_revoke--ca_database_file)
+* [`provider`](#-openssl_revoke--provider)
+* [`serial`](#-openssl_revoke--serial)
+
+##### <a name="-openssl_revoke--ca_database_file"></a>`ca_database_file`
+
+Required. The file containing the CA database.
+
+##### <a name="-openssl_revoke--provider"></a>`provider`
+
+The specific backend to use for this `openssl_revoke` resource. You will seldom need to specify this --- Puppet will
+usually discover the appropriate provider for your platform.
+
+##### <a name="-openssl_revoke--serial"></a>`serial`
+
+The serial number of the certificate to revoke.
 
 ## Data types
 
