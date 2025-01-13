@@ -13,6 +13,9 @@ class PuppetX::OpenSSL::CADB
   # Certificate is revoked in the CA database
   REVOKED = 'R'
 
+  # Certificate is expired in the CA database
+  EXPIRED = 'E'
+
   # The format of a line in the CA database
   DB_LINE_FORMAT = Regexp.new('^(\S)\t(\d+Z)\t(.*)\t(\S+)\t(.+)\t(.+)')
 
