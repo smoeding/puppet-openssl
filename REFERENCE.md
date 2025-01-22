@@ -18,6 +18,7 @@
 
 * [`openssl_cert`](#openssl_cert): Create an OpenSSL certificate from a Certificate Signing Request
 * [`openssl_certutil`](#openssl_certutil): Manage trusted certificates in the system-wide NSS database
+* [`openssl_crl`](#openssl_crl): Create an OpenSSL certificate revocation list
 * [`openssl_dhparam`](#openssl_dhparam): Generate a file with Diffie-Hellman parameters
 * [`openssl_genparam`](#openssl_genparam): Generate Diffie-Hellman or Elliptic Curve parameter file
 * [`openssl_hash`](#openssl_hash): Manage a symbolic link using the certificate hash
@@ -912,6 +913,182 @@ The nickname of the certificate in the certificate database.
 
 The specific backend to use for this `openssl_certutil` resource. You will seldom need to specify this --- Puppet will
 usually discover the appropriate provider for your platform.
+
+### <a name="openssl_crl"></a>`openssl_crl`
+
+The type reads the CA database file passed as argument and creates a CRL
+for revoked certificates. The CRL is created using the issuer key and
+certificate.
+
+The type is refreshable and will generate a new certificate revocation
+list if the resource is notified.
+
+This type uses the Ruby OpenSSL library and does not need the `openssl`
+binary provided by the operating system.
+
+**Autorequires:** If Puppet is managing the OpenSSL issuer key and
+issuer certificate that is used to create the CRL, the `openssl_crl`
+resource will autorequire these resources
+
+#### Examples
+
+##### Create a CRL for a local CA
+
+```puppet
+
+openssl_crl { '/etc/ssl/ca.crl':
+  crl_serial_file     => '/etc/ssl/crl.serial
+  ca_database         => '/etc/ssl/ca.database',
+  issuer_cert         => '/etc/ssl/ca.crt',
+  issuer_key          => '/etc/ssl/ca.key',
+  issuer_key_password => 'rosebud',
+  days                => 14,
+  mode                => '0644',
+}
+```
+
+#### Properties
+
+The following properties are available in the `openssl_crl` type.
+
+##### `ensure`
+
+Valid values: `present`, `absent`
+
+The basic property that the resource should be in.
+
+Default value: `present`
+
+#### Parameters
+
+The following parameters are available in the `openssl_crl` type.
+
+* [`backup`](#-openssl_crl--backup)
+* [`ca_database_file`](#-openssl_crl--ca_database_file)
+* [`crl_serial_file`](#-openssl_crl--crl_serial_file)
+* [`days`](#-openssl_crl--days)
+* [`group`](#-openssl_crl--group)
+* [`issuer_cert`](#-openssl_crl--issuer_cert)
+* [`issuer_key`](#-openssl_crl--issuer_key)
+* [`issuer_key_password`](#-openssl_crl--issuer_key_password)
+* [`mode`](#-openssl_crl--mode)
+* [`owner`](#-openssl_crl--owner)
+* [`path`](#-openssl_crl--path)
+* [`selinux_ignore_defaults`](#-openssl_crl--selinux_ignore_defaults)
+* [`selrange`](#-openssl_crl--selrange)
+* [`selrole`](#-openssl_crl--selrole)
+* [`seltype`](#-openssl_crl--seltype)
+* [`seluser`](#-openssl_crl--seluser)
+* [`show_diff`](#-openssl_crl--show_diff)
+* [`signature_algorithm`](#-openssl_crl--signature_algorithm)
+
+##### <a name="-openssl_crl--backup"></a>`backup`
+
+Specifies whether (and how) to back up the destination file before
+overwriting it. Your value gets passed on to Puppet's native file
+resource for execution. Valid options: true, false, or a string
+representing either a target filebucket or a filename extension
+beginning with ".".
+
+##### <a name="-openssl_crl--ca_database_file"></a>`ca_database_file`
+
+Specifies the path to the CA database file. All certificates marked as
+revoked in this file will be added to the CRL.
+Valid options: a string containing an absolute path.
+
+##### <a name="-openssl_crl--crl_serial_file"></a>`crl_serial_file`
+
+Specified the path to the CRL serial number file. The file should
+exist and contain a single line with a decimal number representing the
+serial number of the next CRL that will be created.
+
+Valid options: a string containing an absolute path.
+
+##### <a name="-openssl_crl--days"></a>`days`
+
+Valid values: `%r{^[0-9]+$}`
+
+The number of days that the CRL should be valid.
+
+Default value: `30`
+
+##### <a name="-openssl_crl--group"></a>`group`
+
+Specifies a permissions group for the destination file. Valid options:
+a string containing a group name or integer containing a gid.
+
+##### <a name="-openssl_crl--issuer_cert"></a>`issuer_cert`
+
+The path to the certificate file that is used to issue the certificate.
+
+##### <a name="-openssl_crl--issuer_key"></a>`issuer_key`
+
+The path to the key file that is used to issue the certificate.
+
+##### <a name="-openssl_crl--issuer_key_password"></a>`issuer_key_password`
+
+The password to use when loading a protected issuer key.
+
+Default value: `''`
+
+##### <a name="-openssl_crl--mode"></a>`mode`
+
+Specifies the permissions mode of the destination file. Valid options:
+a string containing a permission mode value in octal notation.
+
+##### <a name="-openssl_crl--owner"></a>`owner`
+
+Specifies the owner of the destination file. Valid options: a string
+containing a username or integer containing a uid.
+
+##### <a name="-openssl_crl--path"></a>`path`
+
+Specifies the destination file. Valid options: a string containing an
+absolute path. Default value: the title of your declared resource.
+
+##### <a name="-openssl_crl--selinux_ignore_defaults"></a>`selinux_ignore_defaults`
+
+Valid values: `true`, `false`, `yes`, `no`
+
+See the file type's selinux_ignore_defaults documentention:
+https://docs.puppetlabs.com/references/latest/type.html#file-attribute-selinux_ignore_defaults.
+
+##### <a name="-openssl_crl--selrange"></a>`selrange`
+
+See the file type's selrange documentation:
+https://docs.puppetlabs.com/references/latest/type.html#file-attribute-selrange
+
+##### <a name="-openssl_crl--selrole"></a>`selrole`
+
+See the file type's selrole documentation:
+https://docs.puppetlabs.com/references/latest/type.html#file-attribute-selrole
+
+##### <a name="-openssl_crl--seltype"></a>`seltype`
+
+See the file type's seltype documentation:
+https://docs.puppetlabs.com/references/latest/type.html#file-attribute-seltype
+
+##### <a name="-openssl_crl--seluser"></a>`seluser`
+
+See the file type's seluser documentation:
+https://docs.puppetlabs.com/references/latest/type.html#file-attribute-seluser
+
+##### <a name="-openssl_crl--show_diff"></a>`show_diff`
+
+Valid values: `true`, `false`, `yes`, `no`
+
+Specifies whether to set the show_diff parameter for the file
+resource.
+
+##### <a name="-openssl_crl--signature_algorithm"></a>`signature_algorithm`
+
+Valid values: `md2`, `md4`, `md5`, `sha`, `sha1`, `sha224`, `sha256`, `sha384`, `sha512`
+
+The signature algorithm to use. The algorithms `md2`, `md4`, `md5`,
+`sha` and `sha1` are only included for backwards compatibility and
+should be considered insecure for new certificates.
+
+Default value: `sha256`
 
 ### <a name="openssl_dhparam"></a>`openssl_dhparam`
 
