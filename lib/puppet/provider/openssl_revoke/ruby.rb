@@ -33,18 +33,11 @@ Puppet::Type.type(:openssl_revoke).provide(:ruby) do
           # Revoke the certificate if it matches
           if serial.casecmp(resource[:serial]).zero? &&
              status == PuppetX::OpenSSL::CADB::VALID
-            revdate = PuppetX::OpenSSL::CADB.timestamp(Time.now)
             status = PuppetX::OpenSSL::CADB::REVOKED
+            revdate = PuppetX::OpenSSL::CADB.timestamp(Time.now)
           end
 
-          new.puts "%{status}\t%{expdate}\t%{revdate}\t%{serial}\t%{certfile}\t%{subj}" % {
-            status: status,
-            expdate: expdate,
-            revdate: revdate,
-            serial: serial,
-            certfile: certfile,
-            subj: subj
-          }
+          new.puts status + "\t" + expdate + "\t" + revdate + "\t" + serial + "\t" + certfile + "\t" + subj
         end
       end
     end
@@ -62,14 +55,7 @@ Puppet::Type.type(:openssl_revoke).provide(:ruby) do
           next if serial.casecmp(resource[:serial]).zero? &&
                   status == PuppetX::OpenSSL::CADB::REVOKED
 
-          new.puts "%{status}\t%{expdate}\t%{revdate}\t%{serial}\t%{certfile}\t%{subj}" % {
-            status: status,
-            expdate: expdate,
-            revdate: revdate,
-            serial: serial,
-            certfile: certfile,
-            subj: subj
-          }
+          new.puts status + "\t" + expdate + "\t" + revdate + "\t" + serial + "\t" + certfile + "\t" + subj
         end
       end
     end
