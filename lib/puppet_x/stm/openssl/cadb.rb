@@ -2,6 +2,7 @@
 
 require 'tempfile'
 require 'puppet_x'
+require_relative '../openssl'
 
 # A utility class to encapsulate the layout of the OpenSSL CA database file
 # and provide locked read/append/write access to the database.
@@ -24,14 +25,13 @@ class PuppetX::OpenSSL::CADB
     time.strftime('%Y%m%d%H%M%SZ')
   end
 
-  # Open the database file using mode
-  def self.open(filename, mode)
+  # Read the CA database file.
+  def self.read(filename)
     done = false
     loop do
-      File.open(filename, mode) do |db|
+      File.open(filename, 'rb') do |db|
         if db.flock(File::LOCK_EX)
           yield db if block_given?
-          db.close
           done = true
         end
       end
@@ -39,18 +39,18 @@ class PuppetX::OpenSSL::CADB
     end
   end
 
-  # Read the CA database file.
-  #
-  # The database file is locked until it is closed.
-  def self.read(filename)
-    self.open(filename, 'rb')
-  end
-
   # Append to the CA database file.
-  #
-  # The database file is locked until it is closed.
   def self.append(filename)
-    self.open(filename, 'ab')
+    done = false
+    loop do
+      File.open(filename, 'ab') do |db|
+        if db.flock(File::LOCK_EX)
+          yield db if block_given?
+          done = true
+        end
+      end
+      break if done
+    end
   end
 
   # Replace the CA database file with a new version.
