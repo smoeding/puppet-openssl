@@ -5,6 +5,8 @@ require 'puppet/type/file/owner'
 require 'puppet/type/file/group'
 require 'puppet/type/file/mode'
 
+require_relative '../../puppet_x/stm/openssl/cadb'
+
 Puppet::Type.newtype(:openssl_cert) do
   desc <<-DOC
     @summary Create an OpenSSL certificate from a Certificate Signing Request
@@ -609,32 +611,24 @@ Puppet::Type.newtype(:openssl_cert) do
       unless self[:ensure] == :absent || self[:ca_database_file].nil?
         Puppet.notice("#{self} updating CA database #{self[:ca_database_file]}")
 
-        waiting_for_lock = true
+        PuppetX::OpenSSL::CADB.append(self[:ca_database_file]) do |file|
+          # The database uses the followin fields (TAB separated):
+          # 1) Certificate status flag (V=valid, R=revoked, E=expired).
+          # 2) Certificate expiration date in [YY]YYMMDDHHMMSSZ format.
+          # 3) Certificate revocation date in [YY]YYMMDDHHMMSSZ[,reason]
+          #    format. Empty if not revoked.
+          # 4) Certificate serial number in hex.
+          # 5) Certificate filename or literal string ‘unknown’.
+          # 6) Certificate subject DN.
 
-        while waiting_for_lock
-          File.open(self[:ca_database_file], 'ab') do |file|
-            if file.flock(File::LOCK_EX | File::LOCK_NB)
-              # The database uses the followin fields (TAB separated):
-              # 1) Certificate status flag (V=valid, R=revoked, E=expired).
-              file.print("V\t")
-              # 2) Certificate expiration date in [YY]YYMMDDHHMMSSZ format.
-              file.print(crt.not_after.strftime('%Y%m%d%H%M%SZ'), "\t")
-              # 3) Certificate revocation date in [YY]YYMMDDHHMMSSZ[,reason]
-              #    format. Empty if not revoked.
-              file.print("\t")
-              # 4) Certificate serial number in hex.
-              file.print(serial, "\t")
-              # 5) Certificate filename or literal string ‘unknown’.
-              file.print(self[:path], "\t")
-              # 6) Certificate subject DN.
-              file.print(crt.subject.to_s, "\n")
-
-              waiting_for_lock = false
-            end
-          end
-
-          # Avoid spinlock
-          sleep(0.2) if waiting_for_lock
+          file.puts "%{status}\t%{expired}\t%{revoked}\t%{serial}\t%{certfile}\t%{subject}" % {
+            status:   PuppetX::OpenSSL::CADB::VALID,
+            expired:  PuppetX::OpenSSL::CADB.timestamp(crt.not_after),
+            revoked:  '',
+            serial:   serial.to_s,
+            certfile: self[:path],
+            subject:  crt.subject.to_s,
+          }
         end
       end
 
