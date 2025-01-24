@@ -10,13 +10,14 @@ Puppet::Type.newtype(:openssl_revoke) do
 
     The certificate to revoke is identified by the serial number.
 
-    @example Revoke a certificate
+    @example Revoke a certificate and trigger an update of the CRL
 
       openssl_revoke { '6A71033D32F4D4D3E5A4461BFAB3B907':
         ca_database_file => '/etc/ssl/CA/index.txt',
+        notify           => Openssl_crl['/etc/ssl/CA/ca.crl'],
       }
 
-    @example Remove a revoked certificate
+    @example Remove a revoked certificate from the index
 
       openssl_revoke { '6A71033D32F4D4D3E5A4461BFAB3B907':
         ensure           => absent,

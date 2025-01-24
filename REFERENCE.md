@@ -1910,16 +1910,17 @@ The certificate to revoke is identified by the serial number.
 
 #### Examples
 
-##### Revoke a certificate
+##### Revoke a certificate and trigger an update of the CRL
 
 ```puppet
 
 openssl_revoke { '6A71033D32F4D4D3E5A4461BFAB3B907':
   ca_database_file => '/etc/ssl/CA/index.txt',
+  notify           => Openssl_crl['/etc/ssl/CA/ca.crl'],
 }
 ```
 
-##### Remove a revoked certificate
+##### Remove a revoked certificate from the index
 
 ```puppet
 
